@@ -1,0 +1,7 @@
+.idea/
+__pycache__/
+.venv/
+文件范例/
+data/transportNetwork.db
+dist/
+生成应用程序.bat
