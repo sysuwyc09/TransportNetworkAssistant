@@ -36,7 +36,7 @@ class CheckTableThread(QThread):
                     row_count = cursor.fetchone()[0]
                     self.tableReady.emit(table + f': 表格校验通过, 列数: {len(columns)}, 行数: {row_count}')
                 else:
-                    if table == '光交上联方案集':
+                    if table == '箱体上联OLT跳纤路径表':
                         self.tableReady.emit(table + ': 不存在这个表格,请先执行光设施分析')
                     else:
                         self.tableReady.emit(table + '：不存在这个表格，请先在资源数据中导入表格')
@@ -57,7 +57,7 @@ class CheckTableThread(QThread):
         elif self.analysis_type == "OLT端口":
             return ['OLT网元', 'PON端口', '机房', '华为PON单板','中兴PON单板']
         elif self.analysis_type == "主光路":
-            return ['主光路', '光交上联方案集']
+            return ['主光路', '箱体上联OLT跳纤路径表','光交箱','分纤箱','ODF']
 
 
 
@@ -66,16 +66,25 @@ class ImportFileThread(QThread):
     state_signal = Signal(str)  # 状态信号
     result_signal = Signal(pd.DataFrame)  # 列名和数据信号
     
-    def __init__(self, file_path, table_name):
+    def __init__(self, file_paths, table_name, header_line):
         super().__init__()
-        self.file_path = file_path
+        self.file_paths = file_paths
         self.table_name = table_name
+        self.header_line = header_line
     
     def run(self):
         try:
             self.state_signal.emit("正在读取文件,请稍后...")
             # 读取文件到DataFrame
-            df = pd.read_excel(self.file_path)
+            dfs = []
+            for file in self.file_paths:
+                if file.endswith('.xlsx') or file.endswith('.XLSX'):
+                    df = pd.read_excel(file,header=self.header_line-1)
+                    dfs.append(df)
+                if file.endswith('.csv') or file.endswith('.CSV'):
+                    df = readCsvFile(file,header=self.header_line-1)
+                    dfs.append(df)
+            df = pd.concat(dfs, ignore_index=True)
             if self.table_name == '中继段':
                 self.convertLine(df)
             # 发送状态信号
@@ -84,7 +93,7 @@ class ImportFileThread(QThread):
             self.result_signal.emit(df)
         except Exception as e:
             self.state_signal.emit(f"导入失败: {str(e)}")
-            self.result_signal.emit([], [])
+            self.result_signal.emit(pd.DataFrame)
 
     def convertLine(self,df):
         value_vars = df.columns.tolist()[16:]
@@ -243,7 +252,6 @@ class AnalysisOltPortThread(QThread):
         #     self.state_signal.emit(f"查询失败: {str(e)}",0,"")
 
     def ponTable(self,pon_df):
-        
         pon_df = pon_df[pon_df['PON口类型'] != '非PON口']
         #数据透视表统计PON口数量
         pon_table = pd.pivot_table(pon_df,index=['OLT网元'],columns=['端口状态'],aggfunc={'端口名称':'count'},fill_value=0)
@@ -342,6 +350,7 @@ class BoxUpLineThread(QThread):
     def run(self):
         self.state_signal.emit('正在加载中继段信息，请稍后...',0,'')
         self.line_df = loadLine2Df()
+        self.state_signal.emit(f'已查询到{len(self.line_df)}个跳纤中继段...',0,'')
         self.state_signal.emit('正在加载全量光交设施...',0,'')
         self.all_dev = readDevs()
         self.state_signal.emit('已加载全量光交设施...',0,'')
@@ -471,37 +480,62 @@ class BusyBoxUplinkThread(QThread):
 
 # 查找中继段资源的类
 #名称(TEXT), 长度(REAL), 空闲数量(REAL), 占用数量(REAL), 中继纤芯数量(REAL), 始端站点(TEXT), 终端站点(TEXT), 始端机房(TEXT), 终端机房(TEXT), 始端设施(TEXT), 终端设施(TEXT)
-class FindRelayLineThread(QThread):
+# class FindRelayLineThread(QThread):
+#     state_signal = Signal(str)
+#     result_signal = Signal(pd.DataFrame)
+#     def __init__(self,parent=None,keywords=[]):
+#         super().__init__(parent)
+#         self.keywords = keywords
+#         self.cols = ['名称','长度','中继纤芯数量','占用数量','空闲数量','始端机房','终端机房']
+    
+#     def run(self):
+#         try:
+#             self.state_signal.emit('正在查找中继段资源，请稍后...')
+#             lines = readDataBase('中继段')
+#             lines = lines[lines['中继纤芯数量'] > 0]
+#             lines['长度'] = round(lines['长度']/1000,2)
+#             lines = lines.astype({'名称':str,'始端机房':str,'终端机房':str,'中继纤芯数量':int,'占用数量':int,'空闲数量':int})
+#             lines['查找项'] = lines['名称'] + lines['始端机房'] + lines['终端机房']
+#             result_df = lines[lines['查找项'].apply(lambda x: self.search(x,self.keywords))]
+#             result_df = result_df[self.cols]
+#             result_df.sort_values(by=['中继纤芯数量'],ascending=[False],inplace=True)
+#             result_df =result_df.reset_index(drop=True)
+#             self.result_signal.emit(result_df)
+#             self.state_signal.emit('查找完成')
+#         except Exception as e:
+#             self.state_signal.emit('查找中继段资源失败:' + str(e))
+    
+#     def search(self,text,keywords=[]):
+#         for keyword in keywords:
+#             if keyword not in text:
+#                 return False
+#         return True
+
+# 加载中继段资源的类
+class LoadRelayLineThread(QThread):
     state_signal = Signal(str)
     result_signal = Signal(pd.DataFrame)
-    def __init__(self,parent=None,keywords=[]):
+    def __init__(self,parent=None):
         super().__init__(parent)
-        self.keywords = keywords
-        self.cols = ['名称','长度','中继纤芯数量','占用数量','空闲数量','始端机房','终端机房']
+        self.cols = ['名称','始端机房','终端机房','长度','纤芯数量','空闲数量','占用数量','查找项']
     
     def run(self):
         try:
-            self.state_signal.emit('正在查找中继段资源，请稍后...')
+            self.state_signal.emit('正在加载中继段资源，请稍后...')
             lines = readDataBase('中继段')
             lines = lines[lines['中继纤芯数量'] > 0]
             lines['长度'] = round(lines['长度']/1000,2)
             lines = lines.astype({'名称':str,'始端机房':str,'终端机房':str,'中继纤芯数量':int,'占用数量':int,'空闲数量':int})
             lines['查找项'] = lines['名称'] + lines['始端机房'] + lines['终端机房']
-            result_df = lines[lines['查找项'].apply(lambda x: self.search(x,self.keywords))]
-            result_df = result_df[self.cols]
-            result_df.sort_values(by=['中继纤芯数量'],ascending=[False],inplace=True)
-            result_df =result_df.reset_index(drop=True)
-            self.result_signal.emit(result_df)
-            self.state_signal.emit('查找完成')
+            lines = lines.rename(columns={'中继纤芯数量':'纤芯数量'})
+            lines = lines[self.cols]
+            lines.sort_values(by=['纤芯数量'],ascending=[False],inplace=True)
+            lines =lines.reset_index(drop=True)
+            self.result_signal.emit(lines)
         except Exception as e:
-            self.state_signal.emit('查找中继段资源失败:' + str(e))
-    
-    def search(self,text,keywords=[]):
-        for keyword in keywords:
-            if keyword not in text:
-                return False
-        return True
-    
+            self.state_signal.emit('加载中继段资源失败:' + str(e))
+
+
 
 # 查找端口不足的OLT站点
 class FindRedOltPortSiteThread(QThread):
@@ -578,3 +612,269 @@ class FindNoOltSiteThread(QThread):
             self.state_signal.emit('表格生成完成!')
         except Exception as e:
             self.state_signal.emit('分析未部署OLT的汇聚站点失败:' + str(e))
+
+
+class FindNoXgOltSiteThread(QThread):
+    state_signal = Signal(str)
+    def __init__(self,parent=None,file_path=''):
+        super().__init__(parent)
+        self.file_path = file_path
+        self.cols = ['所属站点','OLT网元数量','OLT情况','千兆OLT数','用户数','全量PON口数量','空闲PON口数量','PON口利用率']
+    
+    def run(self):
+        try:
+            self.state_signal.emit('正在分析未部署千兆OLT的超1000户站点，请稍后...')
+            df = readDataBase('OLT网元数据集')
+            # site_table = pd.pivot_table(df,index=['所属站点'],aggfunc={'OLT网元':'count','用户数':'sum'})
+            # site_table.columns = ['OLT网元数量','用户数']
+            # site_table = site_table.reset_index()
+            # site_table = site_table[site_table['用户数'] >= 1000]
+            # self.state_signal.emit('分析完成，正在生成表格，请稍后...')
+            # with pd.ExcelWriter(self.file_path) as writer:
+            #     site_table.to_excel(writer,sheet_name='超1000户站点部署OLT分析',index=False)
+            self.state_signal.emit('表格生成完成!')
+        except Exception as e:
+            self.state_signal.emit('分析未部署千兆OLT的超1000户站点失败:' + str(e))
+
+# 超长主光路调优分析
+class FindLongPonLineThread(QThread):
+    state_signal = Signal(str,float,str)
+    def __init__(self,parent=None,file_path=''):
+        super().__init__(parent)
+        self.file_path = file_path
+    
+    def run(self):
+        try:
+            self.state_signal.emit('正在分析超长主光路清单...',0,'')
+            pon_df = readDataBase('主光路')
+            pon_num = pon_df.shape[0]
+            self.state_signal.emit(f'存量共有{pon_num}条主光路，按1跳1dB、1公里0.35dB估算超长主光路（超6dB）',0,'')
+            pon_df['光路文本路由'] = pon_df['光路文本路由'].astype(str)
+            pon_df['跳数'] = pon_df['光路文本路由'].apply(findJumpNum)
+            pon_df['光路长度'] = pon_df['光路长度'].astype(float)
+            pon_df['光衰'] = pon_df['跳数'] * 1 + pon_df['光路长度'] / 1000 * 0.35
+            lon_pon_df = pon_df[pon_df['光衰'] >= 6]
+            self.state_signal.emit(f'按1跳1dB、1公里0.35dB估算，共有{lon_pon_df.shape[0]}条主光路超6dB',10,'')
+            
+            box_up_df = readDataBase('箱体上联OLT跳纤路径表')
+            box_up_df = box_up_df[['设施名称','目标OLT机房','跳纤距离','跳数','光衰预算','跳纤路径']].rename(
+                columns={'设施名称':'OBD所属对象','跳纤距离':'调整后距离','跳数':'调整后跳数','光衰预算':'调整后光衰','跳纤路径':'调整路径'})
+            box_up_df = box_up_df.sort_values(by=['OBD所属对象','调整后光衰'],ascending=[True,True])
+            box_up_df = box_up_df.drop_duplicates(subset=['OBD所属对象'],keep='first')
+            
+            lon_pon_df = lon_pon_df.merge(box_up_df,on='OBD所属对象',how='left')
+            lon_pon_df['调整后光衰'] = lon_pon_df['调整后光衰'].fillna(999)
+            lon_pon_df['优化光衰'] = lon_pon_df['光衰'] - lon_pon_df['调整后光衰']
+            # 筛选出优化光衰大于等于1dB的主光路
+            lon_pon_df = lon_pon_df[lon_pon_df['优化光衰'] >= 1]
+            self.state_signal.emit(f'主光路能调优1dB，共有{lon_pon_df.shape[0]}条主光路',30,'')
+            # 筛选割接点及割接可行纤芯
+            box_df = readDataBase('光交箱')[['设施名称','机房名称']]
+            oBox_df = readDataBase('分纤箱')[['设施名称','机房名称']]
+            odf_df = readDataBase('ODF')[['设施名称','机房名称']]
+            all_site_df = pd.concat([box_df,oBox_df,odf_df],axis=0)
+            all_site_df = all_site_df.ffill(axis=1)
+            site_dict = all_site_df.set_index('设施名称')['机房名称'].to_dict()
+            findKeyPointVec = np.vectorize(findKeyPoint,excluded=['site_dict'])
+            lon_pon_df = lon_pon_df.reset_index(drop=True)
+            # print(findKeyPoint(lon_pon_df.iloc[0]['光路文本路由'],lon_pon_df.iloc[0]['调整路径'],site_dict=site_dict))
+            lon_pon_df['割接点'],lon_pon_df['割接路由'],lon_pon_df['割接可用芯数'] = findKeyPointVec(lon_pon_df['光路文本路由'],lon_pon_df['调整路径'],site_dict=site_dict)
+            
+            self.state_signal.emit('割接路由分析完成，正在写入数据库，请稍后...',90,'')
+            writeDataBase('超长主光路调优方案',lon_pon_df)
+            self.state_signal.emit('已完成...',100,'')
+
+            
+        except Exception as e:
+            self.state_signal.emit('分析超长PON主光路调优方案失败:' + str(e),0,'')
+
+
+# 分析ONU弱光的线程
+class FindWeakONUThread(QThread):
+    state_signal = Signal(str)
+    def __init__(self,parent=None,folder_path=''):
+        super().__init__(parent)
+        self.folder_path = folder_path
+    
+    def run(self):
+        try:
+            # onus,ports = self.loadData()
+            # if not onus or not ports:
+            #     self.state_signal.emit('未加载到ONU或光模块的数据')
+            #     return
+            # onu_df = pd.concat(onus,axis=0)
+            # port_df = pd.concat(ports,axis=0)
+            conn = sqlite3.connect('data/onu.db')
+            # port_df.to_sql('pon_port',conn,if_exists='replace',index=False)
+            # onu_df.to_sql('onu',conn,if_exists='replace',index=False)
+            port_df = pd.read_sql('select * from pon_port',conn)
+            onu_df = pd.read_sql('select * from onu',conn)
+            conn.close()
+            port_df['匹配项'] = port_df['网元名称'] + ' ' + port_df['槽位'] + '槽' + port_df['端口'] + '口'
+            onu_df['匹配项'] = onu_df['网元名称'] + ' ' + onu_df['槽位'] + '槽' + onu_df['端口'] + '口'
+            self.state_signal.emit(f'共{onu_df.shape[0]}条ONU数据,正在分析ONU收光情况...')
+            onu_df['ONU收光情况'] = onu_df['接收光功率(dBm)'].apply(self.onuType)
+            onu_table = pd.pivot_table(onu_df,index='匹配项',columns=['ONU收光情况'],aggfunc={'网元名称':'count'},fill_value=0)
+            onu_table.columns = onu_table.columns.droplevel(0)
+            onu_table['有光ONU数'] = 0
+            for col in onu_table.columns:
+                if col != '有光ONU数' and col != '未知':
+                    onu_table['有光ONU数'] += onu_table[col]
+            onu_table = onu_table.reset_index()
+            if '<-28.5dBm' in onu_table.columns:
+                if '-28.5dBm~-27dBm' in onu_table.columns:
+                    onu_table['弱光ONU数'] = onu_table['<-28.5dBm'] + onu_table['-28.5dBm~-27dBm']
+                else:
+                    onu_table['弱光ONU数'] = onu_table['<-28.5dBm']
+            else:
+                if '-28.5dBm~-27dBm' in onu_table.columns:
+                    onu_table['弱光ONU数'] = onu_table['-28.5dBm~-27dBm']
+                else:
+                    onu_table['弱光ONU数'] = 0
+            if '-27dBm~-25dBm' in onu_table.columns:
+                onu_table['临界弱光ONU数'] = onu_table['-27dBm~-25dBm']
+            else:
+                onu_table['临界弱光ONU数'] = 0
+            onu_table['弱光ONU整治数'] = onu_table['弱光ONU数'] + onu_table['临界弱光ONU数']
+            onu_table['整治ONU比例%'] = round(onu_table['弱光ONU整治数']/onu_table['有光ONU数']*100,2)
+            port_df = port_df.merge(onu_table,on='匹配项',how='left')
+            # 匹配主光路
+            pon_df = readDataBase('主光路')
+            pon_df['光路文本路由'] = pon_df['光路文本路由'].astype(str)
+            pon_df['跳数'] = pon_df['光路文本路由'].apply(findJumpNum)
+            pon_df['光路长度'] = pd.to_numeric(pon_df['光路长度'], errors='coerce')
+            pon_df['光路长度'] = round(pon_df['光路长度']/1000,2)
+            pon_df['光衰'] = pon_df['跳数'] * 1 + pon_df['光路长度'] * 0.35
+            pon_df['槽位'],pon_df['端口'] = zip(*pon_df['PON口'].apply(fixSrcPoNPort))
+            pon_df['匹配项'] = pon_df['OLT名称'] + ' ' + pon_df['槽位'] + '槽' + pon_df['端口'] + '口'
+            pon_df = pon_df[['匹配项','PON口','PON下挂ONU数量','OBD所属对象','光路名称','光路长度','光路文本路由','跳数','光衰']]
+            port_df = port_df.merge(pon_df,on='匹配项',how='left')
+            port_df['一级OBD前收光预算'] = port_df['PON口发送光功率 (dBm)'] - port_df['光衰']
+            # 匹配超长主光路调优方案
+            long_pon_df = readDataBase('超长主光路调优方案')
+            long_pon_df = long_pon_df[['PON口','目标OLT机房','调整后距离','调整后跳数','调整后光衰','调整路径','优化光衰','割接点','割接路由','割接可用芯数']]
+            port_df = port_df.merge(long_pon_df,on='PON口',how='left')
+
+            # PON口光模块更换范围,发光光功率<5.5dBm，弱光ONU数>0，整治ONU数>=3，目标OLT机房为空或 目标机房不为空且割接可用芯数=0;-28.5dBm~-27dBm >0
+            opitcal_model_df = port_df[(port_df['PON口发送光功率 (dBm)']<5.5) & (port_df['弱光ONU数']>0) & (port_df['-28.5dBm~-27dBm']>0) & (port_df['弱光ONU整治数']>=3) & (port_df['整治ONU比例%']>0) & ((port_df['目标OLT机房'].isnull()) | (port_df['割接可用芯数']==0))].copy()
+            opitcal_model_df = opitcal_model_df.sort_values(by=['弱光ONU整治数'],ascending=[False])
+            # opitcal_model_df = opitcal_model_df.drop(['目标OLT机房','调整后距离','调整后跳数','调整后光衰','调整路径','优化光衰','割接点','割接路由','割接可用芯数'],axis=1)
+
+            # 主光路调优范围；优化光衰>=2dBm，ONU整治数>0, 割接可用芯数>0
+            adjust_pon_df = port_df[(port_df['优化光衰']>=2) & (port_df['弱光ONU整治数']>=3) & (port_df['割接可用芯数']>0)].copy()
+            adjust_pon_df = adjust_pon_df.sort_values(by=['弱光ONU整治数'],ascending=[False])
+
+            # 现场测试范围：弱光ONU整治数占比≥80%，且一级OBD前预算出光≥0dBm,弱光ONU整治数>=3
+            test_pon_df = port_df[(port_df['整治ONU比例%']>=80) & (port_df['一级OBD前收光预算']>=0) & (port_df['弱光ONU整治数']>=3) & (port_df['PON口发送光功率 (dBm)']) ].copy()
+            test_pon_df = test_pon_df.sort_values(by=['弱光ONU整治数'],ascending=[False])
+
+            # 聚类弱光OBD所属对象分析；光衰≥6dBm，且调整后光衰为空或者调整后光衰≥6dBm
+            cluster_pon_df = port_df[(port_df['光衰']>=6) & ((port_df['调整后光衰'].isnull()) | (port_df['调整后光衰']>=6)) & (port_df['弱光ONU整治数']>=1)].copy()
+            cluster_table = pd.pivot_table(cluster_pon_df,index='OBD所属对象',aggfunc={'PON口':'count'})
+            cluster_table = cluster_table.reset_index().rename(columns={'PON口':'聚类弱光PON口数'})
+            cluster_pon_df = cluster_pon_df.merge(cluster_table,on='OBD所属对象',how='left')
+            cluster_pon_df = cluster_pon_df.sort_values(by=['聚类弱光PON口数','弱光ONU整治数'],ascending=[False,False])
+
+
+            self.state_signal.emit('分析完成，正在生成数据表格。')
+            dt = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+            with pd.ExcelWriter(os.path.join(self.folder_path,f'ONU弱光分析结果{dt}.xlsx')) as writer:
+                port_df.to_excel(writer,sheet_name='PON口详细清单',index=False)
+                opitcal_model_df.to_excel(writer,sheet_name='PON口光模块更换清单',index=False)
+                adjust_pon_df.to_excel(writer,sheet_name='主光路调优清单',index=False)
+                test_pon_df.to_excel(writer,sheet_name='现场测试清单',index=False)
+                cluster_pon_df.to_excel(writer,sheet_name='聚类弱光OBD所属对象分析',index=False)
+            self.state_signal.emit('已完成...')
+        except Exception as e:
+            self.state_signal.emit('分析ONU弱光失败:' + str(e))
+            
+    def loadData(self):
+        onus = []
+        ports = []
+        # 华为ONU ：网元名称 槽号 端口号 接收光功率(dBm)
+        # 中兴ONU：网元名称 槽位 端口 接收光功率(dBm)
+        # 华为光模块：网元名称	资源名称 PON口光模块子类型 PON口发送光功率 (dBm)；资源名称 框:0/槽:1/端口:0
+        # 中兴光模块：网元名称 槽位 端口 发送光功率(dBm) 等级(类型/子类型)
+        files = os.listdir(self.folder_path)
+        for file in files:
+            if '华为ONU' in file:
+                if '.xlsx' in file and '$' not in file:
+                    df = pd.read_excel(os.path.join(self.folder_path,file))
+                elif '.csv' in file or '.CSV' in file:
+                    df = readCsvFile(os.path.join(self.folder_path,file))
+                else:
+                    df = pd.DataFrame(columns=['网元名称','槽号','端口号','接收光功率(dBm)'])
+                df = df[['网元名称','槽号','端口号','接收光功率(dBm)']].rename(columns={'槽号':'槽位','端口号':'端口'})
+                df = df.astype({'槽位':str,'端口':str})
+                df['接收光功率(dBm)'] = pd.to_numeric(df['接收光功率(dBm)'],errors='coerce')
+                onus.append(df)
+                self.state_signal.emit(f'已加载{file}，共{df.shape[0]}条数据')
+            if '中兴ONU' in file:
+                if '.xlsx' in file and '$' not in file:
+                    df = pd.read_excel(os.path.join(self.folder_path,file))
+                elif '.csv' in file or '.CSV' in file:
+                    df = readCsvFile(os.path.join(self.folder_path,file))
+                else:
+                    df = pd.DataFrame(columns=['网元名称','槽位','端口','接收光功率(dBm)'])
+                df = df[['网元名称','槽位','端口','接收光功率(dBm)']]
+                df = df.astype({'槽位':str,'端口':str})
+                df['接收光功率(dBm)'] = pd.to_numeric(df['接收光功率(dBm)'],errors='coerce')
+                onus.append(df)
+                self.state_signal.emit(f'已加载{file}，共{df.shape[0]}条数据')
+            if '华为光模块' in file:
+                if '.xlsx' in file and '$' not in file:
+                    df = pd.read_excel(os.path.join(self.folder_path,file))
+                elif '.csv' in file or '.CSV' in file:
+                    df = readCsvFile(os.path.join(self.folder_path,file))
+                else:
+                    df = pd.DataFrame(columns=['网元名称','资源名称','PON口光模块子类型','PON口发送光功率 (dBm)'])
+                df = df[['网元名称','资源名称','PON口光模块子类型','PON口发送光功率 (dBm)']].rename(columns={'PON口光模块子类型':'PON口光模块类型'})
+                df['槽位'],df['端口'] = zip(*df['资源名称'].apply(self.fixHwPort))
+                df = df[['网元名称','槽位','端口','PON口光模块类型','PON口发送光功率 (dBm)']]
+                df['PON口发送光功率 (dBm)'] = pd.to_numeric(df['PON口发送光功率 (dBm)'],errors='coerce')
+                ports.append(df)
+                self.state_signal.emit(f'已加载{file}，共{df.shape[0]}条数据')
+            if '中兴光模块' in file:
+                if '.xlsx' in file and '$' not in file:
+                    df = pd.read_excel(os.path.join(self.folder_path,file))
+                elif '.csv' in file or '.CSV' in file:
+                    df = readCsvFile(os.path.join(self.folder_path,file))
+                else:
+                    df = pd.DataFrame(columns=['网元名称','槽位','端口','发送光功率(dBm)','等级(类型/子类型)','光模块号/通道号'])
+                df = df[['网元名称','槽位','端口','发送光功率(dBm)','等级(类型/子类型)','光模块号/通道号']].rename(columns={'发送光功率(dBm)':'PON口发送光功率 (dBm)','等级(类型/子类型)':'PON口光模块类型'})
+                df['光模块号/通道号'] = df['光模块号/通道号'].astype(str)
+                df = df[df['光模块号/通道号'] != '1']
+                df = df[df['光模块号/通道号'] != '2']
+
+                df = df[['网元名称','槽位','端口','PON口光模块类型','PON口发送光功率 (dBm)']]
+                df = df.astype({'槽位':str,'端口':str})
+                df['PON口发送光功率 (dBm)'] = pd.to_numeric(df['PON口发送光功率 (dBm)'],errors='coerce')
+                ports.append(df)
+                self.state_signal.emit(f'已加载{file}，共{df.shape[0]}条数据')
+        return onus,ports
+ 
+    def fixHwPort(self,port_name):
+        regex = r'槽:(\d+)/端口:(\d+)'
+        match = re.search(regex,port_name)
+        if match:
+            slot = match.group(1)
+            port = match.group(2)
+            return slot,port
+        else:
+            return '-','-'
+
+    def onuType(self,onu_dbm):
+        if pd.isnull(onu_dbm):
+            return '未知'
+        else:
+            if onu_dbm >= -21:
+                return '≥-21dBm'
+            elif onu_dbm >= -25:
+                return '-25dBm~-21dBm'
+            elif onu_dbm >= -27:
+                return '-27dBm~-25dBm'
+            elif onu_dbm >= -28.5:
+                return '-28.5dBm~-27dBm'
+            else:
+                return '<-28.5dBm'
+        

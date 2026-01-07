@@ -28,28 +28,33 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.cardShadow(self.card3)
         self.cardShadow(self.card4)
         self.cardShadow(self.card5)
+
+        # 数据库更新页面
         self.file_type_cols = [
             'OLT网元', '主光路', 'PON端口', '中继段', '光缆段', '站点', '机房', '光交箱', '分纤箱', 'ODF', '华为PON单板','中兴PON单板'
         ]
+        # 数据库更新页面 列名
         self.file_cols = [
-            ['网元名称', '所属机房', '设备型号', '生命周期状态'],
-            ['OLT名称', 'PON口', 'PON下挂ONU数量', 'OBD所属对象', '光路名称', '光路长度','光路文本路由'],
-            ['所属传输网元', '端口名称', 'PONID', '端口状态', 'PON口下挂用户数', '端口子类型'],
-            ['名称', '长度', '空闲数量', '占用数量', '中继纤芯数量', '始端站点', '终端站点', '始端机房','终端机房', '始端设施', '终端设施'],
-            ['名称','所属光缆','实际长度','纤芯占用率','光纤数目','业务级别','敷设方式'],
-            ['站点名称', '所属区县', '乡镇街道'],
-            ['所属站点', '机房类型', '机房名称', '业务级别', '生命周期状态'],
-            ['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],
-            ['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],
-            ['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],
-            ['所属网元','槽位号','单板类型','单板状态'],
-            ['网元名称','板卡槽位','板卡类型','板卡状态']
+            (['网元名称', '所属机房', '设备型号', '设备IP','生命周期状态'],['str','str','str','str','str']),
+            (['OLT名称', 'PON口', 'PON下挂ONU数量', 'OBD所属对象', '光路名称', '光路长度','光路文本路由'],['str','str','int','str','str','float','str']),
+            (['所属传输网元', '端口名称', 'PONID', '端口状态', 'PON口下挂用户数', '端口子类型'],['str','str','str','str','int','str']),
+            (['名称', '长度', '空闲数量', '占用数量', '中继纤芯数量', '始端站点', '终端站点', '始端机房','终端机房', '始端设施', '终端设施'],['str','float','int','int','int','str','str','str','str','str','str']),
+            (['名称','所属光缆','实际长度','纤芯占用率','光纤数目','业务级别','敷设方式'],['str','str','float','float','int','str','str']),
+            (['站点名称', '所属区县', '乡镇街道'],['str','str','str']),
+            (['所属站点', '机房类型', '机房名称', '业务级别', '生命周期状态'],['str','str','str','str','str']),
+            (['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','int','float','float']),
+            (['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','int','float','float']),
+            (['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','int','float','float']),
+            (['所属网元','槽位号','单板类型','单板状态'],['str','str','str','str']),
+            (['网元名称','板卡槽位','板卡类型','板卡状态'],['str','str','str','str'])
         ]
+
         self.fileTypeCB.currentIndexChanged.connect(self.updateFileCols)
         self.fileTypeCB.addItems(self.file_type_cols)
         self.current_cols = []
         self.importFileDf = pd.DataFrame()
         self.choseFileBtn.clicked.connect(self.choseFile)
+        
         self.settingBtn.clicked.connect(self.initDataBase)
         self.analysis_types = ['光设施', 'OLT端口', '主光路']
         self.current_analysis_type = 0
@@ -81,18 +86,55 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         # 设置首页
         page_widget = self.container.findChild(QWidget, "homePage")
         self.container.setCurrentWidget(page_widget)
-        self.boxUplinkBusyBtn.clicked.connect(self.busyBoxUplink)
+
         # kpi页面的按钮
         self.redOltPortSiteBtn.clicked.connect(self.searchRedOltPortSite)
         self.notOltAggrSiteBtn.clicked.connect(self.findNoOltSite)
+        self.boxUplinkBusyBtn.clicked.connect(self.busyBoxUplink)
+        self.notXgOltBtn.clicked.connect(self.findNoXgOltSite)
+        self.onuBtn.clicked.connect(self.findWeekOnu)
+
+
+        self.log_str = ''
+        # 提速 中继段查找效能
+        self.all_line_df = pd.DataFrame()
+        self.load_relay_line_thread = LoadRelayLineThread()
+        self.load_relay_line_thread.state_signal.connect(self.showStatus)
+        self.load_relay_line_thread.result_signal.connect(self.loadRelayLineResult)
+        self.load_relay_line_thread.start()
+
+    def loadRelayLineResult(self,df):
+        self.all_line_df = df
+        self.showStatus('中继段加载完成')
     
+    def findWeekOnu(self):
+        # 选择PON口光功率数据文件夹
+        folder_path = QFileDialog.getExistingDirectory(self, "选择PON口光功率数据文件夹")
+        if not folder_path:
+            return
+        self.find_weak_onu_thread = FindWeakONUThread(folder_path=folder_path)
+        self.find_weak_onu_thread.state_signal.connect(self.showStatus)
+        self.find_weak_onu_thread.start()
+        
+
+    # 分析未部署千兆OLT的超1000户站点
+    def findNoXgOltSite(self):
+        # 选择保存文件路径
+        file_path, _ = QFileDialog.getSaveFileName(self, "保存文件", "未部署千兆OLT的超1000户站点.xlsx", "Excel 文件 (*.xlsx)")
+        if not file_path:
+            return
+        self.find_no_xg_olt_site_thread = FindNoXgOltSiteThread(file_path=file_path)
+        self.find_no_xg_olt_site_thread.state_signal.connect(self.showStatus)
+        self.find_no_xg_olt_site_thread.start()
+
+    # 分析未部署OLT的汇聚站点          
     def findNoOltSite(self):
         # 选择保存文件路径
         file_path, _ = QFileDialog.getSaveFileName(self, "保存文件", "未部署OLT的汇聚站点.xlsx", "Excel 文件 (*.xlsx)")
         if not file_path:
             return
         self.find_no_olt_site_thread = FindNoOltSiteThread(file_path=file_path)
-        self.find_no_olt_site_thread.state_signal.connect(self.showKpiStatus)
+        self.find_no_olt_site_thread.state_signal.connect(self.showStatus)
         self.find_no_olt_site_thread.start()
     
     def searchRedOltPortSite(self):
@@ -101,30 +143,36 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         if not file_path:
             return
         self.find_red_olt_port_site_thread = FindRedOltPortSiteThread(file_path=file_path)
-        self.find_red_olt_port_site_thread.state_signal.connect(self.showKpiStatus)
+        self.find_red_olt_port_site_thread.state_signal.connect(self.showStatus)
         self.find_red_olt_port_site_thread.start()
 
-
-
+    # 中继段查找
+    def search(self,text,keywords=[]):
+        for keyword in keywords:
+            if keyword not in text:
+                return False
+        return True
 
     def findRelayLine(self):
         keyword_text = self.lineKeysLE.text().strip()
         if not keyword_text:
             QMessageBox.warning(self, '警告', '请输入查找关键词')
             return;
+        if self.all_line_df.empty:
+            QMessageBox.warning(self, '警告', '请先加载中继段资源')
+            return;
         keywords = keyword_text.split(' ')
-        self.find_relay_line_thread = FindRelayLineThread(keywords=keywords)
-        self.find_relay_line_thread.state_signal.connect(self.showKpiStatus)
-        self.find_relay_line_thread.result_signal.connect(self.showRelayLineResult)
-        self.find_relay_line_thread.start()
+        temp_df = self.all_line_df[self.all_line_df['查找项'].apply(lambda x: self.search(x,keywords))].copy()
+        temp_df = temp_df.drop(['查找项'],axis=1)
+        temp_df = temp_df.reset_index(drop=True)
+        self.showRelayLineResult(temp_df,keyword_text)
 
-    def showRelayLineResult(self,df):
+    def showRelayLineResult(self,df,keyword_text):
         if df.empty:
             QMessageBox.warning(self, '警告', '未查询到结果')
             return;
-# 创建新的结果窗口
+        # 创建新的结果窗口
         dialog = RelayLineResultDialog(df)
-        keyword_text = self.lineKeysLE.text().strip()
         # 设置窗口标题包含序号，便于区分
         dialog.setWindowTitle(f"中继段资源查询结果：({keyword_text})")
         # 添加到窗口列表
@@ -146,11 +194,8 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         if not dir_path:
             return
         self.busy_box_thread = BusyBoxUplinkThread(dir_path)
-        self.busy_box_thread.state_signal.connect(self.showKpiStatus)
+        self.busy_box_thread.state_signal.connect(self.showStatus)
         self.busy_box_thread.start()
-    
-    def showKpiStatus(self,msg):
-        self.kpiStatus.setText(msg)
 
     def selectupLink(self):
         if self.sender() == self.highScoreBtn:
@@ -242,9 +287,9 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         file_path = QFileDialog.getSaveFileName(self, '保存文件', '汇聚机房覆盖情况.kml', 'KML Files (*.kml)')
         if file_path[0] == '':
             return;
-        self.kpiStatus.setText('正在生成机房覆盖图层...')
+        self.statusLabel.setText('正在生成机房覆盖图层...')
         writeAggrHouseKml(file_path[0])
-        self.kpiStatus.setText('已生成机房覆盖图层！')
+        self.statusLabel.setText('已生成机房覆盖图层！')
     
     def onOltNeTwCellClicked(self,row,column):
         # 行号从0开始（第一行为0），可根据需要加1转为自然行号
@@ -305,11 +350,9 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         # 查询数据库的表信息，返回dataframe ,显示在dbTableTw，最后一列加上 操作 列
         self.db_info_thread = DatabaseInfoThread()
         self.db_info_thread.resultReady.connect(self.showDBTableInfo)
-        self.db_info_thread.state_signal.connect(self.showdbTableStatus)
+        self.db_info_thread.state_signal.connect(self.showStatus)
         self.db_info_thread.start()
 
-    def showdbTableStatus(self,msg):
-        self.dbTableStatus.setText(msg)
 
     def showDBTableInfo(self,df):
         self.dbTableTw.setRowCount(len(df))
@@ -366,7 +409,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         data_df = readDataBase(table_name)
         file_path = QFileDialog.getSaveFileName(self, "保存文件", f"{table_name}.xlsx", "Excel 文件 (*.xlsx)")[0]
         self.download_file_thread = downloadThread([table_name], [data_df],file_path)
-        self.download_file_thread.state_signal.connect(self.showdbTableStatus)
+        self.download_file_thread.state_signal.connect(self.showStatus)
         self.download_file_thread.start()
 
     def clear_table(self, table_name):
@@ -375,7 +418,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         if reply == QMessageBox.No:
             return;
         # 清空表格实现
-        self.showdbTableStatus(clearDataBase(table_name))
+        self.showStatus(clearDataBase(table_name))
 
     # 运行分析
     def runAnalysis(self):
@@ -385,7 +428,8 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
             self.analysis_thread = BoxUpLineThread()
         elif self.current_analysis_type == 1:
             self.analysis_thread = AnalysisOltPortThread()
-
+        elif self.current_analysis_type == 2:
+            self.analysis_thread = FindLongPonLineThread()
         self.analysis_thread.state_signal.connect(self.showAnalysisStatus)
         self.analysis_thread.start()
 
@@ -447,36 +491,47 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
             QMessageBox.information(self, "提示", "未选择导入文件！", QMessageBox.Yes)
             return
         tempDf = self.importFileDf.copy()
-        cols = self.file_cols[self.fileTypeCB.currentIndex()]
+        cols = self.file_cols[self.fileTypeCB.currentIndex()][0]
+        col_types = self.file_cols[self.fileTypeCB.currentIndex()][1]
         for i in range(len(cols)):
             row = 2 * int(i / 5) + 1
             col = i % 5
             oldCol = self.colsGridLayout.itemAtPosition(row, col).widget().currentText()
             if oldCol != cols[i]:
                 tempDf.rename(columns={oldCol: cols[i]}, inplace=True)
+            if col_types[i] == 'int':
+                tempDf[cols[i]] = pd.to_numeric(tempDf[cols[i]], errors='coerce').fillna(0).astype(int)
+            elif col_types[i] == 'float':
+                tempDf[cols[i]] = pd.to_numeric(tempDf[cols[i]], errors='coerce')
         tempDf = tempDf[cols]
         tempFileType = self.fileTypeCB.currentText()
         tempDf = tempDf.drop_duplicates()
         self.update_db_thread = UpdateDBThread(tempFileType, tempDf)
-        self.update_db_thread.state_signal.connect(self.showUpdateState)
+        self.update_db_thread.state_signal.connect(self.showStatus)
         self.update_db_thread.start()
 
     def choseFile(self):
-        file_path = QFileDialog.getOpenFileName(self, "选择文件", "", "Excel 文件 (*.xlsx)")
-        if file_path[0]:
-            self.filePathLE.setText(file_path[0])
+        if self.muti_file_cb.isChecked():
+            file_paths, _ = QFileDialog.getOpenFileNames(self, "选择文件", "", "Excel 文件 (*.xlsx);;CSV 文件 (*.csv)")
+            if len(file_paths) == 0:
+                return
         else:
-            return
+            file_path, _ = QFileDialog.getOpenFileName(self, "选择文件", "", "Excel 文件 (*.xlsx);;CSV 文件 (*.csv)")
+            if len(file_path) == 0:
+                return
+            file_paths = [file_path]
+        self.filePathLE.setText(', '.join(file_paths))
+        header_line = self.header_sb.value()
         table_name = self.fileTypeCB.currentText()
-        self.import_file_thread = ImportFileThread(file_path[0], table_name)
-        self.import_file_thread.state_signal.connect(self.showUpdateState)
+        self.import_file_thread = ImportFileThread(file_paths, table_name, header_line)
+        self.import_file_thread.state_signal.connect(self.showStatus)
         self.import_file_thread.result_signal.connect(self.showResult)
         self.import_file_thread.start()
 
     def showResult(self, df):
         self.importFileDf = df
         self.current_cols = df.columns.tolist()
-        cols = self.file_cols[self.fileTypeCB.currentIndex()]
+        cols = self.file_cols[self.fileTypeCB.currentIndex()][0]
         for i in range(len(cols)):
             row = 2 * int(i / 5) + 1
             col = i % 5
@@ -488,10 +543,14 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
             else:
                 tempMark = mostLike(tempCol, self.current_cols)
                 self.colsGridLayout.itemAtPosition(row, col).widget().setCurrentIndex(self.current_cols.index(tempMark))
-        self.updateStatus.setText('自动匹配对应列如上，请核对，确认无问题后更新缓存按钮！')
+        self.statusLabel.setText('自动匹配对应列如上，请核对，确认无问题后更新缓存按钮！')
 
-    def showUpdateState(self, state):
-        self.updateStatus.setText(state)
+
+    def showStatus(self, state):
+        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.statusLabel.setText(f"{current_time} {state}")
+        self.log_str += f"{current_time} {state}\n"
+
 
     def updateFileCols(self):
         # 初始化：
@@ -500,7 +559,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
             for col in range(5):
                 self.colsGridLayout.itemAtPosition(row,col).widget().setText("- - - -")
                 self.colsGridLayout.itemAtPosition(row + 1, col).widget().clear()
-        cols = self.file_cols[self.fileTypeCB.currentIndex()]
+        cols = self.file_cols[self.fileTypeCB.currentIndex()][0]
         for i in range(len(cols)):
             row = 2 * int(i / 5)
             col = i % 5

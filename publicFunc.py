@@ -6,6 +6,8 @@ import pandas as pd
 import datetime
 import numpy as np
 import math
+import cchardet
+import re
 
 
 line2TableCols = ['中继段名称','A端','B端','长度','纤芯总数','空闲芯数']
@@ -35,7 +37,8 @@ def dispatchToOlt(obds,line_df):
     siteDf = pd.DataFrame({'第1跳':obds,'跳纤路径':obds})
     siteDf['最小空闲芯数'] = 300
     siteDf['跳纤距离'] = 0
-    siteDf['跳数'] = 0
+    # 修改初始OBD算1跳
+    siteDf['跳数'] = 1
     siteDf['光衰预算'] = 0
     resultDf = pd.DataFrame()
     #6条内达到 B站点的 全部路径,待修正跳数        
@@ -123,16 +126,18 @@ def selectBestPath(df):
     
 @np.vectorize
 def CompareMin(x,y):
-	if x < y:
-		return x
-	else:
-		return y
+    if x < y:
+        return x
+    else:
+        return y
 
 @np.vectorize
 def fixSite(x,y):
     if pd.isnull(x):
         return y
     else:
+        if len(x) == 0:
+            return y
         return x
     
 def loadLine2Df():
@@ -493,3 +498,105 @@ def mostLike(sourse,objs):
                 same = tempsame
                 mark = obj
     return mark
+
+
+def getCsvEncoding(file_path, sample_size=10240):
+    """
+    判别CSV文件的编码格式
+    :param file_path: CSV文件路径
+    :param sample_size: 读取的样本字节数（默认10KB，足够覆盖编码特征）
+    :return: 编码名称（如utf-8、gbk）、置信度
+    """
+    # 校验文件是否存在
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f"CSV文件不存在：{file_path}")
+    with open(file_path, 'rb') as f:
+            # 读取指定大小的样本数据，若文件更小则读取全部
+            raw_data = f.read(sample_size)
+            # 若文件为空，返回默认编码utf-8
+            if not raw_data:
+                return "utf-8", 1.0
+            
+            # 分析编码
+            result = cchardet.detect(raw_data)
+            encoding = result['encoding']
+            if encoding == 'GB2312':
+                encoding = 'GB18030'
+            confidence = result['confidence']
+            
+            return encoding, confidence
+
+def readCsvFile(file_path, header=0,sample_size=10240):
+    """
+    读取CSV文件，自动判别编码格式
+    :param file_path: CSV文件路径
+    :param header: 表头行数（默认0，第一行）
+    :param sample_size: 读取的样本字节数（默认10KB）
+    :return: 包含数据的DataFrame
+    """
+    encoding, confidence = getCsvEncoding(file_path, sample_size)
+    try:
+        df = pd.read_csv(file_path, header=header, encoding=encoding)
+    except Exception as e:
+        # 按pd.read_csv出错，则逐行读取加入dataframe
+        with open(file_path, 'r', encoding=encoding, errors='replace') as file:
+            lines = file.readlines()
+        max_len = max(len(lines[i].strip().split(',')) for i in range(header,len(lines)))
+        first_len = len(lines[header].strip().split(','))
+        if first_len < max_len:
+            columns = lines[header].strip().split(',') + [f'extra_{i}' for i in range(max_len - first_len)]
+        else:
+            columns = lines[header].strip().split(',')
+        df = pd.DataFrame([line.strip().split(',') for line in lines[header+1:]], columns=columns)
+    return df
+
+
+def findJumpNum(route):
+    # 使用正则表达式查找所有匹配项
+    matches = re.findall('<==>', route)
+    return len(matches)
+
+
+def findKeyPoint(currentPath,objPath,site_dict):
+    if pd.isnull(objPath):
+        return "None","None",0
+    sites = re.findall('>(.*?)\([AB正反/面ODM0-9]+-\d+-\d+',currentPath)
+    if len(sites)==0:
+        return "0","0",0
+    if '-POS' in sites[-1]:
+        sites[-1] = re.findall('(.*)-POS',sites[-1])[0]
+    items = []
+    # 倒序查询割接路径上的割接点,排除空字符串和NA值
+    for site in sites:
+        item = site_dict.get(site,site)
+        if item == '':
+            if site not in items:
+                items.append(site)
+        if item not in items:
+            items.append(item)
+
+    items = items[::-1]
+    objPath = '=>' + objPath + '<='
+    parts = re.findall('=>(.*?)<=',objPath)
+    for i in range(len(parts)):
+        if parts[i] != items[i] or i > len(items)-1:
+            index = objPath.index('=>' + parts[i-1])
+            path = objPath[index+2:-2]
+            min_num = 300
+            if '=>' in path:
+
+                use_nums = re.findall('\((\d+)/\d+\)',path)
+                if use_nums:
+                    min_num = min(int(use_num) for use_num in use_nums)
+            return parts[i-1],path,min_num
+    return parts[-1],'-','300'
+
+def fixSrcPoNPort(port_name):
+    regex = r'-(\d+)-[A-Z0-9]+-(\d+)-GPON'
+    match = re.search(regex,port_name)
+    if match:
+        slot = match.group(1)
+        port = match.group(2)
+        return slot,port
+    else:
+        return '-','-'

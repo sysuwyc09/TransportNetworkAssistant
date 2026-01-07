@@ -2,6 +2,8 @@
 __pycache__/
 .venv/
 文件范例/
-data/transportNetwork.db
+data/
 dist/
 生成应用程序.bat
+结果/
+PON口光数据/

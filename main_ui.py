@@ -15,11 +15,12 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QFont, QFontDatabase, QGradient, QIcon,
     QImage, QKeySequence, QLinearGradient, QPainter,
     QPalette, QPixmap, QRadialGradient, QTransform)
-from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
-    QHBoxLayout, QHeaderView, QLabel, QLineEdit,
-    QMainWindow, QProgressBar, QPushButton, QSizePolicy,
-    QSpacerItem, QStackedWidget, QTabWidget, QTableWidget,
-    QTableWidgetItem, QTextEdit, QVBoxLayout, QWidget)
+from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
+    QGridLayout, QHBoxLayout, QHeaderView, QLabel,
+    QLineEdit, QMainWindow, QProgressBar, QPushButton,
+    QSizePolicy, QSpacerItem, QSpinBox, QStackedWidget,
+    QTabWidget, QTableWidget, QTableWidgetItem, QTextEdit,
+    QVBoxLayout, QWidget)
 
 from customnWidget import (OltBoardView, PieChartView, TopologyView)
 import resources_rc
@@ -28,36 +29,32 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(1000, 600)
+        MainWindow.resize(1000, 650)
         sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
         MainWindow.setSizePolicy(sizePolicy)
-        MainWindow.setMaximumSize(QSize(1000, 600))
+        MainWindow.setMaximumSize(QSize(1000, 650))
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         sizePolicy.setHeightForWidth(self.centralwidget.sizePolicy().hasHeightForWidth())
         self.centralwidget.setSizePolicy(sizePolicy)
-        self.centralwidget.setMaximumSize(QSize(1000, 600))
+        self.centralwidget.setMaximumSize(QSize(1000, 700))
         self.centralwidget.setStyleSheet(u"background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0.236422 rgba(28, 33, 44, 255), stop:0.760383 rgba(41, 48, 60, 255));")
         self.horizontalLayout = QHBoxLayout(self.centralwidget)
-        self.horizontalLayout.setSpacing(0)
         self.horizontalLayout.setObjectName(u"horizontalLayout")
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setContentsMargins(6, 6, 6, 6)
         self.root = QFrame(self.centralwidget)
         self.root.setObjectName(u"root")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
-        sizePolicy1.setHorizontalStretch(0)
-        sizePolicy1.setVerticalStretch(0)
-        sizePolicy1.setHeightForWidth(self.root.sizePolicy().hasHeightForWidth())
-        self.root.setSizePolicy(sizePolicy1)
+        sizePolicy.setHeightForWidth(self.root.sizePolicy().hasHeightForWidth())
+        self.root.setSizePolicy(sizePolicy)
         self.root.setStyleSheet(u"background-color: rgba(0, 0, 0, 0);\n"
 "border: none;")
         self.root.setFrameShape(QFrame.NoFrame)
         self.root.setFrameShadow(QFrame.Raised)
         self.verticalLayout = QVBoxLayout(self.root)
-        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setSpacing(6)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.titleBar = QFrame(self.root)
@@ -69,7 +66,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_2 = QHBoxLayout(self.titleBar)
         self.horizontalLayout_2.setSpacing(0)
         self.horizontalLayout_2.setObjectName(u"horizontalLayout_2")
-        self.horizontalLayout_2.setContentsMargins(10, 0, 0, 0)
+        self.horizontalLayout_2.setContentsMargins(10, 6, 10, 0)
         self.frame = QFrame(self.titleBar)
         self.frame.setObjectName(u"frame")
         self.frame.setMinimumSize(QSize(250, 0))
@@ -233,12 +230,13 @@ class Ui_MainWindow(object):
         self.container.setObjectName(u"container")
         sizePolicy.setHeightForWidth(self.container.sizePolicy().hasHeightForWidth())
         self.container.setSizePolicy(sizePolicy)
-        self.container.setMinimumSize(QSize(1000, 0))
+        self.container.setMinimumSize(QSize(1000, 550))
+        self.container.setMaximumSize(QSize(1000, 550))
         self.container.setFrameShape(QFrame.NoFrame)
         self.container.setFrameShadow(QFrame.Raised)
         self.homePage = QWidget()
         self.homePage.setObjectName(u"homePage")
-        self.homePage.setMaximumSize(QSize(1000, 540))
+        self.homePage.setMaximumSize(QSize(1000, 550))
         self.verticalLayout_2 = QVBoxLayout(self.homePage)
         self.verticalLayout_2.setSpacing(0)
         self.verticalLayout_2.setObjectName(u"verticalLayout_2")
@@ -257,11 +255,11 @@ class Ui_MainWindow(object):
 
         self.label_2 = QLabel(self.headers)
         self.label_2.setObjectName(u"label_2")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Ignored)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
-        self.label_2.setSizePolicy(sizePolicy2)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Ignored)
+        sizePolicy1.setHorizontalStretch(0)
+        sizePolicy1.setVerticalStretch(0)
+        sizePolicy1.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy1)
         self.label_2.setMinimumSize(QSize(200, 0))
         self.label_2.setMaximumSize(QSize(400, 16777215))
 
@@ -592,24 +590,12 @@ class Ui_MainWindow(object):
 
         self.action_frame = QFrame(self.homePage)
         self.action_frame.setObjectName(u"action_frame")
-        self.action_frame.setMaximumSize(QSize(16777215, 150))
+        self.action_frame.setMaximumSize(QSize(16777215, 120))
         self.action_frame.setStyleSheet(u"")
         self.action_frame.setFrameShape(QFrame.NoFrame)
         self.action_frame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_8 = QHBoxLayout(self.action_frame)
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
-        self.label_15 = QLabel(self.action_frame)
-        self.label_15.setObjectName(u"label_15")
-        self.label_15.setStyleSheet(u"QLabel {\n"
-"    color: #44cc88;\n"
-"    background-color: transparent;\n"
-"    padding: 5px;\n"
-"    font-size: 12px;\n"
-"	font-weight:700;\n"
-"}")
-
-        self.horizontalLayout_8.addWidget(self.label_15)
-
         self.horizontalSpacer_10 = QSpacerItem(170, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_8.addItem(self.horizontalSpacer_10)
@@ -646,18 +632,6 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_8.addItem(self.horizontalSpacer_9)
 
-        self.label_17 = QLabel(self.action_frame)
-        self.label_17.setObjectName(u"label_17")
-        self.label_17.setStyleSheet(u"QLabel {\n"
-"    color: #44cc88;\n"
-"    background-color: transparent;\n"
-"    padding: 5px;\n"
-"    font-size: 12px;\n"
-"	font-weight:700;\n"
-"}")
-
-        self.horizontalLayout_8.addWidget(self.label_17)
-
 
         self.verticalLayout_2.addWidget(self.action_frame)
 
@@ -666,6 +640,10 @@ class Ui_MainWindow(object):
         self.updatePage.setObjectName(u"updatePage")
         self.verticalLayout_16 = QVBoxLayout(self.updatePage)
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
+        self.verticalSpacer_2 = QSpacerItem(20, 69, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_16.addItem(self.verticalSpacer_2)
+
         self.frame_3 = QFrame(self.updatePage)
         self.frame_3.setObjectName(u"frame_3")
         self.frame_3.setMaximumSize(QSize(16777215, 50))
@@ -679,11 +657,11 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB = QComboBox(self.frame_3)
         self.fileTypeCB.setObjectName(u"fileTypeCB")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
-        sizePolicy3.setHorizontalStretch(0)
-        sizePolicy3.setVerticalStretch(0)
-        sizePolicy3.setHeightForWidth(self.fileTypeCB.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB.setSizePolicy(sizePolicy3)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB.setSizePolicy(sizePolicy2)
         self.fileTypeCB.setMinimumSize(QSize(150, 0))
         self.fileTypeCB.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB.setStyleSheet(u"QComboBox {\n"
@@ -710,11 +688,11 @@ class Ui_MainWindow(object):
 
         self.filePathLE = QLineEdit(self.frame_3)
         self.filePathLE.setObjectName(u"filePathLE")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
-        sizePolicy4.setHorizontalStretch(0)
-        sizePolicy4.setVerticalStretch(0)
-        sizePolicy4.setHeightForWidth(self.filePathLE.sizePolicy().hasHeightForWidth())
-        self.filePathLE.setSizePolicy(sizePolicy4)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.filePathLE.sizePolicy().hasHeightForWidth())
+        self.filePathLE.setSizePolicy(sizePolicy3)
         self.filePathLE.setMaximumSize(QSize(16777215, 30))
         self.filePathLE.setStyleSheet(u"QLineEdit {\n"
 "    background-color: rgba(28, 33, 44, 255);\n"
@@ -737,8 +715,8 @@ class Ui_MainWindow(object):
 
         self.choseFileBtn = QPushButton(self.frame_3)
         self.choseFileBtn.setObjectName(u"choseFileBtn")
-        sizePolicy3.setHeightForWidth(self.choseFileBtn.sizePolicy().hasHeightForWidth())
-        self.choseFileBtn.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.choseFileBtn.sizePolicy().hasHeightForWidth())
+        self.choseFileBtn.setSizePolicy(sizePolicy2)
         self.choseFileBtn.setMinimumSize(QSize(100, 0))
         self.choseFileBtn.setMaximumSize(QSize(100, 30))
         self.choseFileBtn.setStyleSheet(u"QPushButton {\n"
@@ -764,8 +742,8 @@ class Ui_MainWindow(object):
 
         self.updateDataBaseBtn = QPushButton(self.frame_3)
         self.updateDataBaseBtn.setObjectName(u"updateDataBaseBtn")
-        sizePolicy3.setHeightForWidth(self.updateDataBaseBtn.sizePolicy().hasHeightForWidth())
-        self.updateDataBaseBtn.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.updateDataBaseBtn.sizePolicy().hasHeightForWidth())
+        self.updateDataBaseBtn.setSizePolicy(sizePolicy2)
         self.updateDataBaseBtn.setMinimumSize(QSize(100, 0))
         self.updateDataBaseBtn.setMaximumSize(QSize(16777215, 30))
         self.updateDataBaseBtn.setStyleSheet(u"QPushButton {\n"
@@ -792,13 +770,91 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_16.addWidget(self.frame_3)
 
+        self.frame_28 = QFrame(self.updatePage)
+        self.frame_28.setObjectName(u"frame_28")
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy4.setHorizontalStretch(0)
+        sizePolicy4.setVerticalStretch(0)
+        sizePolicy4.setHeightForWidth(self.frame_28.sizePolicy().hasHeightForWidth())
+        self.frame_28.setSizePolicy(sizePolicy4)
+        self.frame_28.setFrameShape(QFrame.StyledPanel)
+        self.frame_28.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_27 = QHBoxLayout(self.frame_28)
+        self.horizontalLayout_27.setObjectName(u"horizontalLayout_27")
+        self.horizontalSpacer_15 = QSpacerItem(728, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+
+        self.horizontalLayout_27.addItem(self.horizontalSpacer_15)
+
+        self.muti_file_cb = QCheckBox(self.frame_28)
+        self.muti_file_cb.setObjectName(u"muti_file_cb")
+        self.muti_file_cb.setStyleSheet(u"QCheckBox::indicator {\n"
+"    width: 12px;\n"
+"    height:12px;\n"
+"    border: 2px solid #44cc88; /* \u53ef\u9009\u6846\u9ed8\u8ba4\u8fb9\u6846\u989c\u8272 */\n"
+"    border-radius: 2px;\n"
+"    background-color: #ffffff;\n"
+"}\n"
+"\n"
+"/* \u9009\u4e2d\u72b6\u6001\u7684\u53ef\u9009\u6846\u6837\u5f0f\uff08:checked \u4f2a\u72b6\u6001\uff09 */\n"
+"QCheckBox::indicator:checked {\n"
+"    border-color: #44cc88; /* \u9009\u4e2d\u540e\u8fb9\u6846\u4ecd\u4fdd\u6301#44cc88 */\n"
+"    background-color: #44cc88; /* \u9009\u4e2d\u540e\u80cc\u666f\u8272\u8bbe\u4e3a#44cc88 */\n"
+"    /* \u53ef\u9009\uff1a\u6dfb\u52a0\u52fe\u9009\u6807\u8bb0\uff08\u9ed8\u8ba4\u52fe\u9009\u6807\u8bb0\u4f1a\u663e\u793a\uff0c\u53ef\u81ea\u5b9a\u4e49\uff09 */\n"
+"}\n"
+"\n"
+"/* \u53ef\u9009\uff1a\u9f20\u6807\u60ac\u6d6e\u65f6\u53ef\u9009\u6846\u8fb9\u6846\u52a0\u6df1 */\n"
+"QCheckBox::indicator:hover {\n"
+"    border-color: #33aa77; /* \u7565\u6df1\u7684\u7eff\u8272\uff0c\u63d0\u5347\u4ea4\u4e92\u4f53\u9a8c */\n"
+"}\n"
+"\n"
+"QCheckBox {\n"
+"    "
+                        "padding-left: 8px;\n"
+"    color: #44cc88;\n"
+"    font-size: 12px;\n"
+"    font-weight: bold;\n"
+"}")
+        self.muti_file_cb.setChecked(False)
+
+        self.horizontalLayout_27.addWidget(self.muti_file_cb)
+
+        self.label_35 = QLabel(self.frame_28)
+        self.label_35.setObjectName(u"label_35")
+        self.label_35.setStyleSheet(u"QLabel{\n"
+"	padding-left:8px;\n"
+"    color: #44cc88;\n"
+"    font-size: 12px;\n"
+"    font-weight: bold;\n"
+"}")
+
+        self.horizontalLayout_27.addWidget(self.label_35)
+
+        self.header_sb = QSpinBox(self.frame_28)
+        self.header_sb.setObjectName(u"header_sb")
+        self.header_sb.setMinimumSize(QSize(0, 25))
+        self.header_sb.setMaximumSize(QSize(16777215, 25))
+        self.header_sb.setStyleSheet(u"QSpinBox {\n"
+"    border: 1px solid #44cc88;\n"
+"    font-size: 12px;\n"
+"    color: #44cc88;\n"
+"}\n"
+"\n"
+"")
+        self.header_sb.setMinimum(1)
+
+        self.horizontalLayout_27.addWidget(self.header_sb)
+
+
+        self.verticalLayout_16.addWidget(self.frame_28)
+
+        self.verticalSpacer_3 = QSpacerItem(20, 31, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+
+        self.verticalLayout_16.addItem(self.verticalSpacer_3)
+
         self.frame_5 = QFrame(self.updatePage)
         self.frame_5.setObjectName(u"frame_5")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
-        sizePolicy5.setHorizontalStretch(0)
-        sizePolicy5.setVerticalStretch(0)
-        sizePolicy5.setHeightForWidth(self.frame_5.sizePolicy().hasHeightForWidth())
-        self.frame_5.setSizePolicy(sizePolicy5)
+        sizePolicy4.setHeightForWidth(self.frame_5.sizePolicy().hasHeightForWidth())
+        self.frame_5.setSizePolicy(sizePolicy4)
         self.frame_5.setFrameShape(QFrame.StyledPanel)
         self.frame_5.setFrameShadow(QFrame.Raised)
         self.colsGridLayout = QGridLayout(self.frame_5)
@@ -806,8 +862,8 @@ class Ui_MainWindow(object):
         self.colsGridLayout.setObjectName(u"colsGridLayout")
         self.fileTypeCB_12 = QComboBox(self.frame_5)
         self.fileTypeCB_12.setObjectName(u"fileTypeCB_12")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_12.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_12.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_12.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_12.setSizePolicy(sizePolicy2)
         self.fileTypeCB_12.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_12.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_12.setStyleSheet(u"QComboBox {\n"
@@ -834,6 +890,9 @@ class Ui_MainWindow(object):
 
         self.label_26 = QLabel(self.frame_5)
         self.label_26.setObjectName(u"label_26")
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        sizePolicy5.setHorizontalStretch(0)
+        sizePolicy5.setVerticalStretch(0)
         sizePolicy5.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
         self.label_26.setSizePolicy(sizePolicy5)
         self.label_26.setMaximumSize(QSize(16777215, 30))
@@ -848,8 +907,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_3 = QComboBox(self.frame_5)
         self.fileTypeCB_3.setObjectName(u"fileTypeCB_3")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_3.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_3.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_3.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_3.setSizePolicy(sizePolicy2)
         self.fileTypeCB_3.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_3.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_3.setStyleSheet(u"QComboBox {\n"
@@ -904,8 +963,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_4 = QComboBox(self.frame_5)
         self.fileTypeCB_4.setObjectName(u"fileTypeCB_4")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_4.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_4.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_4.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_4.setSizePolicy(sizePolicy2)
         self.fileTypeCB_4.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_4.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_4.setStyleSheet(u"QComboBox {\n"
@@ -932,8 +991,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_15 = QComboBox(self.frame_5)
         self.fileTypeCB_15.setObjectName(u"fileTypeCB_15")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_15.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_15.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_15.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_15.setSizePolicy(sizePolicy2)
         self.fileTypeCB_15.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_15.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_15.setStyleSheet(u"QComboBox {\n"
@@ -960,8 +1019,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_13 = QComboBox(self.frame_5)
         self.fileTypeCB_13.setObjectName(u"fileTypeCB_13")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_13.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_13.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_13.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_13.setSizePolicy(sizePolicy2)
         self.fileTypeCB_13.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_13.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_13.setStyleSheet(u"QComboBox {\n"
@@ -988,8 +1047,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_11 = QComboBox(self.frame_5)
         self.fileTypeCB_11.setObjectName(u"fileTypeCB_11")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_11.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_11.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_11.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_11.setSizePolicy(sizePolicy2)
         self.fileTypeCB_11.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_11.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_11.setStyleSheet(u"QComboBox {\n"
@@ -1016,8 +1075,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_6 = QComboBox(self.frame_5)
         self.fileTypeCB_6.setObjectName(u"fileTypeCB_6")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_6.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_6.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_6.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_6.setSizePolicy(sizePolicy2)
         self.fileTypeCB_6.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_6.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_6.setStyleSheet(u"QComboBox {\n"
@@ -1072,8 +1131,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_9 = QComboBox(self.frame_5)
         self.fileTypeCB_9.setObjectName(u"fileTypeCB_9")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_9.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_9.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_9.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_9.setSizePolicy(sizePolicy2)
         self.fileTypeCB_9.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_9.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_9.setStyleSheet(u"QComboBox {\n"
@@ -1114,8 +1173,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_10 = QComboBox(self.frame_5)
         self.fileTypeCB_10.setObjectName(u"fileTypeCB_10")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_10.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_10.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_10.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_10.setSizePolicy(sizePolicy2)
         self.fileTypeCB_10.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_10.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_10.setStyleSheet(u"QComboBox {\n"
@@ -1156,8 +1215,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_14 = QComboBox(self.frame_5)
         self.fileTypeCB_14.setObjectName(u"fileTypeCB_14")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_14.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_14.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_14.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_14.setSizePolicy(sizePolicy2)
         self.fileTypeCB_14.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_14.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_14.setStyleSheet(u"QComboBox {\n"
@@ -1240,8 +1299,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_5 = QComboBox(self.frame_5)
         self.fileTypeCB_5.setObjectName(u"fileTypeCB_5")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_5.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_5.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_5.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_5.setSizePolicy(sizePolicy2)
         self.fileTypeCB_5.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_5.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_5.setStyleSheet(u"QComboBox {\n"
@@ -1296,8 +1355,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_16 = QComboBox(self.frame_5)
         self.fileTypeCB_16.setObjectName(u"fileTypeCB_16")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_16.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_16.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_16.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_16.setSizePolicy(sizePolicy2)
         self.fileTypeCB_16.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_16.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_16.setStyleSheet(u"QComboBox {\n"
@@ -1338,8 +1397,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_2 = QComboBox(self.frame_5)
         self.fileTypeCB_2.setObjectName(u"fileTypeCB_2")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_2.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_2.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_2.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_2.setSizePolicy(sizePolicy2)
         self.fileTypeCB_2.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_2.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_2.setStyleSheet(u"QComboBox {\n"
@@ -1366,8 +1425,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_8 = QComboBox(self.frame_5)
         self.fileTypeCB_8.setObjectName(u"fileTypeCB_8")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_8.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_8.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_8.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_8.setSizePolicy(sizePolicy2)
         self.fileTypeCB_8.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_8.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_8.setStyleSheet(u"QComboBox {\n"
@@ -1394,8 +1453,8 @@ class Ui_MainWindow(object):
 
         self.fileTypeCB_7 = QComboBox(self.frame_5)
         self.fileTypeCB_7.setObjectName(u"fileTypeCB_7")
-        sizePolicy3.setHeightForWidth(self.fileTypeCB_7.sizePolicy().hasHeightForWidth())
-        self.fileTypeCB_7.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.fileTypeCB_7.sizePolicy().hasHeightForWidth())
+        self.fileTypeCB_7.setSizePolicy(sizePolicy2)
         self.fileTypeCB_7.setMinimumSize(QSize(150, 0))
         self.fileTypeCB_7.setMaximumSize(QSize(16777215, 30))
         self.fileTypeCB_7.setStyleSheet(u"QComboBox {\n"
@@ -1437,27 +1496,9 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_16.addWidget(self.frame_5)
 
-        self.frame_7 = QFrame(self.updatePage)
-        self.frame_7.setObjectName(u"frame_7")
-        self.frame_7.setMaximumSize(QSize(16777215, 50))
-        self.frame_7.setFrameShape(QFrame.StyledPanel)
-        self.frame_7.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_12 = QHBoxLayout(self.frame_7)
-        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
-        self.updateStatus = QLabel(self.frame_7)
-        self.updateStatus.setObjectName(u"updateStatus")
-        self.updateStatus.setStyleSheet(u"QLabel {\n"
-"    color: #44cc88;\n"
-"    background-color: transparent;\n"
-"    padding: 5px;\n"
-"    font-size: 12px;\n"
-"    font-weight: bold;\n"
-"}")
+        self.verticalSpacer = QSpacerItem(20, 91, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
 
-        self.horizontalLayout_12.addWidget(self.updateStatus)
-
-
-        self.verticalLayout_16.addWidget(self.frame_7)
+        self.verticalLayout_16.addItem(self.verticalSpacer)
 
         self.container.addWidget(self.updatePage)
         self.analysisPage = QWidget()
@@ -1581,16 +1622,16 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_18.addWidget(self.frame_11)
 
-        self.frame_14 = QFrame(self.analysisPage)
-        self.frame_14.setObjectName(u"frame_14")
-        sizePolicy5.setHeightForWidth(self.frame_14.sizePolicy().hasHeightForWidth())
-        self.frame_14.setSizePolicy(sizePolicy5)
-        self.frame_14.setMaximumSize(QSize(16777215, 40))
-        self.frame_14.setFrameShape(QFrame.StyledPanel)
-        self.frame_14.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_13 = QHBoxLayout(self.frame_14)
+        self.processBarFrame = QFrame(self.analysisPage)
+        self.processBarFrame.setObjectName(u"processBarFrame")
+        sizePolicy5.setHeightForWidth(self.processBarFrame.sizePolicy().hasHeightForWidth())
+        self.processBarFrame.setSizePolicy(sizePolicy5)
+        self.processBarFrame.setMaximumSize(QSize(16777215, 40))
+        self.processBarFrame.setFrameShape(QFrame.StyledPanel)
+        self.processBarFrame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_13 = QHBoxLayout(self.processBarFrame)
         self.horizontalLayout_13.setObjectName(u"horizontalLayout_13")
-        self.runProgressBar = QProgressBar(self.frame_14)
+        self.runProgressBar = QProgressBar(self.processBarFrame)
         self.runProgressBar.setObjectName(u"runProgressBar")
         self.runProgressBar.setStyleSheet(u"QProgressBar {\n"
 "        background-color: rgba(28, 33, 44, 255);\n"
@@ -1609,7 +1650,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_13.addWidget(self.runProgressBar)
 
-        self.needTime = QLabel(self.frame_14)
+        self.needTime = QLabel(self.processBarFrame)
         self.needTime.setObjectName(u"needTime")
         self.needTime.setStyleSheet(u"QLabel {\n"
 "    color: #44cc88;\n"
@@ -1622,13 +1663,14 @@ class Ui_MainWindow(object):
         self.horizontalLayout_13.addWidget(self.needTime)
 
 
-        self.verticalLayout_18.addWidget(self.frame_14)
+        self.verticalLayout_18.addWidget(self.processBarFrame)
 
         self.container.addWidget(self.analysisPage)
         self.dbTablePage = QWidget()
         self.dbTablePage.setObjectName(u"dbTablePage")
         self.verticalLayout_19 = QVBoxLayout(self.dbTablePage)
         self.verticalLayout_19.setObjectName(u"verticalLayout_19")
+        self.verticalLayout_19.setContentsMargins(9, -1, -1, 0)
         self.frame_15 = QFrame(self.dbTablePage)
         self.frame_15.setObjectName(u"frame_15")
         sizePolicy5.setHeightForWidth(self.frame_15.sizePolicy().hasHeightForWidth())
@@ -1712,30 +1754,6 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_19.addWidget(self.frame_16)
 
-        self.frame_17 = QFrame(self.dbTablePage)
-        self.frame_17.setObjectName(u"frame_17")
-        sizePolicy5.setHeightForWidth(self.frame_17.sizePolicy().hasHeightForWidth())
-        self.frame_17.setSizePolicy(sizePolicy5)
-        self.frame_17.setMaximumSize(QSize(16777215, 50))
-        self.frame_17.setFrameShape(QFrame.StyledPanel)
-        self.frame_17.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_17 = QHBoxLayout(self.frame_17)
-        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
-        self.dbTableStatus = QLabel(self.frame_17)
-        self.dbTableStatus.setObjectName(u"dbTableStatus")
-        self.dbTableStatus.setStyleSheet(u"QLabel {\n"
-"    color: #44cc88;\n"
-"    background-color: transparent;\n"
-"    padding: 5px;\n"
-"    font-size: 12px;\n"
-"    font-weight: bold;\n"
-"}")
-
-        self.horizontalLayout_17.addWidget(self.dbTableStatus)
-
-
-        self.verticalLayout_19.addWidget(self.frame_17)
-
         self.container.addWidget(self.dbTablePage)
         self.kpiPage = QWidget()
         self.kpiPage.setObjectName(u"kpiPage")
@@ -1773,8 +1791,8 @@ class Ui_MainWindow(object):
         self.gridLayout.setObjectName(u"gridLayout")
         self.writeAggrHouseBtn = QPushButton(self.frame_18)
         self.writeAggrHouseBtn.setObjectName(u"writeAggrHouseBtn")
-        sizePolicy3.setHeightForWidth(self.writeAggrHouseBtn.sizePolicy().hasHeightForWidth())
-        self.writeAggrHouseBtn.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.writeAggrHouseBtn.sizePolicy().hasHeightForWidth())
+        self.writeAggrHouseBtn.setSizePolicy(sizePolicy2)
         self.writeAggrHouseBtn.setMinimumSize(QSize(100, 100))
         self.writeAggrHouseBtn.setMaximumSize(QSize(100, 100))
         self.writeAggrHouseBtn.setStyleSheet(u"QPushButton {\n"
@@ -1796,8 +1814,8 @@ class Ui_MainWindow(object):
 
         self.redOltPortSiteBtn = QPushButton(self.frame_18)
         self.redOltPortSiteBtn.setObjectName(u"redOltPortSiteBtn")
-        sizePolicy3.setHeightForWidth(self.redOltPortSiteBtn.sizePolicy().hasHeightForWidth())
-        self.redOltPortSiteBtn.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.redOltPortSiteBtn.sizePolicy().hasHeightForWidth())
+        self.redOltPortSiteBtn.setSizePolicy(sizePolicy2)
         self.redOltPortSiteBtn.setMinimumSize(QSize(100, 100))
         self.redOltPortSiteBtn.setMaximumSize(QSize(100, 100))
         self.redOltPortSiteBtn.setStyleSheet(u"QPushButton {\n"
@@ -1819,8 +1837,8 @@ class Ui_MainWindow(object):
 
         self.notOltAggrSiteBtn = QPushButton(self.frame_18)
         self.notOltAggrSiteBtn.setObjectName(u"notOltAggrSiteBtn")
-        sizePolicy3.setHeightForWidth(self.notOltAggrSiteBtn.sizePolicy().hasHeightForWidth())
-        self.notOltAggrSiteBtn.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.notOltAggrSiteBtn.sizePolicy().hasHeightForWidth())
+        self.notOltAggrSiteBtn.setSizePolicy(sizePolicy2)
         self.notOltAggrSiteBtn.setMinimumSize(QSize(100, 100))
         self.notOltAggrSiteBtn.setMaximumSize(QSize(100, 100))
         self.notOltAggrSiteBtn.setStyleSheet(u"QPushButton {\n"
@@ -1842,8 +1860,8 @@ class Ui_MainWindow(object):
 
         self.notXgOltBtn = QPushButton(self.frame_18)
         self.notXgOltBtn.setObjectName(u"notXgOltBtn")
-        sizePolicy3.setHeightForWidth(self.notXgOltBtn.sizePolicy().hasHeightForWidth())
-        self.notXgOltBtn.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.notXgOltBtn.sizePolicy().hasHeightForWidth())
+        self.notXgOltBtn.setSizePolicy(sizePolicy2)
         self.notXgOltBtn.setMinimumSize(QSize(100, 100))
         self.notXgOltBtn.setMaximumSize(QSize(100, 100))
         self.notXgOltBtn.setStyleSheet(u"QPushButton {\n"
@@ -1865,8 +1883,8 @@ class Ui_MainWindow(object):
 
         self.blueAggrSiteBtn = QPushButton(self.frame_18)
         self.blueAggrSiteBtn.setObjectName(u"blueAggrSiteBtn")
-        sizePolicy3.setHeightForWidth(self.blueAggrSiteBtn.sizePolicy().hasHeightForWidth())
-        self.blueAggrSiteBtn.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.blueAggrSiteBtn.sizePolicy().hasHeightForWidth())
+        self.blueAggrSiteBtn.setSizePolicy(sizePolicy2)
         self.blueAggrSiteBtn.setMinimumSize(QSize(100, 100))
         self.blueAggrSiteBtn.setMaximumSize(QSize(100, 100))
         self.blueAggrSiteBtn.setStyleSheet(u"QPushButton {\n"
@@ -1888,8 +1906,8 @@ class Ui_MainWindow(object):
 
         self.boxUplinkBusyBtn = QPushButton(self.frame_18)
         self.boxUplinkBusyBtn.setObjectName(u"boxUplinkBusyBtn")
-        sizePolicy3.setHeightForWidth(self.boxUplinkBusyBtn.sizePolicy().hasHeightForWidth())
-        self.boxUplinkBusyBtn.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.boxUplinkBusyBtn.sizePolicy().hasHeightForWidth())
+        self.boxUplinkBusyBtn.setSizePolicy(sizePolicy2)
         self.boxUplinkBusyBtn.setMinimumSize(QSize(100, 100))
         self.boxUplinkBusyBtn.setMaximumSize(QSize(100, 100))
         self.boxUplinkBusyBtn.setStyleSheet(u"QPushButton {\n"
@@ -1909,13 +1927,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.boxUplinkBusyBtn, 1, 0, 1, 1)
 
-        self.longPonLineBtn = QPushButton(self.frame_18)
-        self.longPonLineBtn.setObjectName(u"longPonLineBtn")
-        sizePolicy3.setHeightForWidth(self.longPonLineBtn.sizePolicy().hasHeightForWidth())
-        self.longPonLineBtn.setSizePolicy(sizePolicy3)
-        self.longPonLineBtn.setMinimumSize(QSize(100, 100))
-        self.longPonLineBtn.setMaximumSize(QSize(100, 100))
-        self.longPonLineBtn.setStyleSheet(u"QPushButton {\n"
+        self.onuBtn = QPushButton(self.frame_18)
+        self.onuBtn.setObjectName(u"onuBtn")
+        sizePolicy2.setHeightForWidth(self.onuBtn.sizePolicy().hasHeightForWidth())
+        self.onuBtn.setSizePolicy(sizePolicy2)
+        self.onuBtn.setMinimumSize(QSize(100, 100))
+        self.onuBtn.setMaximumSize(QSize(100, 100))
+        self.onuBtn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -1930,12 +1948,12 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout.addWidget(self.longPonLineBtn, 1, 1, 1, 1)
+        self.gridLayout.addWidget(self.onuBtn, 1, 1, 1, 1)
 
         self.ponLineProjectBtn = QPushButton(self.frame_18)
         self.ponLineProjectBtn.setObjectName(u"ponLineProjectBtn")
-        sizePolicy3.setHeightForWidth(self.ponLineProjectBtn.sizePolicy().hasHeightForWidth())
-        self.ponLineProjectBtn.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.ponLineProjectBtn.sizePolicy().hasHeightForWidth())
+        self.ponLineProjectBtn.setSizePolicy(sizePolicy2)
         self.ponLineProjectBtn.setMinimumSize(QSize(100, 100))
         self.ponLineProjectBtn.setMaximumSize(QSize(100, 100))
         self.ponLineProjectBtn.setStyleSheet(u"QPushButton {\n"
@@ -1958,35 +1976,12 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_20.addWidget(self.frame_18)
 
-        self.frame_20 = QFrame(self.kpiPage)
-        self.frame_20.setObjectName(u"frame_20")
-        sizePolicy5.setHeightForWidth(self.frame_20.sizePolicy().hasHeightForWidth())
-        self.frame_20.setSizePolicy(sizePolicy5)
-        self.frame_20.setMaximumSize(QSize(16777215, 50))
-        self.frame_20.setFrameShape(QFrame.StyledPanel)
-        self.frame_20.setFrameShadow(QFrame.Raised)
-        self.horizontalLayout_19 = QHBoxLayout(self.frame_20)
-        self.horizontalLayout_19.setObjectName(u"horizontalLayout_19")
-        self.kpiStatus = QLabel(self.frame_20)
-        self.kpiStatus.setObjectName(u"kpiStatus")
-        self.kpiStatus.setStyleSheet(u"QLabel {\n"
-"    color: #44cc88;\n"
-"    background-color: transparent;\n"
-"    padding: 5px;\n"
-"    font-size: 12px;\n"
-"    font-weight: bold;\n"
-"}")
-
-        self.horizontalLayout_19.addWidget(self.kpiStatus)
-
-
-        self.verticalLayout_20.addWidget(self.frame_20)
-
         self.container.addWidget(self.kpiPage)
         self.outsidePage = QWidget()
         self.outsidePage.setObjectName(u"outsidePage")
         self.verticalLayout_21 = QVBoxLayout(self.outsidePage)
         self.verticalLayout_21.setObjectName(u"verticalLayout_21")
+        self.verticalLayout_21.setContentsMargins(-1, -1, 18, -1)
         self.tabWidget = QTabWidget(self.outsidePage)
         self.tabWidget.setObjectName(u"tabWidget")
         self.tabWidget.setStyleSheet(u"QTabWidget {\n"
@@ -2017,6 +2012,7 @@ class Ui_MainWindow(object):
         self.oDevPage.setObjectName(u"oDevPage")
         self.verticalLayout_25 = QVBoxLayout(self.oDevPage)
         self.verticalLayout_25.setObjectName(u"verticalLayout_25")
+        self.verticalLayout_25.setContentsMargins(-1, -1, 9, -1)
         self.frame_21 = QFrame(self.oDevPage)
         self.frame_21.setObjectName(u"frame_21")
         sizePolicy5.setHeightForWidth(self.frame_21.sizePolicy().hasHeightForWidth())
@@ -2062,8 +2058,8 @@ class Ui_MainWindow(object):
 
         self.odevNamesCB = QComboBox(self.frame_21)
         self.odevNamesCB.setObjectName(u"odevNamesCB")
-        sizePolicy3.setHeightForWidth(self.odevNamesCB.sizePolicy().hasHeightForWidth())
-        self.odevNamesCB.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.odevNamesCB.sizePolicy().hasHeightForWidth())
+        self.odevNamesCB.setSizePolicy(sizePolicy2)
         self.odevNamesCB.setMinimumSize(QSize(400, 30))
         self.odevNamesCB.setMaximumSize(QSize(16777215, 30))
         self.odevNamesCB.setStyleSheet(u"QComboBox {\n"
@@ -2090,8 +2086,8 @@ class Ui_MainWindow(object):
 
         self.searchDevUplinkBtn = QPushButton(self.frame_21)
         self.searchDevUplinkBtn.setObjectName(u"searchDevUplinkBtn")
-        sizePolicy3.setHeightForWidth(self.searchDevUplinkBtn.sizePolicy().hasHeightForWidth())
-        self.searchDevUplinkBtn.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.searchDevUplinkBtn.sizePolicy().hasHeightForWidth())
+        self.searchDevUplinkBtn.setSizePolicy(sizePolicy2)
         self.searchDevUplinkBtn.setMinimumSize(QSize(100, 30))
         self.searchDevUplinkBtn.setMaximumSize(QSize(100, 30))
         self.searchDevUplinkBtn.setStyleSheet(u"QPushButton {\n"
@@ -2124,8 +2120,8 @@ class Ui_MainWindow(object):
         self.horizontalLayout_21.setObjectName(u"horizontalLayout_21")
         self.upLinkTW = QTableWidget(self.frame_22)
         self.upLinkTW.setObjectName(u"upLinkTW")
-        sizePolicy4.setHeightForWidth(self.upLinkTW.sizePolicy().hasHeightForWidth())
-        self.upLinkTW.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.upLinkTW.sizePolicy().hasHeightForWidth())
+        self.upLinkTW.setSizePolicy(sizePolicy3)
         self.upLinkTW.setMinimumSize(QSize(0, 130))
         self.upLinkTW.setMaximumSize(QSize(16777215, 130))
         self.upLinkTW.setStyleSheet(u"QTableWidget {\n"
@@ -2364,10 +2360,9 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.oDevPage, "")
         self.linePage = QWidget()
         self.linePage.setObjectName(u"linePage")
-        self.verticalLayout_27 = QVBoxLayout(self.linePage)
-        self.verticalLayout_27.setObjectName(u"verticalLayout_27")
         self.frame_27 = QFrame(self.linePage)
         self.frame_27.setObjectName(u"frame_27")
+        self.frame_27.setGeometry(QRect(9, 9, 407, 48))
         self.frame_27.setFrameShape(QFrame.StyledPanel)
         self.frame_27.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_26 = QHBoxLayout(self.frame_27)
@@ -2391,8 +2386,8 @@ class Ui_MainWindow(object):
 
         self.lineKeysLE = QLineEdit(self.frame_27)
         self.lineKeysLE.setObjectName(u"lineKeysLE")
-        sizePolicy4.setHeightForWidth(self.lineKeysLE.sizePolicy().hasHeightForWidth())
-        self.lineKeysLE.setSizePolicy(sizePolicy4)
+        sizePolicy3.setHeightForWidth(self.lineKeysLE.sizePolicy().hasHeightForWidth())
+        self.lineKeysLE.setSizePolicy(sizePolicy3)
         self.lineKeysLE.setMinimumSize(QSize(0, 30))
         self.lineKeysLE.setMaximumSize(QSize(16777215, 30))
         self.lineKeysLE.setStyleSheet(u"QLineEdit {\n"
@@ -2416,8 +2411,8 @@ class Ui_MainWindow(object):
 
         self.searchLineBtn = QPushButton(self.frame_27)
         self.searchLineBtn.setObjectName(u"searchLineBtn")
-        sizePolicy3.setHeightForWidth(self.searchLineBtn.sizePolicy().hasHeightForWidth())
-        self.searchLineBtn.setSizePolicy(sizePolicy3)
+        sizePolicy2.setHeightForWidth(self.searchLineBtn.sizePolicy().hasHeightForWidth())
+        self.searchLineBtn.setSizePolicy(sizePolicy2)
         self.searchLineBtn.setMinimumSize(QSize(100, 30))
         self.searchLineBtn.setMaximumSize(QSize(100, 30))
         self.searchLineBtn.setStyleSheet(u"QPushButton {\n"
@@ -2440,42 +2435,6 @@ class Ui_MainWindow(object):
         self.searchLineBtn.setIcon(icon16)
 
         self.horizontalLayout_26.addWidget(self.searchLineBtn)
-
-
-        self.verticalLayout_27.addWidget(self.frame_27)
-
-        self.lineTW = QTableWidget(self.linePage)
-        self.lineTW.setObjectName(u"lineTW")
-        self.lineTW.setStyleSheet(u"QTableWidget {\n"
-"        background-color: rgba(28, 33, 44, 255);\n"
-"        color: #44cc88;\n"
-"        gridline-color: #44cc88;\n"
-"        border: 1px solid #44cc88;\n"
-"    }\n"
-"    \n"
-"    QTableWidget::item {\n"
-"        border: none;\n"
-"        padding: 5px;\n"
-"    }\n"
-"    \n"
-"    QTableWidget::item:selected {\n"
-"        background-color: #44cc88;\n"
-"        color: rgba(28, 33, 44, 255);\n"
-"    }\n"
-"    \n"
-"    QHeaderView::section {\n"
-"        background-color: rgba(28, 33, 44, 255);\n"
-"        color: #44cc88;\n"
-"        border: 1px solid #44cc88;\n"
-"        padding: 5px;\n"
-"    }\n"
-"    \n"
-"    QTableCornerButton::section {\n"
-"        background-color: rgba(28, 33, 44, 255);\n"
-"        border: 1px solid #44cc88;\n"
-"    }")
-
-        self.verticalLayout_27.addWidget(self.lineTW)
 
         self.tabWidget.addTab(self.linePage, "")
 
@@ -2764,11 +2723,38 @@ class Ui_MainWindow(object):
 
         self.verticalLayout.addWidget(self.container)
 
+        self.bottomBar = QFrame(self.root)
+        self.bottomBar.setObjectName(u"bottomBar")
+        self.bottomBar.setMinimumSize(QSize(0, 40))
+        self.bottomBar.setMaximumSize(QSize(1000, 40))
+        self.bottomBar.setFrameShape(QFrame.StyledPanel)
+        self.bottomBar.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_28 = QHBoxLayout(self.bottomBar)
+        self.horizontalLayout_28.setObjectName(u"horizontalLayout_28")
+        self.horizontalLayout_28.setContentsMargins(-1, 0, -1, -1)
+        self.statusLabel = QLabel(self.bottomBar)
+        self.statusLabel.setObjectName(u"statusLabel")
+        self.statusLabel.setMinimumSize(QSize(0, 30))
+        self.statusLabel.setMaximumSize(QSize(16777215, 30))
+        self.statusLabel.setStyleSheet(u"QLabel {\n"
+"    color: #44cc88;\n"
+"    background-color: transparent;\n"
+"    padding: 5px;\n"
+"    font-size: 12px;\n"
+"	font-weight:700;\n"
+"}")
+
+        self.horizontalLayout_28.addWidget(self.statusLabel)
+
+
+        self.verticalLayout.addWidget(self.bottomBar)
+
 
         self.horizontalLayout.addWidget(self.root)
 
         self.sideBar = QFrame(self.centralwidget)
         self.sideBar.setObjectName(u"sideBar")
+        self.sideBar.setEnabled(True)
         sizePolicy.setHeightForWidth(self.sideBar.sizePolicy().hasHeightForWidth())
         self.sideBar.setSizePolicy(sizePolicy)
         self.sideBar.setMinimumSize(QSize(0, 0))
@@ -2777,9 +2763,8 @@ class Ui_MainWindow(object):
         self.sideBar.setFrameShape(QFrame.NoFrame)
         self.sideBar.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_9 = QHBoxLayout(self.sideBar)
-        self.horizontalLayout_9.setSpacing(0)
         self.horizontalLayout_9.setObjectName(u"horizontalLayout_9")
-        self.horizontalLayout_9.setContentsMargins(0, 0, 30, 0)
+        self.horizontalLayout_9.setContentsMargins(0, 0, 0, 0)
         self.sideContainer = QFrame(self.sideBar)
         self.sideContainer.setObjectName(u"sideContainer")
         self.sideContainer.setStyleSheet(u"background-color: rgb(43, 50, 63);")
@@ -2941,12 +2926,12 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_15.addWidget(self.kpiBtn)
 
-        self.helpBtn = QPushButton(self.contentFrame)
-        self.helpBtn.setObjectName(u"helpBtn")
-        self.helpBtn.setMinimumSize(QSize(320, 40))
-        self.helpBtn.setMaximumSize(QSize(320, 40))
-        self.helpBtn.setFont(font3)
-        self.helpBtn.setStyleSheet(u"QPushButton {\n"
+        self.logBtn = QPushButton(self.contentFrame)
+        self.logBtn.setObjectName(u"logBtn")
+        self.logBtn.setMinimumSize(QSize(320, 40))
+        self.logBtn.setMaximumSize(QSize(320, 40))
+        self.logBtn.setFont(font3)
+        self.logBtn.setStyleSheet(u"QPushButton {\n"
 "	background-color: rgb(43, 50, 63);\n"
 "	border-radius: 5;\n"
 "	color: rgb(188, 188, 188);\n"
@@ -2964,10 +2949,10 @@ class Ui_MainWindow(object):
 "}")
         icon21 = QIcon()
         icon21.addFile(u":/icons/assets/help.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.helpBtn.setIcon(icon21)
-        self.helpBtn.setIconSize(QSize(30, 30))
+        self.logBtn.setIcon(icon21)
+        self.logBtn.setIconSize(QSize(30, 30))
 
-        self.verticalLayout_15.addWidget(self.helpBtn)
+        self.verticalLayout_15.addWidget(self.logBtn)
 
         self.aboutBtn = QPushButton(self.contentFrame)
         self.aboutBtn.setObjectName(u"aboutBtn")
@@ -3034,8 +3019,8 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(4)
-        self.tabWidget.setCurrentIndex(1)
+        self.container.setCurrentIndex(5)
+        self.tabWidget.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -3044,7 +3029,7 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"\u4f20\u8f93\u7f51\u667a\u80fd\u8bca\u65ad\u5de5\u5177", None))
         self.pushButton.setText("")
-        self.label.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:16pt; font-weight:700; color:#ffffff;\">\u5e7f\u4e1c\u79fb\u52a8 </span><span style=\" font-size:12pt; color:#44cc88;\">\u4f20\u8f93\u7f51\u7edc\u7ef4\u62a4</span></p></body></html>", None))
+        self.label.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:16pt; font-weight:700; color:#ffffff;\">\u6e5b\u6c5f\u79fb\u52a8 </span><span style=\" font-size:12pt; color:#44cc88;\">\u4f20\u8f93\u7f51\u7edc\u7ef4\u62a4</span></p></body></html>", None))
         self.homeBtn.setText(QCoreApplication.translate("MainWindow", u"\u9996\u9875", None))
         self.menuBtn.setText(QCoreApplication.translate("MainWindow", u"\u83dc\u5355", None))
         self.miniBtn.setText("")
@@ -3067,11 +3052,11 @@ class Ui_MainWindow(object):
         self.linkBtn.setText("")
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:12pt; color:#cacaca;\">\u4e3b\u5149\u8def</span></p></body></html>", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:9pt; color:#c3c3c3;\">\u8d85\u957f \u8de8\u533a</span></p></body></html>", None))
-        self.label_15.setText(QCoreApplication.translate("MainWindow", u"\u62a5\u8868\u66f4\u65b0\u65f6\u95f4\uff1a", None))
-        self.dbmsBtn.setText(QCoreApplication.translate("MainWindow", u"\u8d44\u6e90\u8bca\u65ad", None))
-        self.label_17.setText(QCoreApplication.translate("MainWindow", u"\u8d44\u6e90\u66f4\u65b0\u65f6\u95f4\uff1a", None))
+        self.dbmsBtn.setText(QCoreApplication.translate("MainWindow", u"\u6570\u636e\u5e93\u7ba1\u7406", None))
         self.choseFileBtn.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u6587\u4ef6", None))
         self.updateDataBaseBtn.setText(QCoreApplication.translate("MainWindow", u"\u66f4\u65b0\u6570\u636e", None))
+        self.muti_file_cb.setText(QCoreApplication.translate("MainWindow", u"\u591a\u4e2a\u6587\u4ef6", None))
+        self.label_35.setText(QCoreApplication.translate("MainWindow", u"\u6587\u4ef6\u5217\u540d\u884c\u53f7\uff1a", None))
         self.label_26.setText(QCoreApplication.translate("MainWindow", u"--", None))
         self.label_30.setText(QCoreApplication.translate("MainWindow", u"--", None))
         self.label_24.setText(QCoreApplication.translate("MainWindow", u"--", None))
@@ -3087,13 +3072,11 @@ class Ui_MainWindow(object):
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"--", None))
         self.label_18.setText(QCoreApplication.translate("MainWindow", u"--", None))
         self.label_31.setText(QCoreApplication.translate("MainWindow", u"--", None))
-        self.updateStatus.setText(QCoreApplication.translate("MainWindow", u"\u66f4\u65b0\u60c5\u51b5", None))
         self.analysisLabel.setText(QCoreApplication.translate("MainWindow", u"\u3010\u6d4b\u8bd5\u3011", None))
         self.checkTableBtn.setText(QCoreApplication.translate("MainWindow", u"\u8868\u6821\u9a8c", None))
         self.runAnalysisBtn.setText(QCoreApplication.translate("MainWindow", u"\u6267\u884c\u5206\u6790", None))
         self.needTime.setText(QCoreApplication.translate("MainWindow", u"\u5269\u4f59\u65f6\u95f4\uff1a", None))
         self.dbTableBtn.setText(QCoreApplication.translate("MainWindow", u"\u8868\u67e5\u8be2", None))
-        self.dbTableStatus.setText(QCoreApplication.translate("MainWindow", u"\u6570\u636e\u5e93\u8868\u7ed3\u6784", None))
         self.label_34.setText(QCoreApplication.translate("MainWindow", u"\u3010\u5feb\u901f\u62a5\u8868\u3011", None))
         self.writeAggrHouseBtn.setText(QCoreApplication.translate("MainWindow", u"\u6c47\u805a\u673a\u623f\n"
 "\u8986\u76d6\u8bc4\u4f30", None))
@@ -3107,11 +3090,10 @@ class Ui_MainWindow(object):
 "\u6c47\u805a\u7ad9\u70b9", None))
         self.boxUplinkBusyBtn.setText(QCoreApplication.translate("MainWindow", u"\u4e0a\u8054\u7ea4\u82af\n"
 "\u7d27\u5f20\u7bb1\u4f53", None))
-        self.longPonLineBtn.setText(QCoreApplication.translate("MainWindow", u"\u8d85\u957fPON\n"
-"\u4e3b\u5149\u8def\u6e05\u5355", None))
-        self.ponLineProjectBtn.setText(QCoreApplication.translate("MainWindow", u"\u53ef\u4f18\u5316\n"
-"\u4e3b\u5149\u8def\u6e05\u5355", None))
-        self.kpiStatus.setText("")
+        self.onuBtn.setText(QCoreApplication.translate("MainWindow", u"ONU\u5f31\u5149\n"
+"\u8c03\u4f18\u5206\u6790", None))
+        self.ponLineProjectBtn.setText(QCoreApplication.translate("MainWindow", u"\u5df2\u6709\u7ba1\u9053\n"
+"\u6746\u8def\u5206\u6790", None))
         self.label_36.setText(QCoreApplication.translate("MainWindow", u"\u5149\u4ea4\u7bb1/\u5206\u7ea4\u7bb1:", None))
         self.searchDevUplinkBtn.setText(QCoreApplication.translate("MainWindow", u"\u67e5\u627e", None))
         self.highScoreBtn.setText(QCoreApplication.translate("MainWindow", u"\u8bc4\u5206\u6700\u9ad8", None))
@@ -3130,12 +3112,13 @@ class Ui_MainWindow(object):
         self.label_40.setText(QCoreApplication.translate("MainWindow", u"\u7f51\u5143\n"
 "\n"
 "\u6e05\u5355", None))
+        self.statusLabel.setText("")
         self.sideClose.setText("")
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:700; color:#ffffff;\">\u4f7f\u7528\u8bf4\u660e</span></p><p align=\"center\"><span style=\" font-size:12pt; font-weight:700; color:#ffffff;\">\u9700\u5468\u671f\u66f4\u65b0\u6570\u636e </span></p></body></html>", None))
         self.settingBtn.setText(QCoreApplication.translate("MainWindow", u"\u8bbe\u7f6e", None))
         self.updateBtn.setText(QCoreApplication.translate("MainWindow", u"\u8d44\u6e90\u6570\u636e\u66f4\u65b0", None))
         self.kpiBtn.setText(QCoreApplication.translate("MainWindow", u"\u6307\u6807\u6570\u636e", None))
-        self.helpBtn.setText(QCoreApplication.translate("MainWindow", u"\u5e2e\u52a9", None))
+        self.logBtn.setText(QCoreApplication.translate("MainWindow", u"\u65e5\u5fd7", None))
         self.aboutBtn.setText(QCoreApplication.translate("MainWindow", u"\u5173\u4e8e", None))
         self.toolBtn.setText(QCoreApplication.translate("MainWindow", u"\u5de5\u5177\u7bb1", None))
     # retranslateUi
