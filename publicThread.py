@@ -53,7 +53,7 @@ class CheckTableThread(QThread):
     def get_tables_for_analysis(self):
         """根据分析类型返回需要检查的表格列表"""
         if self.analysis_type == "光设施":
-            return ["OLT网元","机房", "中继段",'光交箱','分纤箱']
+            return ["OLT网元","机房", "中继段",'光交箱','分纤箱','主光路']
         elif self.analysis_type == "OLT端口":
             return ['OLT网元', 'PON端口', '机房', '华为PON单板','中兴PON单板']
         elif self.analysis_type == "主光路":
@@ -349,9 +349,10 @@ class BoxUpLineThread(QThread):
 
     def run(self):
         self.state_signal.emit('正在加载中继段信息，请稍后...',0,'')
-        self.line_df = loadLine2Df()
-        self.state_signal.emit(f'已查询到{len(self.line_df)}个跳纤中继段...',0,'')
-        self.state_signal.emit('正在加载全量光交设施...',0,'')
+        line2Df = loadLine2Df()
+        oltDf = loadOltTypeDf()
+        self.state_signal.emit(f'已查询到{len(line2Df)}个跳纤中继段...',0,'')
+        self.state_signal.emit('正在加载全量光交设施(超72芯分纤箱、光交箱、ODF) ...',0,'')
         self.all_dev = readDevs()
         self.state_signal.emit('已加载全量光交设施...',0,'')
         self.all_dev.rename(columns={'机房名称':'设施所属机房','业务区':'设施所属业务区'},inplace=True)
@@ -363,7 +364,7 @@ class BoxUpLineThread(QThread):
         result_dfs = []
         start_time = time.time()
         for i,obds_group in enumerate(obds_groups):
-            temp_df = dispatchToOlt(obds_group,self.line_df)
+            temp_df = dispatchToMany(obds_group,line2Df,oltDf)
             if temp_df.shape[0] > 0:
                 temp_df = selectBestPath(temp_df)
             result_dfs.append(temp_df)
@@ -382,6 +383,9 @@ class BoxUpLineThread(QThread):
         result_df = result_df.rename(columns={'A端':'设施所属位置','B端':'目标OLT机房'})
         result_df.drop(['B端类型'],axis=1,inplace=True)
         odevs = odevs.merge(result_df,on='设施所属位置',how='left')
+        odevs2 = odevs.copy().drop(['设施名称'],axis=1).rename(columns={'设施所属位置':'设施名称'})
+        odevs = odevs.drop(['设施所属位置'],axis=1)
+        odevs = pd.concat([odevs,odevs2],axis=0).drop_duplicates()
         writeDataBase('箱体上联OLT跳纤路径表', odevs)
         self.state_signal.emit('已完成...',100,'')
 
@@ -698,18 +702,18 @@ class FindWeakONUThread(QThread):
     
     def run(self):
         try:
-            # onus,ports = self.loadData()
-            # if not onus or not ports:
-            #     self.state_signal.emit('未加载到ONU或光模块的数据')
-            #     return
-            # onu_df = pd.concat(onus,axis=0)
-            # port_df = pd.concat(ports,axis=0)
-            conn = sqlite3.connect('data/onu.db')
+            onus,ports = self.loadData()
+            if not onus or not ports:
+                self.state_signal.emit('未加载到ONU或光模块的数据')
+                return
+            onu_df = pd.concat(onus,axis=0)
+            port_df = pd.concat(ports,axis=0)
+            # conn = sqlite3.connect('data/onu.db')
             # port_df.to_sql('pon_port',conn,if_exists='replace',index=False)
             # onu_df.to_sql('onu',conn,if_exists='replace',index=False)
-            port_df = pd.read_sql('select * from pon_port',conn)
-            onu_df = pd.read_sql('select * from onu',conn)
-            conn.close()
+            # port_df = pd.read_sql('select * from pon_port',conn)
+            # onu_df = pd.read_sql('select * from onu',conn)
+            # conn.close()
             port_df['匹配项'] = port_df['网元名称'] + ' ' + port_df['槽位'] + '槽' + port_df['端口'] + '口'
             onu_df['匹配项'] = onu_df['网元名称'] + ' ' + onu_df['槽位'] + '槽' + onu_df['端口'] + '口'
             self.state_signal.emit(f'共{onu_df.shape[0]}条ONU数据,正在分析ONU收光情况...')
@@ -760,7 +764,7 @@ class FindWeakONUThread(QThread):
             opitcal_model_df = opitcal_model_df.sort_values(by=['弱光ONU整治数'],ascending=[False])
             # opitcal_model_df = opitcal_model_df.drop(['目标OLT机房','调整后距离','调整后跳数','调整后光衰','调整路径','优化光衰','割接点','割接路由','割接可用芯数'],axis=1)
 
-            # 主光路调优范围；优化光衰>=2dBm，ONU整治数>0, 割接可用芯数>0
+            # 主光路调优范围；优化光衰>=2dBm，ONU整治数>=3, 割接可用芯数>0
             adjust_pon_df = port_df[(port_df['优化光衰']>=2) & (port_df['弱光ONU整治数']>=3) & (port_df['割接可用芯数']>0)].copy()
             adjust_pon_df = adjust_pon_df.sort_values(by=['弱光ONU整治数'],ascending=[False])
 
@@ -769,11 +773,11 @@ class FindWeakONUThread(QThread):
             test_pon_df = test_pon_df.sort_values(by=['弱光ONU整治数'],ascending=[False])
 
             # 聚类弱光OBD所属对象分析；光衰≥6dBm，且调整后光衰为空或者调整后光衰≥6dBm
-            cluster_pon_df = port_df[(port_df['光衰']>=6) & ((port_df['调整后光衰'].isnull()) | (port_df['调整后光衰']>=6)) & (port_df['弱光ONU整治数']>=1)].copy()
-            cluster_table = pd.pivot_table(cluster_pon_df,index='OBD所属对象',aggfunc={'PON口':'count'})
-            cluster_table = cluster_table.reset_index().rename(columns={'PON口':'聚类弱光PON口数'})
+            cluster_pon_df = port_df[(port_df['光衰']>=6) & ((port_df['调整后光衰'].isnull()) | (port_df['调整后光衰']>=6))].copy()
+            cluster_table = pd.pivot_table(cluster_pon_df,index='OBD所属对象',aggfunc={'PON口':'count','弱光ONU整治数':'sum'})
+            cluster_table = cluster_table.reset_index().rename(columns={'PON口':'PON口数','弱光ONU整治数':'聚类弱光ONU整治数'})
             cluster_pon_df = cluster_pon_df.merge(cluster_table,on='OBD所属对象',how='left')
-            cluster_pon_df = cluster_pon_df.sort_values(by=['聚类弱光PON口数','弱光ONU整治数'],ascending=[False,False])
+            cluster_pon_df = cluster_pon_df.sort_values(by=['PON口数','聚类弱光ONU整治数'],ascending=[False,False])
 
 
             self.state_signal.emit('分析完成，正在生成数据表格。')
@@ -877,4 +881,168 @@ class FindWeakONUThread(QThread):
                 return '-28.5dBm~-27dBm'
             else:
                 return '<-28.5dBm'
-        
+
+
+# 单点A-B跳纤方案线程
+class DispatchABThread(QThread):
+    state_signal = Signal(str) 
+    def __init__(self,parent=None,a_name='',b_name='',jump_num=5,dbm_num=14,must_devs=[],not_devs=[]):
+        super().__init__(parent)
+        self.a_name = a_name
+        self.b_name = b_name
+        self.jump_num = jump_num
+        self.dbm_num = dbm_num
+        self.must_devs = must_devs
+        self.not_devs = not_devs
+    
+    def run(self):
+        try:
+            self.state_signal.emit('正在加载中继段信息...')
+            line2Df = loadLine2Df()
+            resultDf = dispatchOneToOne(line2Df,self.a_name,self.b_name,self.jump_num,self.dbm_num,self.not_devs)
+            if resultDf.shape[0] == 0:
+                self.state_signal.emit('未找到符合条件的跳纤路径')
+            else:
+                if self.must_devs:
+                    for dev in self.must_devs:
+                        resultDf = resultDf[resultDf['跳纤路径'].str.contains(dev)]
+                if resultDf.shape[0] == 0:
+                    self.state_signal.emit('未找到符合条件的跳纤路径')
+                else:
+                    self.state_signal.emit(f'已找到{resultDf.shape[0]}条符合条件的跳纤路径')
+                    # 评估方案得分，算法如下：
+                    resultDf['最小空闲芯数得分'] =  resultDf['最小空闲芯数'].apply(lambda x: x if x<=10 else 10)
+                    resultDf['方案得分'] = round(resultDf['最小空闲芯数得分']/resultDf['光衰预算'],2)
+                    resultDf.drop(columns=['最小空闲芯数得分'],inplace=True)
+                    resultDf = resultDf.sort_values(by='方案得分',ascending=False)
+                    dt = datetime.datetime.now().strftime('%Y%m%d%H%M')
+                    out_file_name = f'结果\\{self.a_name}_{self.b_name}_跳纤路径{dt}.xlsx'
+                    resultDf.to_excel(out_file_name,index=False)
+                    os.startfile(out_file_name)
+                    self.state_signal.emit(f'已将结果保存至{out_file_name}')
+        except Exception as e:
+            self.state_signal.emit(f'发生错误：{e}')
+
+
+# 批量A-B跳纤方案线程
+class DispatchABSThread(QThread):
+    state_signal = Signal(str)
+    error_signal = Signal(str)
+    def __init__(self,parent=None,jump_num=5,dbm_num=14,file_path=''):
+        super().__init__(parent)
+        self.jump_num = jump_num
+        self.dbm_num = dbm_num
+        self.file_path = file_path
+    
+    def run(self):
+        self.state_signal.emit('正在加载需求文件信息...')
+        df = pd.read_excel(self.file_path)
+        df = df.astype(str)
+        if 'A端' not in df.columns or 'B端' not in df.columns:
+            self.error_signal.emit('需求文件格式错误，必须包含A端和B端列')
+            return;
+        self.state_signal.emit('正在加载中继段信息...')
+        line2Df = loadLine2Df()
+        self.state_signal.emit('正在分析跳纤路由...')
+        results = []
+        for i in range(df.shape[0]):
+            a_name = df.loc[i,'A端']
+            b_name = df.loc[i,'B端']
+            if a_name == b_name:
+                temp_df = pd.DataFrame({'A端':[a_name],'B端':[b_name],'跳纤路径':'A端等于B端'})
+            else:
+                temp_df = dispatchOneToOne(line2Df,a_name,b_name,self.jump_num,self.dbm_num,[])
+            if temp_df.shape[0] == 0:
+                temp_df = pd.DataFrame({'A端':[a_name],'B端':[b_name],'跳纤路径':'未找到符合条件的跳纤路径'})
+            results.append(temp_df)
+            self.state_signal.emit(f'处理进度：{i+1}/{df.shape[0]}')
+        resultDf = pd.concat(results,ignore_index=True).drop_duplicates().reset_index(drop=True)
+        if resultDf.shape[0] == 0:
+            self.error_signal.emit('未找到符合条件的跳纤路径')
+        else:
+            # 评估方案得分，算法如下：
+            resultDf['最小空闲芯数得分'] =  resultDf['最小空闲芯数'].apply(lambda x: x if x<=10 else 10)
+            resultDf['方案得分'] = round(resultDf['最小空闲芯数得分']/resultDf['光衰预算'],2)
+            resultDf.drop(columns=['最小空闲芯数得分'],inplace=True)
+            resultDf = resultDf.sort_values(by=['A端','B端','方案得分'],ascending=[False,False,False])
+            best_df = resultDf.groupby(['A端','B端']).first().reset_index(drop=False)
+            dt = datetime.datetime.now().strftime('%Y%m%d%H%M')
+            file_name = self.file_path.split('/')[-1].split('.')[0]
+            out_file_name = f'结果\\{file_name}_批量需求跳纤路径{dt}.xlsx'
+            with pd.ExcelWriter(out_file_name) as writer:
+                resultDf.to_excel(writer,sheet_name='所有跳纤路径',index=False)
+                best_df.to_excel(writer,sheet_name='最优跳纤路径',index=False)
+            os.startfile(out_file_name)
+            self.state_signal.emit(f'已将结果保存至{out_file_name}')
+
+# 集中跳纤至OLT、CRAN机房的线程
+class DispatchToManyThread(QThread):
+    state_signal = Signal(str)
+    error_signal = Signal(str)
+    def __init__(self,parent=None,jump_num=5,dbm_num=14,file_path='',b_type='CRAN'):
+        super().__init__(parent)
+        self.jump_num = jump_num
+        self.dbm_num = dbm_num
+        self.file_path = file_path
+        self.b_type = b_type
+    
+    def run(self):
+        self.state_signal.emit('正在加载需求文件信息...')
+        df = pd.read_excel(self.file_path)
+        df = df.astype(str)
+        if '需求名称' not in df.columns:
+            self.error_signal.emit('需求文件格式错误，必须包含需求名称列')
+            return;
+        obds = df['需求名称'].tolist()
+        if len(obds) == 0:
+            self.error_signal.emit('需求行为空')
+            return;
+        self.state_signal.emit(f'共{len(obds)}个需求，将按500一组进行分析')
+        # 按500一组进行分组，如果最后一组不足500则为剩余值
+        obds_groups = [obds[i:i+500] for i in range(0, len(obds), 500)]
+
+        self.state_signal.emit('正在加载中继段信息...')
+        line2Df = loadLine2Df()
+        self.state_signal.emit(f'正在加载{self.b_type}机房信息...')
+        if self.b_type == 'CRAN':
+            b_df = loadCranTypeDf()
+        elif self.b_type == 'OLT':
+            b_df = loadOltTypeDf()
+        self.state_signal.emit('正在分析跳纤路由...')
+        result_dfs = []
+        start_time = time.time()
+        for i,obds_group in enumerate(obds_groups):
+            temp_df = dispatchToMany(obds_group,line2Df,b_df,self.b_type,self.jump_num,self.dbm_num)
+            result_dfs.append(temp_df)
+            # 计算预估剩余时间
+            elapsed_time = time.time() - start_time
+            avg_time_per_group = elapsed_time / (i+1)
+            remaining_groups = len(obds_groups) - (i+1)
+            estimated_time = avg_time_per_group * remaining_groups
+            self.state_signal.emit(f'已完成{i+1}/{len(obds_groups)}组光设施跳纤分析,剩余约{int(estimated_time/60)}分{int(estimated_time%60)}秒')
+        resultDf = pd.concat(result_dfs,ignore_index=True).drop_duplicates().reset_index(drop=True)
+        if resultDf.shape[0] == 0:
+            self.error_signal.emit(f'未找到符合条件的跳纤路径')
+            return;
+        resultDf['最小空闲芯数评分'] = resultDf['最小空闲芯数'].apply(lambda x: x if x<=10 else 10)
+        # 评估方案得分，算法如下：
+        resultDf['最小空闲芯数得分'] =  resultDf['最小空闲芯数'].apply(lambda x: x if x<=10 else 10)
+        resultDf['方案得分'] = round(resultDf['最小空闲芯数得分']/resultDf['光衰预算'],2)
+        resultDf.drop(columns=['最小空闲芯数得分'],inplace=True)
+        resultDf = resultDf.sort_values(by=['A端','方案得分'],ascending=[False,False])
+        best_df = resultDf.groupby(['A端']).first().reset_index(drop=False)
+        dt = datetime.datetime.now().strftime('%Y%m%d%H%M')
+        file_name = self.file_path.split('/')[-1].split('.')[0]
+        out_file_name = f'结果\\{file_name}_需求至{self.b_type}的跳纤路径{dt}.xlsx'
+
+        all_df = pd.DataFrame({'A端':obds})
+        all_df = pd.merge(all_df,resultDf,on='A端',how='left')
+        not_df = all_df[all_df['跳纤路径'].isnull()].copy()
+        not_df['跳纤路径'] = '未找到符合条件的跳纤路径'
+        self.state_signal.emit('分析完成，正在生成表格中')
+        with pd.ExcelWriter(out_file_name) as writer:
+            all_df.to_excel(writer,sheet_name='所有跳纤路径',index=False)
+            best_df.to_excel(writer,sheet_name='最优跳纤路径',index=False)
+            not_df.to_excel(writer,sheet_name='未找到跳纤路径',index=False)
+        os.startfile(out_file_name)
+        self.state_signal.emit(f'已将结果保存至{out_file_name}')

@@ -39,5 +39,8 @@
     <file>assets/database.svg</file>
     <file>assets/check.svg</file>
     <file>assets/search.svg</file>
+    <file>assets/delete.svg</file>
+    <file>assets/right.svg</file>
+    <file>assets/left.svg</file>
   </qresource>
 </RCC>

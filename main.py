@@ -31,7 +31,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
 
         # 数据库更新页面
         self.file_type_cols = [
-            'OLT网元', '主光路', 'PON端口', '中继段', '光缆段', '站点', '机房', '光交箱', '分纤箱', 'ODF', '华为PON单板','中兴PON单板'
+            'OLT网元', '主光路', 'PON端口', '中继段', '光缆段', '站点', '机房', '光交箱', '分纤箱', 'ODF', '华为PON单板','中兴PON单板','CRAN机房'
         ]
         # 数据库更新页面 列名
         self.file_cols = [
@@ -46,7 +46,8 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
             (['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','int','float','float']),
             (['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','int','float','float']),
             (['所属网元','槽位号','单板类型','单板状态'],['str','str','str','str']),
-            (['网元名称','板卡槽位','板卡类型','板卡状态'],['str','str','str','str'])
+            (['网元名称','板卡槽位','板卡类型','板卡状态'],['str','str','str','str']),
+            (['机房名称', '机房类型'],['str','str'])
         ]
 
         self.fileTypeCB.currentIndexChanged.connect(self.updateFileCols)
@@ -66,9 +67,13 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.updateDataBaseBtn.clicked.connect(self.updateDataBase)
         self.dbmsBtn.clicked.connect(self.selectPage)
         self.dbTableBtn.clicked.connect(self.searchDBTableInfo)
+
+        # 设置页面按钮事件
         self.kpiBtn.clicked.connect(self.selectPage)
         self.outsideBtn.clicked.connect(self.selectPage)
         self.insideBtn.clicked.connect(self.selectPage)
+        self.logBtn.clicked.connect(self.selectPage)
+
         self.oltKeywordLE.returnPressed.connect(self.searchOltSite)
         self.searchOltBtn.clicked.connect(self.searchOltNe)
         self.oltNeTw.cellClicked.connect(self.onOltNeTwCellClicked)
@@ -83,6 +88,21 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.searchLineBtn.clicked.connect(self.findRelayLine)
         self.lineKeysLE.returnPressed.connect(self.findRelayLine)
         self.relay_line_result_dialogs = []
+        self.devLE.returnPressed.connect(self.searchDev)
+        self.aSiteBtn.clicked.connect(self.setDevName)
+        self.bSiteBtn.clicked.connect(self.setDevName)
+        self.mustDevBtn.clicked.connect(self.setDevName)
+        self.notDevBtn.clicked.connect(self.setDevName)
+        self.delMustDevBtn.clicked.connect(self.delMustDev)
+        self.delNotDevBtn.clicked.connect(self.delNotDev)
+        self.devToRightBtn.clicked.connect(self.devToRight)
+        self.devToLeftBtn.clicked.connect(self.devToLeft)
+        dispatch_types = ['单点A-B','批量A-B','批量-OLT','批量-CRAN']
+        self.dispatchTypeCB.addItems(dispatch_types)
+        self.dispatchTypeCB.currentIndexChanged.connect(self.updateDispatchType)
+        self.dispatchBtn.clicked.connect(self.dispatchFunc)
+        self.importABsBtn.clicked.connect(self.importABsFile)
+
         # 设置首页
         page_widget = self.container.findChild(QWidget, "homePage")
         self.container.setCurrentWidget(page_widget)
@@ -102,7 +122,124 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.load_relay_line_thread.state_signal.connect(self.showStatus)
         self.load_relay_line_thread.result_signal.connect(self.loadRelayLineResult)
         self.load_relay_line_thread.start()
+        self.dev_df = pd.DataFrame()
 
+    def importABsFile(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "导入批量需求文件", "", "Excel Files (*.xlsx)")
+        if file_path:
+            self.absFileLE.setText(file_path)
+
+
+    # 跳纤开始按钮
+    def dispatchFunc(self):
+        jump_num = int(self.jumpNumSB.value())
+        dbm_num = int(self.dBmNumSB.value())
+        if self.dispatchTypeCB.currentText() == '单点A-B':
+            must_devs = [self.mustDevLW.item(i).text() for i in range(self.mustDevLW.count())]
+            not_devs = [self.notDevLW.item(i).text() for i in range(self.notDevLW.count())]
+            a_name = self.aSiteLabel.text()
+            b_name = self.bSiteLabel.text()
+            if a_name == '' or b_name == '' or a_name == b_name:
+                QMessageBox.information(self, '提示', '请先正确选择A、B端')
+                return;
+            self.dispatchABThread = DispatchABThread(a_name=a_name,b_name=b_name,jump_num=jump_num,dbm_num=dbm_num,must_devs=must_devs,not_devs=not_devs)
+            self.dispatchABThread.state_signal.connect(self.showStatus)
+            self.dispatchABThread.start()
+        elif self.dispatchTypeCB.currentText() == '批量A-B':
+            file_path = self.absFileLE.text()
+            if file_path == '':
+                QMessageBox.information(self, '提示', '请先选择批量需求文件')
+                return;
+            self.dispatchABSThread = DispatchABSThread(jump_num=jump_num,dbm_num=dbm_num,file_path=file_path)
+            self.dispatchABSThread.state_signal.connect(self.showStatus)
+            self.dispatchABSThread.error_signal.connect(self.showError)
+            self.dispatchABSThread.start()
+        else:
+            file_path = self.absFileLE.text()
+            if file_path == '':
+                QMessageBox.information(self, '提示', '请先选择批量需求文件')
+                return;
+            if self.dispatchTypeCB.currentText() == '批量-OLT':
+                b_type = 'OLT'
+            elif self.dispatchTypeCB.currentText() == '批量-CRAN':
+                b_type = 'CRAN'
+            self.dispatchToManyThread = DispatchToManyThread(jump_num=jump_num,dbm_num=dbm_num,file_path=file_path,b_type=b_type)
+            self.dispatchToManyThread.state_signal.connect(self.showStatus)
+            self.dispatchToManyThread.error_signal.connect(self.showError)
+            self.dispatchToManyThread.start()
+
+    def updateDispatchType(self):
+        if self.dispatchTypeCB.currentText() == '单点A-B':
+            QMessageBox.information(self, '提示', '请输入A、B端、必经、不经的点')
+            self.importABsBtn.setEnabled(False)
+            self.absFileLE.setText('')
+        elif self.dispatchTypeCB.currentText() == '批量A-B':
+            QMessageBox.information(self, '提示', '导入文件需包含【A端、B端】两列')
+            self.importABsBtn.setEnabled(True)
+        else:
+            QMessageBox.information(self, '提示', '导入文件需包含【需求名称】列')
+            self.importABsBtn.setEnabled(True)
+
+
+
+    def devToLeft(self):
+        # 移动选中项到左侧
+        # dev_name = self.notDevLW.currentItem().text()
+        item = self.notDevLW.takeItem(self.notDevLW.currentRow())
+        self.mustDevLW.addItem(item)
+
+    def devToRight(self):
+        # 移动选中项到右侧
+        # dev_name = self.mustDevLW.currentItem().text()
+        item = self.mustDevLW.takeItem(self.mustDevLW.currentRow())
+        self.notDevLW.addItem(item)
+
+    # 删除不经
+    def delNotDev(self):
+        # 删除选中项
+        self.notDevLW.takeItem(self.notDevLW.currentRow())
+
+    # 删除必经
+    def delMustDev(self):
+        # 删除选中项
+        self.mustDevLW.takeItem(self.mustDevLW.currentRow())
+
+    # 设置A、B端，必经，不经的点
+    def setDevName(self):
+        sender = self.sender()
+        index = self.devCB.currentIndex()
+        if self.dev_df.iloc[index]['机房名称'] != '' and self.dev_df.iloc[index]['机房名称'] != 'None':
+            dev_name = self.dev_df.iloc[index]['机房名称']
+        else:
+            dev_name = self.dev_df.iloc[index]['设施名称']
+        if sender == self.aSiteBtn:
+            self.aSiteLabel.setText(dev_name)
+        elif sender == self.bSiteBtn:
+            self.bSiteLabel.setText(dev_name)
+        elif sender == self.mustDevBtn:
+            # 判断是否已添加
+            if dev_name not in [self.mustDevLW.item(i).text() for i in range(self.mustDevLW.count())]:
+                self.mustDevLW.addItem(dev_name)
+        elif sender == self.notDevBtn:
+            # 判断是否已添加
+            if dev_name not in [self.notDevLW.item(i).text() for i in range(self.notDevLW.count())]:
+                self.notDevLW.addItem(dev_name)
+
+    # 搜索机房设施
+    def searchDev(self):
+        dev_keyword = self.devLE.text().strip()
+        if not dev_keyword:
+            QMessageBox.warning(self, '警告', '请输入机房/光交设施名称')
+            return
+        self.dev_df = searchDevFunc(dev_keyword)
+        if len(self.dev_df) == 0:
+            QMessageBox.warning(self, '警告', '未查询到光交设施')
+            return;
+        self.devCB.clear()
+        self.devCB.addItems(self.dev_df['设施名称'].tolist())
+
+
+    # 加载中继段
     def loadRelayLineResult(self,df):
         self.all_line_df = df
         self.showStatus('中继段加载完成')
@@ -550,6 +687,12 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.statusLabel.setText(f"{current_time} {state}")
         self.log_str += f"{current_time} {state}\n"
+        self.logTE.setText(self.log_str)
+        # logTE 滚动到最底部
+        self.logTE.verticalScrollBar().setValue(self.logTE.verticalScrollBar().maximum())
+
+    def showError(self,err_msg):
+        QMessageBox.critical(self, "错误", err_msg)
 
 
     def updateFileCols(self):
@@ -586,6 +729,11 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         elif self.sender() == self.insideBtn:
             page_widget = self.container.findChild(QWidget, "insidePage")
             self.container.setCurrentWidget(page_widget)
+        elif self.sender() == self.logBtn:
+            page_widget = self.container.findChild(QWidget, "logPage")
+            self.container.setCurrentWidget(page_widget)
+
+
 
     def closeWindow(self):
         self.close()

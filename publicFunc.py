@@ -12,7 +12,7 @@ import re
 
 line2TableCols = ['中继段名称','A端','B端','长度','纤芯总数','空闲芯数']
 dispatchOneToManyCols = ['A端','B端','最小空闲芯数','跳纤距离','跳数','光衰预算','跳纤路径','B端类型']
-
+dispatchOneToOneCols = ['A端','B端','最小空闲芯数','跳纤距离','跳数','光衰预算','跳纤路径']
 
 # 读取光设施的清单
 def readDevs():
@@ -28,21 +28,45 @@ def readDevs():
         ) as dev
     '''
     all_dev = queryDataBase(sql)
+    sql = '''
+        SELECT 
+            f.设施名称,
+            f.机房名称,
+            f.所属综合业务区
+        FROM 分纤箱 f
+        INNER JOIN 主光路 g
+            ON g.OBD所属对象 = f.设施名称
+        WHERE f.容量 < 72;
+    '''
+    oBox_df = queryDataBase(sql)
+    all_dev = pd.concat([all_dev,oBox_df],axis=0)
     return all_dev
 
 
 
-# 分析跳纤至OLT的路径
-def dispatchToOlt(obds,line_df):
+# 分析跳纤至OLT、CRAN机房的跳纤方案路径
+#  ['A端','B端','最小空闲芯数','跳纤距离','跳数','光衰预算','跳纤路径','B端类型']
+def dispatchToMany(obds,line_df,type_df,b_type='OLT',max_jump=6,max_dbm=9):
+    # 匹配跳纤至B端类型为b_type的跳纤清单
+    line_df = line_df.merge(type_df,how='left',on='B端')
+
     siteDf = pd.DataFrame({'第1跳':obds,'跳纤路径':obds})
+    resultDf = siteDf.merge(type_df,left_on='第1跳',right_on='B端')
+    resultDf = resultDf.rename(columns={'第1跳':'A端'})
+    resultDf['最小空闲芯数'] = 300
+    resultDf['跳纤距离'] = 0.01
+    resultDf['跳数'] = 1
+    resultDf['光衰预算'] = 1
+    resultDf['B端类型'] = b_type
+
     siteDf['最小空闲芯数'] = 300
     siteDf['跳纤距离'] = 0
     # 修改初始OBD算1跳
     siteDf['跳数'] = 1
     siteDf['光衰预算'] = 0
-    resultDf = pd.DataFrame()
+
     #6条内达到 B站点的 全部路径,待修正跳数        
-    for num in range(1,7):
+    for num in range(1,max_jump+1):
         step = '第' + str(num) + '跳'
         siteDf.rename(columns={step:'A端'},inplace=True)
         siteDf = siteDf.merge(line_df,on='A端')
@@ -65,7 +89,7 @@ def dispatchToOlt(obds,line_df):
             siteDf['跳数'] = siteDf['跳数'] + 1
             siteDf['光衰预算'] = round(siteDf['跳纤距离'] * 0.35 + siteDf['跳数'] * 1,2)  # 按跳纤距离0.35dB 1跳 1dB估算
             # siteDf.to_csv(f'test{num}.csv',encoding='ANSI')
-            siteDf = siteDf[siteDf['光衰预算'] < 9]
+            siteDf = siteDf[siteDf['光衰预算'] < max_dbm]
             if siteDf.shape[0] ==0:
                 resultDf = resultDf.reset_index()
                 if resultDf.shape[0] >0:
@@ -87,12 +111,12 @@ def dispatchToOlt(obds,line_df):
             #按光功率排序
             siteDf.sort_values(by=['光衰预算'],ascending=[True],inplace=True)
 
-            tempResultDf = siteDf[siteDf['B端类型'] == 'OLT'].copy()
+            tempResultDf = siteDf[siteDf['B端类型'] == b_type].copy()
             if tempResultDf.shape[0] > 0:
                 tempResultDf.rename(columns={'第1跳':'A端',nextStep:'B端'},inplace=True)
                 tempResultDf = tempResultDf[dispatchOneToManyCols]
                 resultDf = pd.concat([resultDf,tempResultDf])
-            siteDf = siteDf[siteDf['B端类型'] != 'OLT']
+            siteDf = siteDf[siteDf['B端类型'] != b_type]
             #删除B端类型这一列
             siteDf = siteDf.drop(['B端类型'],axis=1)
             if siteDf.shape[0] == 0:
@@ -100,6 +124,76 @@ def dispatchToOlt(obds,line_df):
     resultDf = resultDf.reset_index()
     if resultDf.shape[0] >0:
         resultDf = resultDf[dispatchOneToManyCols]
+    return resultDf
+
+def dispatchOneToOne(line_df,a_name,b_name,max_jump=5,max_dbm=14,not_devs=[]):
+    siteDf = pd.DataFrame({'第1跳':[a_name],'跳纤路径':[a_name]})
+    siteDf['最小空闲芯数'] = 300
+    siteDf['跳纤距离'] = 0
+    # 修改初始OBD算1跳
+    siteDf['跳数'] = 1
+    siteDf['光衰预算'] = 0
+    resultDf = pd.DataFrame()
+    #6条内达到 B站点的 全部路径,待修正跳数        
+    for num in range(1,max_jump+1):
+        step = '第' + str(num) + '跳'
+        siteDf.rename(columns={step:'A端'},inplace=True)
+        siteDf = siteDf.merge(line_df,on='A端')
+        if siteDf.shape[0] == 0:
+            return resultDf
+        else:
+            nextStep = '第' + str(num+1) + '跳'
+            lineName = '中继段' + str(num)
+            leftName = '空闲芯数' + str(num)
+            numName = '纤芯总数' + str(num)
+            lenName = '长度' + str(num)
+            siteDf.rename(columns={'A端':step,'B端':nextStep,'中继段名称':lineName,'空闲芯数':leftName,\
+                '纤芯总数':numName,'长度':lenName},inplace=True)
+            #杜绝跳纤回原来跳纤已经过站点
+            for j in range(1,num):
+                upStep = '第' + str(num-j) + '跳'
+                siteDf = siteDf[siteDf[upStep] != siteDf[nextStep]]
+            # 删除不经设备的行：
+            if not_devs:
+                for dev in not_devs:
+                    siteDf = siteDf[siteDf[nextStep] != dev]   
+            #结算跳纤距离，跳数，光衰预算
+            siteDf['跳纤距离'] = round(siteDf['跳纤距离'] + siteDf[lenName],2)
+            siteDf['跳数'] = siteDf['跳数'] + 1
+            siteDf['光衰预算'] = round(siteDf['跳纤距离'] * 0.35 + siteDf['跳数'] * 1,2)  # 按跳纤距离0.35dB 1跳 1dB估算
+            siteDf = siteDf[siteDf['光衰预算'] < max_dbm]
+
+            if siteDf.shape[0] ==0:
+                resultDf = resultDf.reset_index(drop=True)
+                if resultDf.shape[0] >0:
+                    resultDf = resultDf[dispatchOneToOneCols]
+                return resultDf
+            #计算空闲纤芯
+            siteDf['最小空闲芯数'] = CompareMin(siteDf[leftName],siteDf['最小空闲芯数'])                
+            #统计跳纤路径
+            siteDf = siteDf.astype({'最小空闲芯数':'str',numName:'str',leftName:'str'})
+            siteDf['跳纤路径'] = siteDf['跳纤路径'] + '<={' + siteDf[lineName] + '}(' + siteDf[leftName] + '/' + siteDf[numName] +')=>' + siteDf[nextStep]
+            siteDf = siteDf.astype({'最小空闲芯数':'int',numName:'int',leftName:'int'})
+                            
+            #保存跳纤结果
+            #处理siteDf,只保留 每组A-最后纤芯最多的5项
+            siteDf.sort_values(by=['第1跳',nextStep,'最小空闲芯数',leftName],ascending=[False,False,False,False],inplace=True)
+            siteDf = siteDf.groupby(['第1跳',nextStep]).head()
+            
+            #按光功率排序
+            siteDf.sort_values(by=['光衰预算'],ascending=[True],inplace=True)
+
+            tempResultDf = siteDf[siteDf[nextStep] == b_name].copy()
+            if tempResultDf.shape[0] > 0:
+                tempResultDf.rename(columns={'第1跳':'A端',nextStep:'B端'},inplace=True)
+                tempResultDf = tempResultDf[dispatchOneToOneCols]
+                resultDf = pd.concat([resultDf,tempResultDf])
+            siteDf = siteDf[siteDf[nextStep] != b_name]
+            if siteDf.shape[0] == 0:
+                break
+    resultDf = resultDf.reset_index(drop=True)
+    if resultDf.shape[0] >0:
+        resultDf = resultDf[dispatchOneToOneCols]
     return resultDf
 
 def selectBestPath(df):
@@ -162,16 +256,30 @@ def loadLine2Df():
     line2Df['纤芯总数'] = line2Df['纤芯总数'].astype('int16')
     line2Df = line2Df[line2Df['纤芯总数']>1]
     line2Df['空闲芯数'] = line2Df['空闲芯数'].astype('int16')
+    return line2Df
+
+def loadOltTypeDf():
+    conn = sqlite3.connect('data/transportNetwork.db')
     sql = '''
     SELECT  所属机房 as B端
     FROM OLT网元
     WHERE 生命周期状态 == '现网有业务' OR 生命周期状态 == '现网无业务' OR 生命周期状态 == '工程有业务'
     '''
-    oltDf = pd.read_sql_query(sql,conn)
+    oltDf = pd.read_sql_query(sql,conn).drop_duplicates()
     conn.close()
     oltDf['B端类型'] = 'OLT'
-    line2Df = line2Df.merge(oltDf,how='left',on='B端')
-    return line2Df
+    return oltDf
+
+def loadCranTypeDf():
+    conn = sqlite3.connect('data/transportNetwork.db')
+    sql = '''
+    SELECT  机房名称 as B端
+    FROM CRAN机房
+    '''
+    cran_df = pd.read_sql_query(sql,conn).drop_duplicates()
+    conn.close()
+    cran_df['B端类型'] = 'CRAN'
+    return cran_df
 
 
 """写文件"""
@@ -397,6 +505,24 @@ def searchOdevNameFunc(keyword):
     query = f"SELECT * FROM 箱体上联OLT跳纤路径表 WHERE {conditions}"
     df = queryDataBase(query)
     return df['设施名称'].unique()
+
+
+def searchDevFunc(keyword):
+    keys = keyword.split(' ')
+    conditions = " AND ".join([f"设施名称 LIKE '%{key}%'" for key in keys])
+    query = '''
+        SELECT dev.设施名称, dev.机房名称
+        FROM (      
+            SELECT 机房名称 as 设施名称,机房名称 FROM 机房
+            UNION ALL
+            SELECT 设施名称,机房名称 FROM 光交箱
+            UNION ALL
+            SELECT 设施名称,机房名称 FROM 分纤箱
+        ) as dev
+    ''' + f"WHERE {conditions}"
+    df = queryDataBase(query).astype(str).drop_duplicates().reset_index(drop=True)
+    return df
+
 
 def searchOdevUplinkFunc(odev_name):
     # 搜索光交设施上联路径

@@ -17,10 +17,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
     QPalette, QPixmap, QRadialGradient, QTransform)
 from PySide6.QtWidgets import (QApplication, QCheckBox, QComboBox, QFrame,
     QGridLayout, QHBoxLayout, QHeaderView, QLabel,
-    QLineEdit, QMainWindow, QProgressBar, QPushButton,
-    QSizePolicy, QSpacerItem, QSpinBox, QStackedWidget,
-    QTabWidget, QTableWidget, QTableWidgetItem, QTextEdit,
-    QVBoxLayout, QWidget)
+    QLineEdit, QListWidget, QListWidgetItem, QMainWindow,
+    QProgressBar, QPushButton, QSizePolicy, QSpacerItem,
+    QSpinBox, QStackedWidget, QTabWidget, QTableWidget,
+    QTableWidgetItem, QTextEdit, QVBoxLayout, QWidget)
 
 from customnWidget import (OltBoardView, PieChartView, TopologyView)
 import resources_rc
@@ -2360,9 +2360,10 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.oDevPage, "")
         self.linePage = QWidget()
         self.linePage.setObjectName(u"linePage")
+        self.verticalLayout_30 = QVBoxLayout(self.linePage)
+        self.verticalLayout_30.setObjectName(u"verticalLayout_30")
         self.frame_27 = QFrame(self.linePage)
         self.frame_27.setObjectName(u"frame_27")
-        self.frame_27.setGeometry(QRect(9, 9, 407, 48))
         self.frame_27.setFrameShape(QFrame.StyledPanel)
         self.frame_27.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_26 = QHBoxLayout(self.frame_27)
@@ -2435,6 +2436,623 @@ class Ui_MainWindow(object):
         self.searchLineBtn.setIcon(icon16)
 
         self.horizontalLayout_26.addWidget(self.searchLineBtn)
+
+
+        self.verticalLayout_30.addWidget(self.frame_27)
+
+        self.frame_7 = QFrame(self.linePage)
+        self.frame_7.setObjectName(u"frame_7")
+        self.frame_7.setFrameShape(QFrame.StyledPanel)
+        self.frame_7.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_12 = QHBoxLayout(self.frame_7)
+        self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
+        self.devLE = QLineEdit(self.frame_7)
+        self.devLE.setObjectName(u"devLE")
+        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy9.setHorizontalStretch(0)
+        sizePolicy9.setVerticalStretch(0)
+        sizePolicy9.setHeightForWidth(self.devLE.sizePolicy().hasHeightForWidth())
+        self.devLE.setSizePolicy(sizePolicy9)
+        self.devLE.setMinimumSize(QSize(150, 30))
+        self.devLE.setMaximumSize(QSize(150, 30))
+        self.devLE.setStyleSheet(u"QLineEdit {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 5px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"")
+
+        self.horizontalLayout_12.addWidget(self.devLE)
+
+        self.devCB = QComboBox(self.frame_7)
+        self.devCB.setObjectName(u"devCB")
+        self.devCB.setMinimumSize(QSize(0, 30))
+        self.devCB.setMaximumSize(QSize(16777215, 30))
+        self.devCB.setStyleSheet(u"QComboBox {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 5px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border: 1px solid #55dd99;\n"
+"}\n"
+"\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    selection-background-color: rgba(68, 204, 136, 0.3);\n"
+"}")
+
+        self.horizontalLayout_12.addWidget(self.devCB)
+
+        self.aSiteBtn = QPushButton(self.frame_7)
+        self.aSiteBtn.setObjectName(u"aSiteBtn")
+        sizePolicy9.setHeightForWidth(self.aSiteBtn.sizePolicy().hasHeightForWidth())
+        self.aSiteBtn.setSizePolicy(sizePolicy9)
+        self.aSiteBtn.setMinimumSize(QSize(100, 30))
+        self.aSiteBtn.setMaximumSize(QSize(100, 30))
+        self.aSiteBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+
+        self.horizontalLayout_12.addWidget(self.aSiteBtn)
+
+        self.bSiteBtn = QPushButton(self.frame_7)
+        self.bSiteBtn.setObjectName(u"bSiteBtn")
+        self.bSiteBtn.setMinimumSize(QSize(100, 30))
+        self.bSiteBtn.setMaximumSize(QSize(100, 30))
+        self.bSiteBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+
+        self.horizontalLayout_12.addWidget(self.bSiteBtn)
+
+        self.mustDevBtn = QPushButton(self.frame_7)
+        self.mustDevBtn.setObjectName(u"mustDevBtn")
+        self.mustDevBtn.setMinimumSize(QSize(100, 30))
+        self.mustDevBtn.setMaximumSize(QSize(100, 30))
+        self.mustDevBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+
+        self.horizontalLayout_12.addWidget(self.mustDevBtn)
+
+        self.notDevBtn = QPushButton(self.frame_7)
+        self.notDevBtn.setObjectName(u"notDevBtn")
+        self.notDevBtn.setMinimumSize(QSize(100, 30))
+        self.notDevBtn.setMaximumSize(QSize(100, 30))
+        self.notDevBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+
+        self.horizontalLayout_12.addWidget(self.notDevBtn)
+
+
+        self.verticalLayout_30.addWidget(self.frame_7)
+
+        self.frame_29 = QFrame(self.linePage)
+        self.frame_29.setObjectName(u"frame_29")
+        self.frame_29.setFrameShape(QFrame.StyledPanel)
+        self.frame_29.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_17 = QHBoxLayout(self.frame_29)
+        self.horizontalLayout_17.setObjectName(u"horizontalLayout_17")
+        self.label_15 = QLabel(self.frame_29)
+        self.label_15.setObjectName(u"label_15")
+        self.label_15.setMinimumSize(QSize(50, 30))
+        self.label_15.setMaximumSize(QSize(50, 30))
+        self.label_15.setStyleSheet(u"QLabel {\n"
+"    background-color: #44cc88;  /* \u7eff\u8272\u80cc\u666f */\n"
+"    color: white;  /* \u767d\u8272\u6587\u5b57 */\n"
+"    padding: 5px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"    border: 1px solid white;\n"
+"    border-radius: 10px;\n"
+"}")
+        self.label_15.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_17.addWidget(self.label_15)
+
+        self.aSiteLabel = QLabel(self.frame_29)
+        self.aSiteLabel.setObjectName(u"aSiteLabel")
+        sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy10.setHorizontalStretch(0)
+        sizePolicy10.setVerticalStretch(0)
+        sizePolicy10.setHeightForWidth(self.aSiteLabel.sizePolicy().hasHeightForWidth())
+        self.aSiteLabel.setSizePolicy(sizePolicy10)
+        self.aSiteLabel.setMinimumSize(QSize(250, 30))
+        self.aSiteLabel.setMaximumSize(QSize(250, 30))
+        self.aSiteLabel.setStyleSheet(u"QLabel {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    padding: 5px;\n"
+"    font-size: 12px;\n"
+"    font-weight: bold;\n"
+"    border-radius: 10px;\n"
+"}")
+
+        self.horizontalLayout_17.addWidget(self.aSiteLabel)
+
+        self.label_17 = QLabel(self.frame_29)
+        self.label_17.setObjectName(u"label_17")
+        self.label_17.setMinimumSize(QSize(50, 30))
+        self.label_17.setMaximumSize(QSize(50, 30))
+        self.label_17.setStyleSheet(u"QLabel {\n"
+"    background-color: #44cc88;  /* \u7eff\u8272\u80cc\u666f */\n"
+"    color: white;  /* \u767d\u8272\u6587\u5b57 */\n"
+"    padding: 5px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"    border: 1px solid white;\n"
+"    border-radius: 10px;\n"
+"}")
+        self.label_17.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_17.addWidget(self.label_17)
+
+        self.bSiteLabel = QLabel(self.frame_29)
+        self.bSiteLabel.setObjectName(u"bSiteLabel")
+        sizePolicy10.setHeightForWidth(self.bSiteLabel.sizePolicy().hasHeightForWidth())
+        self.bSiteLabel.setSizePolicy(sizePolicy10)
+        self.bSiteLabel.setMinimumSize(QSize(250, 30))
+        self.bSiteLabel.setMaximumSize(QSize(250, 30))
+        self.bSiteLabel.setStyleSheet(u"QLabel {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    padding: 5px;\n"
+"    font-size: 12px;\n"
+"    font-weight: bold;\n"
+"    border-radius: 10px;\n"
+"}")
+
+        self.horizontalLayout_17.addWidget(self.bSiteLabel)
+
+        self.label_41 = QLabel(self.frame_29)
+        self.label_41.setObjectName(u"label_41")
+        self.label_41.setMinimumSize(QSize(50, 30))
+        self.label_41.setMaximumSize(QSize(50, 30))
+        self.label_41.setStyleSheet(u"QLabel {\n"
+"    background-color: #44cc88;  /* \u7eff\u8272\u80cc\u666f */\n"
+"    color: white;  /* \u767d\u8272\u6587\u5b57 */\n"
+"    padding: 5px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"    border: 1px solid white;\n"
+"    border-radius: 10px;\n"
+"}")
+        self.label_41.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_17.addWidget(self.label_41)
+
+        self.jumpNumSB = QSpinBox(self.frame_29)
+        self.jumpNumSB.setObjectName(u"jumpNumSB")
+        self.jumpNumSB.setMinimumSize(QSize(55, 30))
+        self.jumpNumSB.setMaximumSize(QSize(55, 30))
+        self.jumpNumSB.setStyleSheet(u"QSpinBox {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 5px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"")
+        self.jumpNumSB.setMinimum(3)
+        self.jumpNumSB.setMaximum(8)
+        self.jumpNumSB.setValue(5)
+
+        self.horizontalLayout_17.addWidget(self.jumpNumSB)
+
+        self.label_42 = QLabel(self.frame_29)
+        self.label_42.setObjectName(u"label_42")
+        self.label_42.setMinimumSize(QSize(50, 30))
+        self.label_42.setMaximumSize(QSize(50, 30))
+        self.label_42.setStyleSheet(u"QLabel {\n"
+"    background-color: #44cc88;  /* \u7eff\u8272\u80cc\u666f */\n"
+"    color: white;  /* \u767d\u8272\u6587\u5b57 */\n"
+"    padding: 5px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"    border: 1px solid white;\n"
+"    border-radius: 10px;\n"
+"}")
+        self.label_42.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_17.addWidget(self.label_42)
+
+        self.dBmNumSB = QSpinBox(self.frame_29)
+        self.dBmNumSB.setObjectName(u"dBmNumSB")
+        self.dBmNumSB.setMinimumSize(QSize(55, 30))
+        self.dBmNumSB.setMaximumSize(QSize(55, 30))
+        self.dBmNumSB.setStyleSheet(u"QSpinBox {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 5px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"")
+        self.dBmNumSB.setMinimum(6)
+        self.dBmNumSB.setMaximum(21)
+        self.dBmNumSB.setSingleStep(1)
+        self.dBmNumSB.setValue(14)
+
+        self.horizontalLayout_17.addWidget(self.dBmNumSB)
+
+
+        self.verticalLayout_30.addWidget(self.frame_29)
+
+        self.horizontalLayout_29 = QHBoxLayout()
+        self.horizontalLayout_29.setObjectName(u"horizontalLayout_29")
+        self.frame_14 = QFrame(self.linePage)
+        self.frame_14.setObjectName(u"frame_14")
+        self.frame_14.setFrameShape(QFrame.StyledPanel)
+        self.frame_14.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_27 = QVBoxLayout(self.frame_14)
+        self.verticalLayout_27.setObjectName(u"verticalLayout_27")
+        self.label_45 = QLabel(self.frame_14)
+        self.label_45.setObjectName(u"label_45")
+        sizePolicy6.setHeightForWidth(self.label_45.sizePolicy().hasHeightForWidth())
+        self.label_45.setSizePolicy(sizePolicy6)
+        self.label_45.setMinimumSize(QSize(0, 30))
+        self.label_45.setMaximumSize(QSize(16777215, 30))
+        self.label_45.setStyleSheet(u"QLabel {\n"
+"    background-color: #44cc88;  /* \u7eff\u8272\u80cc\u666f */\n"
+"    color: white;  /* \u767d\u8272\u6587\u5b57 */\n"
+"    padding: 5px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"    border: 1px solid white;\n"
+"    border-radius: 10px;\n"
+"}")
+        self.label_45.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_27.addWidget(self.label_45)
+
+        self.mustDevLW = QListWidget(self.frame_14)
+        self.mustDevLW.setObjectName(u"mustDevLW")
+        self.mustDevLW.setStyleSheet(u"QListWidget {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"        color: #44cc88;\n"
+"        gridline-color: #44cc88;\n"
+"        border: 1px solid #44cc88;\n"
+"    }\n"
+"    \n"
+"    QListWidget::item {\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"    }\n"
+"    \n"
+"    QListWidget::item:selected {\n"
+"        background-color: #44cc88;\n"
+"        color: rgba(28, 33, 44, 255);\n"
+"    }\n"
+"    ")
+
+        self.verticalLayout_27.addWidget(self.mustDevLW)
+
+
+        self.horizontalLayout_29.addWidget(self.frame_14)
+
+        self.frame_17 = QFrame(self.linePage)
+        self.frame_17.setObjectName(u"frame_17")
+        self.frame_17.setFrameShape(QFrame.StyledPanel)
+        self.frame_17.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_28 = QVBoxLayout(self.frame_17)
+        self.verticalLayout_28.setObjectName(u"verticalLayout_28")
+        self.label_46 = QLabel(self.frame_17)
+        self.label_46.setObjectName(u"label_46")
+        sizePolicy6.setHeightForWidth(self.label_46.sizePolicy().hasHeightForWidth())
+        self.label_46.setSizePolicy(sizePolicy6)
+        self.label_46.setMinimumSize(QSize(0, 30))
+        self.label_46.setMaximumSize(QSize(16777215, 30))
+        self.label_46.setStyleSheet(u"QLabel {\n"
+"    background-color: #44cc88;  /* \u7eff\u8272\u80cc\u666f */\n"
+"    color: white;  /* \u767d\u8272\u6587\u5b57 */\n"
+"    padding: 5px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"    border: 1px solid white;\n"
+"    border-radius: 10px;\n"
+"}")
+        self.label_46.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_28.addWidget(self.label_46)
+
+        self.notDevLW = QListWidget(self.frame_17)
+        self.notDevLW.setObjectName(u"notDevLW")
+        self.notDevLW.setStyleSheet(u"QListWidget {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"        color: #44cc88;\n"
+"        gridline-color: #44cc88;\n"
+"        border: 1px solid #44cc88;\n"
+"    }\n"
+"    \n"
+"    QListWidget::item {\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"    }\n"
+"    \n"
+"    QListWidget::item:selected {\n"
+"        background-color: #44cc88;\n"
+"        color: rgba(28, 33, 44, 255);\n"
+"    }\n"
+"    ")
+
+        self.verticalLayout_28.addWidget(self.notDevLW)
+
+
+        self.horizontalLayout_29.addWidget(self.frame_17)
+
+        self.frame_30 = QFrame(self.linePage)
+        self.frame_30.setObjectName(u"frame_30")
+        self.verticalLayout_29 = QVBoxLayout(self.frame_30)
+        self.verticalLayout_29.setObjectName(u"verticalLayout_29")
+        self.delMustDevBtn = QPushButton(self.frame_30)
+        self.delMustDevBtn.setObjectName(u"delMustDevBtn")
+        self.delMustDevBtn.setMinimumSize(QSize(100, 30))
+        self.delMustDevBtn.setMaximumSize(QSize(100, 30))
+        self.delMustDevBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        icon17 = QIcon()
+        icon17.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.delMustDevBtn.setIcon(icon17)
+
+        self.verticalLayout_29.addWidget(self.delMustDevBtn)
+
+        self.delNotDevBtn = QPushButton(self.frame_30)
+        self.delNotDevBtn.setObjectName(u"delNotDevBtn")
+        self.delNotDevBtn.setMinimumSize(QSize(100, 30))
+        self.delNotDevBtn.setMaximumSize(QSize(100, 30))
+        self.delNotDevBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        self.delNotDevBtn.setIcon(icon17)
+
+        self.verticalLayout_29.addWidget(self.delNotDevBtn)
+
+        self.devToLeftBtn = QPushButton(self.frame_30)
+        self.devToLeftBtn.setObjectName(u"devToLeftBtn")
+        self.devToLeftBtn.setMinimumSize(QSize(100, 30))
+        self.devToLeftBtn.setMaximumSize(QSize(100, 30))
+        self.devToLeftBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        icon18 = QIcon()
+        icon18.addFile(u":/icons/assets/left.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.devToLeftBtn.setIcon(icon18)
+
+        self.verticalLayout_29.addWidget(self.devToLeftBtn)
+
+        self.devToRightBtn = QPushButton(self.frame_30)
+        self.devToRightBtn.setObjectName(u"devToRightBtn")
+        self.devToRightBtn.setMinimumSize(QSize(100, 30))
+        self.devToRightBtn.setMaximumSize(QSize(100, 30))
+        self.devToRightBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        icon19 = QIcon()
+        icon19.addFile(u":/icons/assets/right.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.devToRightBtn.setIcon(icon19)
+
+        self.verticalLayout_29.addWidget(self.devToRightBtn)
+
+
+        self.horizontalLayout_29.addWidget(self.frame_30)
+
+
+        self.verticalLayout_30.addLayout(self.horizontalLayout_29)
+
+        self.frame_20 = QFrame(self.linePage)
+        self.frame_20.setObjectName(u"frame_20")
+        self.frame_20.setFrameShape(QFrame.StyledPanel)
+        self.frame_20.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_19 = QHBoxLayout(self.frame_20)
+        self.horizontalLayout_19.setObjectName(u"horizontalLayout_19")
+        self.dispatchTypeCB = QComboBox(self.frame_20)
+        self.dispatchTypeCB.setObjectName(u"dispatchTypeCB")
+        sizePolicy9.setHeightForWidth(self.dispatchTypeCB.sizePolicy().hasHeightForWidth())
+        self.dispatchTypeCB.setSizePolicy(sizePolicy9)
+        self.dispatchTypeCB.setMinimumSize(QSize(150, 30))
+        self.dispatchTypeCB.setMaximumSize(QSize(150, 30))
+        self.dispatchTypeCB.setStyleSheet(u"QComboBox {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 5px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border: 1px solid #55dd99;\n"
+"}\n"
+"\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    selection-background-color: rgba(68, 204, 136, 0.3);\n"
+"}")
+
+        self.horizontalLayout_19.addWidget(self.dispatchTypeCB)
+
+        self.importABsBtn = QPushButton(self.frame_20)
+        self.importABsBtn.setObjectName(u"importABsBtn")
+        self.importABsBtn.setEnabled(False)
+        sizePolicy2.setHeightForWidth(self.importABsBtn.sizePolicy().hasHeightForWidth())
+        self.importABsBtn.setSizePolicy(sizePolicy2)
+        self.importABsBtn.setMinimumSize(QSize(100, 30))
+        self.importABsBtn.setMaximumSize(QSize(100, 30))
+        self.importABsBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        icon20 = QIcon()
+        icon20.addFile(u":/icons/assets/file.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.importABsBtn.setIcon(icon20)
+
+        self.horizontalLayout_19.addWidget(self.importABsBtn)
+
+        self.absFileLE = QLineEdit(self.frame_20)
+        self.absFileLE.setObjectName(u"absFileLE")
+        self.absFileLE.setStyleSheet(u"QLineEdit {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 5px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"")
+        self.absFileLE.setReadOnly(True)
+
+        self.horizontalLayout_19.addWidget(self.absFileLE)
+
+        self.dispatchBtn = QPushButton(self.frame_20)
+        self.dispatchBtn.setObjectName(u"dispatchBtn")
+        sizePolicy2.setHeightForWidth(self.dispatchBtn.sizePolicy().hasHeightForWidth())
+        self.dispatchBtn.setSizePolicy(sizePolicy2)
+        self.dispatchBtn.setMinimumSize(QSize(100, 30))
+        self.dispatchBtn.setMaximumSize(QSize(100, 30))
+        self.dispatchBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        icon21 = QIcon()
+        icon21.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.dispatchBtn.setIcon(icon21)
+
+        self.horizontalLayout_19.addWidget(self.dispatchBtn)
+
+
+        self.verticalLayout_30.addWidget(self.frame_20)
 
         self.tabWidget.addTab(self.linePage, "")
 
@@ -2524,11 +3142,8 @@ class Ui_MainWindow(object):
 
         self.searchOltBtn = QPushButton(self.frame_24)
         self.searchOltBtn.setObjectName(u"searchOltBtn")
-        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
-        sizePolicy9.setHorizontalStretch(0)
-        sizePolicy9.setVerticalStretch(0)
-        sizePolicy9.setHeightForWidth(self.searchOltBtn.sizePolicy().hasHeightForWidth())
-        self.searchOltBtn.setSizePolicy(sizePolicy9)
+        sizePolicy10.setHeightForWidth(self.searchOltBtn.sizePolicy().hasHeightForWidth())
+        self.searchOltBtn.setSizePolicy(sizePolicy10)
         self.searchOltBtn.setMinimumSize(QSize(100, 30))
         self.searchOltBtn.setMaximumSize(QSize(100, 30))
         self.searchOltBtn.setStyleSheet(u"QPushButton {\n"
@@ -2720,6 +3335,280 @@ class Ui_MainWindow(object):
         self.verticalLayout_26.addWidget(self.frame_26)
 
         self.container.addWidget(self.insidePage)
+        self.logPage = QWidget()
+        self.logPage.setObjectName(u"logPage")
+        self.verticalLayout_31 = QVBoxLayout(self.logPage)
+        self.verticalLayout_31.setObjectName(u"verticalLayout_31")
+        self.verticalLayout_31.setContentsMargins(-1, -1, 20, -1)
+        self.label_43 = QLabel(self.logPage)
+        self.label_43.setObjectName(u"label_43")
+        self.label_43.setStyleSheet(u"QLabel {\n"
+"    background-color: #44cc88;  /* \u7eff\u8272\u80cc\u666f */\n"
+"    color: white;  /* \u767d\u8272\u6587\u5b57 */\n"
+"    padding: 5px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"    border: 1px solid white;\n"
+"    border-radius: 10px;\n"
+"}")
+        self.label_43.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_31.addWidget(self.label_43)
+
+        self.logTE = QTextEdit(self.logPage)
+        self.logTE.setObjectName(u"logTE")
+        self.logTE.setStyleSheet(u"QTextEdit {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"        color: #44cc88;\n"
+"        border: 1px solid #44cc88;\n"
+"        border-radius: 5px;\n"
+"        padding: 5px;\n"
+"        font-size: 12px;\n"
+"    }\n"
+"    \n"
+"    QTextEdit:focus {\n"
+"        border: 2px solid #44cc88;\n"
+"    }\n"
+"    \n"
+"    QScrollBar:vertical {\n"
+"        background: rgba(28, 33, 44, 255);\n"
+"        width: 10px;\n"
+"    }\n"
+"    \n"
+"    QScrollBar::handle:vertical {\n"
+"        background: #44cc88;\n"
+"        min-height: 20px;\n"
+"    }")
+
+        self.verticalLayout_31.addWidget(self.logTE)
+
+        self.container.addWidget(self.logPage)
+        self.toolPage = QWidget()
+        self.toolPage.setObjectName(u"toolPage")
+        self.verticalLayout_32 = QVBoxLayout(self.toolPage)
+        self.verticalLayout_32.setObjectName(u"verticalLayout_32")
+        self.frame_32 = QFrame(self.toolPage)
+        self.frame_32.setObjectName(u"frame_32")
+        self.frame_32.setMinimumSize(QSize(0, 60))
+        self.frame_32.setMaximumSize(QSize(16777215, 60))
+        self.frame_32.setFrameShape(QFrame.StyledPanel)
+        self.frame_32.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_30 = QHBoxLayout(self.frame_32)
+        self.horizontalLayout_30.setObjectName(u"horizontalLayout_30")
+        self.label_44 = QLabel(self.frame_32)
+        self.label_44.setObjectName(u"label_44")
+        self.label_44.setMinimumSize(QSize(300, 0))
+        self.label_44.setMaximumSize(QSize(300, 16777215))
+        self.label_44.setStyleSheet(u"QLabel {\n"
+"    background-color: #44cc88;  /* \u7eff\u8272\u80cc\u666f */\n"
+"    color: white;  /* \u767d\u8272\u6587\u5b57 */\n"
+"    padding: 5px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"    border: 1px solid white;\n"
+"    border-radius: 10px;\n"
+"}")
+        self.label_44.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_30.addWidget(self.label_44)
+
+
+        self.verticalLayout_32.addWidget(self.frame_32)
+
+        self.frame_31 = QFrame(self.toolPage)
+        self.frame_31.setObjectName(u"frame_31")
+        self.frame_31.setFrameShape(QFrame.StyledPanel)
+        self.frame_31.setFrameShadow(QFrame.Raised)
+        self.gridLayout_2 = QGridLayout(self.frame_31)
+        self.gridLayout_2.setObjectName(u"gridLayout_2")
+        self.writeAggrHouseBtn_2 = QPushButton(self.frame_31)
+        self.writeAggrHouseBtn_2.setObjectName(u"writeAggrHouseBtn_2")
+        sizePolicy2.setHeightForWidth(self.writeAggrHouseBtn_2.sizePolicy().hasHeightForWidth())
+        self.writeAggrHouseBtn_2.setSizePolicy(sizePolicy2)
+        self.writeAggrHouseBtn_2.setMinimumSize(QSize(100, 100))
+        self.writeAggrHouseBtn_2.setMaximumSize(QSize(100, 100))
+        self.writeAggrHouseBtn_2.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_2.addWidget(self.writeAggrHouseBtn_2, 0, 0, 1, 1)
+
+        self.redOltPortSiteBtn_2 = QPushButton(self.frame_31)
+        self.redOltPortSiteBtn_2.setObjectName(u"redOltPortSiteBtn_2")
+        sizePolicy2.setHeightForWidth(self.redOltPortSiteBtn_2.sizePolicy().hasHeightForWidth())
+        self.redOltPortSiteBtn_2.setSizePolicy(sizePolicy2)
+        self.redOltPortSiteBtn_2.setMinimumSize(QSize(100, 100))
+        self.redOltPortSiteBtn_2.setMaximumSize(QSize(100, 100))
+        self.redOltPortSiteBtn_2.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_2.addWidget(self.redOltPortSiteBtn_2, 0, 1, 1, 1)
+
+        self.notOltAggrSiteBtn_2 = QPushButton(self.frame_31)
+        self.notOltAggrSiteBtn_2.setObjectName(u"notOltAggrSiteBtn_2")
+        sizePolicy2.setHeightForWidth(self.notOltAggrSiteBtn_2.sizePolicy().hasHeightForWidth())
+        self.notOltAggrSiteBtn_2.setSizePolicy(sizePolicy2)
+        self.notOltAggrSiteBtn_2.setMinimumSize(QSize(100, 100))
+        self.notOltAggrSiteBtn_2.setMaximumSize(QSize(100, 100))
+        self.notOltAggrSiteBtn_2.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_2.addWidget(self.notOltAggrSiteBtn_2, 0, 2, 1, 1)
+
+        self.notXgOltBtn_2 = QPushButton(self.frame_31)
+        self.notXgOltBtn_2.setObjectName(u"notXgOltBtn_2")
+        sizePolicy2.setHeightForWidth(self.notXgOltBtn_2.sizePolicy().hasHeightForWidth())
+        self.notXgOltBtn_2.setSizePolicy(sizePolicy2)
+        self.notXgOltBtn_2.setMinimumSize(QSize(100, 100))
+        self.notXgOltBtn_2.setMaximumSize(QSize(100, 100))
+        self.notXgOltBtn_2.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_2.addWidget(self.notXgOltBtn_2, 0, 3, 1, 1)
+
+        self.blueAggrSiteBtn_2 = QPushButton(self.frame_31)
+        self.blueAggrSiteBtn_2.setObjectName(u"blueAggrSiteBtn_2")
+        sizePolicy2.setHeightForWidth(self.blueAggrSiteBtn_2.sizePolicy().hasHeightForWidth())
+        self.blueAggrSiteBtn_2.setSizePolicy(sizePolicy2)
+        self.blueAggrSiteBtn_2.setMinimumSize(QSize(100, 100))
+        self.blueAggrSiteBtn_2.setMaximumSize(QSize(100, 100))
+        self.blueAggrSiteBtn_2.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_2.addWidget(self.blueAggrSiteBtn_2, 0, 4, 1, 1)
+
+        self.boxUplinkBusyBtn_2 = QPushButton(self.frame_31)
+        self.boxUplinkBusyBtn_2.setObjectName(u"boxUplinkBusyBtn_2")
+        sizePolicy2.setHeightForWidth(self.boxUplinkBusyBtn_2.sizePolicy().hasHeightForWidth())
+        self.boxUplinkBusyBtn_2.setSizePolicy(sizePolicy2)
+        self.boxUplinkBusyBtn_2.setMinimumSize(QSize(100, 100))
+        self.boxUplinkBusyBtn_2.setMaximumSize(QSize(100, 100))
+        self.boxUplinkBusyBtn_2.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_2.addWidget(self.boxUplinkBusyBtn_2, 1, 0, 1, 1)
+
+        self.onuBtn_2 = QPushButton(self.frame_31)
+        self.onuBtn_2.setObjectName(u"onuBtn_2")
+        sizePolicy2.setHeightForWidth(self.onuBtn_2.sizePolicy().hasHeightForWidth())
+        self.onuBtn_2.setSizePolicy(sizePolicy2)
+        self.onuBtn_2.setMinimumSize(QSize(100, 100))
+        self.onuBtn_2.setMaximumSize(QSize(100, 100))
+        self.onuBtn_2.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_2.addWidget(self.onuBtn_2, 1, 1, 1, 1)
+
+        self.ponLineProjectBtn_2 = QPushButton(self.frame_31)
+        self.ponLineProjectBtn_2.setObjectName(u"ponLineProjectBtn_2")
+        sizePolicy2.setHeightForWidth(self.ponLineProjectBtn_2.sizePolicy().hasHeightForWidth())
+        self.ponLineProjectBtn_2.setSizePolicy(sizePolicy2)
+        self.ponLineProjectBtn_2.setMinimumSize(QSize(100, 100))
+        self.ponLineProjectBtn_2.setMaximumSize(QSize(100, 100))
+        self.ponLineProjectBtn_2.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_2.addWidget(self.ponLineProjectBtn_2, 1, 2, 1, 1)
+
+
+        self.verticalLayout_32.addWidget(self.frame_31)
+
+        self.container.addWidget(self.toolPage)
 
         self.verticalLayout.addWidget(self.container)
 
@@ -2809,9 +3698,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(64, 71, 90);\n"
 "}")
-        icon17 = QIcon()
-        icon17.addFile(u":/icons/assets/close.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.sideClose.setIcon(icon17)
+        icon22 = QIcon()
+        icon22.addFile(u":/icons/assets/close.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.sideClose.setIcon(icon22)
 
         self.horizontalLayout_10.addWidget(self.sideClose)
 
@@ -2863,9 +3752,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon18 = QIcon()
-        icon18.addFile(u":/icons/assets/settings.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.settingBtn.setIcon(icon18)
+        icon23 = QIcon()
+        icon23.addFile(u":/icons/assets/settings.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.settingBtn.setIcon(icon23)
         self.settingBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.settingBtn)
@@ -2891,9 +3780,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon19 = QIcon()
-        icon19.addFile(u":/icons/assets/document.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.updateBtn.setIcon(icon19)
+        icon24 = QIcon()
+        icon24.addFile(u":/icons/assets/document.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.updateBtn.setIcon(icon24)
         self.updateBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.updateBtn)
@@ -2919,9 +3808,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon20 = QIcon()
-        icon20.addFile(u":/icons/assets/graph.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.kpiBtn.setIcon(icon20)
+        icon25 = QIcon()
+        icon25.addFile(u":/icons/assets/graph.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.kpiBtn.setIcon(icon25)
         self.kpiBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.kpiBtn)
@@ -2947,9 +3836,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon21 = QIcon()
-        icon21.addFile(u":/icons/assets/help.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.logBtn.setIcon(icon21)
+        icon26 = QIcon()
+        icon26.addFile(u":/icons/assets/help.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.logBtn.setIcon(icon26)
         self.logBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.logBtn)
@@ -2975,9 +3864,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon22 = QIcon()
-        icon22.addFile(u":/icons/assets/about.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.aboutBtn.setIcon(icon22)
+        icon27 = QIcon()
+        icon27.addFile(u":/icons/assets/about.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.aboutBtn.setIcon(icon27)
         self.aboutBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.aboutBtn)
@@ -3019,7 +3908,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(5)
+        self.container.setCurrentIndex(8)
         self.tabWidget.setCurrentIndex(0)
 
 
@@ -3106,12 +3995,47 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.oDevPage), QCoreApplication.translate("MainWindow", u"\u5149\u4ea4\u8bbe\u65bd", None))
         self.label_33.setText(QCoreApplication.translate("MainWindow", u"\u591a\u5173\u952e\u5b57\uff08\u7a7a\u683c\u9694\u5f00\uff09\uff1a", None))
         self.searchLineBtn.setText(QCoreApplication.translate("MainWindow", u"\u67e5\u627e", None))
+        self.aSiteBtn.setText(QCoreApplication.translate("MainWindow", u"A\u7aef", None))
+        self.bSiteBtn.setText(QCoreApplication.translate("MainWindow", u"B\u7aef", None))
+        self.mustDevBtn.setText(QCoreApplication.translate("MainWindow", u"\u5fc5\u7ecf", None))
+        self.notDevBtn.setText(QCoreApplication.translate("MainWindow", u"\u4e0d\u7ecf", None))
+        self.label_15.setText(QCoreApplication.translate("MainWindow", u"A\u7aef", None))
+        self.aSiteLabel.setText("")
+        self.label_17.setText(QCoreApplication.translate("MainWindow", u"B\u7aef", None))
+        self.bSiteLabel.setText("")
+        self.label_41.setText(QCoreApplication.translate("MainWindow", u"\u8df3\u6570", None))
+        self.label_42.setText(QCoreApplication.translate("MainWindow", u"\u8870\u8017", None))
+        self.label_45.setText(QCoreApplication.translate("MainWindow", u"\u5fc5\u7ecf\u673a\u623f/\u5149\u4ea4\u8bbe\u65bd", None))
+        self.label_46.setText(QCoreApplication.translate("MainWindow", u"\u4e0d\u7ecf\u673a\u623f/\u5149\u4ea4\u8bbe\u65bd", None))
+        self.delMustDevBtn.setText(QCoreApplication.translate("MainWindow", u"\u5220\u9664\u5fc5\u7ecf", None))
+        self.delNotDevBtn.setText(QCoreApplication.translate("MainWindow", u"\u5220\u9664\u4e0d\u7ecf", None))
+        self.devToLeftBtn.setText("")
+        self.devToRightBtn.setText("")
+        self.importABsBtn.setText(QCoreApplication.translate("MainWindow", u"\u9700\u6c42\u6587\u4ef6", None))
+        self.dispatchBtn.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u59cb", None))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.linePage), QCoreApplication.translate("MainWindow", u"\u4e2d\u7ee7\u6bb5", None))
         self.label_39.setText(QCoreApplication.translate("MainWindow", u"OLT\u7ad9\u70b9", None))
         self.searchOltBtn.setText(QCoreApplication.translate("MainWindow", u"\u67e5\u627e", None))
         self.label_40.setText(QCoreApplication.translate("MainWindow", u"\u7f51\u5143\n"
 "\n"
 "\u6e05\u5355", None))
+        self.label_43.setText(QCoreApplication.translate("MainWindow", u"\u8fd0\u884c\u65e5\u5fd7", None))
+        self.label_44.setText(QCoreApplication.translate("MainWindow", u"\u5de5\u5177\u7bb1", None))
+        self.writeAggrHouseBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u5750\u6807\u7cfb\n"
+"\u8f6c\u6362", None))
+        self.redOltPortSiteBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u56fe\u5c42\n"
+"\u89e3\u6790", None))
+        self.notOltAggrSiteBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u56fe\u5c42\n"
+"\u751f\u6210", None))
+        self.notXgOltBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u70ed\u529b\u56fe\n"
+"\u7ed8\u5236", None))
+        self.blueAggrSiteBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u533a\u57df\n"
+"\u5f52\u5c5e", None))
+        self.boxUplinkBusyBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u8d44\u6e90\n"
+"\u63a2\u9488", None))
+        self.onuBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u6a21\u7cca\n"
+"\u5339\u914d", None))
+        self.ponLineProjectBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u5f85\u7eed", None))
         self.statusLabel.setText("")
         self.sideClose.setText("")
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:700; color:#ffffff;\">\u4f7f\u7528\u8bf4\u660e</span></p><p align=\"center\"><span style=\" font-size:12pt; font-weight:700; color:#ffffff;\">\u9700\u5468\u671f\u66f4\u65b0\u6570\u636e </span></p></body></html>", None))
