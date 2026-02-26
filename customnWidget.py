@@ -5,7 +5,10 @@ from PySide6.QtGui import *
 from PySide6.QtCharts import QChart, QChartView, QPieSeries,QBarSet, QBarSeries, QChart, QChartView, QBarCategoryAxis,QPieSlice,QLegend
 import math
 import re
-
+from modules.convertCoord_ui import Ui_ConvertCoordForm
+from modules.readKml_ui import Ui_ReadKmlForm
+from modules.convertXY import convertXY
+from modules.modThread import *
 
 class CircularProgress(QWidget):
     def __init__(self, parent=None):
@@ -81,7 +84,6 @@ class CircularProgress(QWidget):
         painter.setPen(QPen(self.text_color))
         painter.drawText(self.rect(), Qt.AlignCenter, f"{self.value}%")
 
-
 class PieChartView(QChartView):
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -141,9 +143,6 @@ class PieChartView(QChartView):
         for i, marker in enumerate(markers):
             if i < len(names):
                 marker.setLabel(names[i])
-        
-
-
 
 class BarChartView(QChartView):
     def __init__(self, parent=None):
@@ -568,8 +567,132 @@ class RelayLineResultDialog(QWidget):
         if clipboard_text.strip():
             QApplication.clipboard().setText(clipboard_text.strip())
         
+# 工具 坐标转换
+class ConvertCoordForm(QWidget, Ui_ConvertCoordForm):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        # 删除最大化按钮
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
+        self.textEdit.setReadOnly(True)
+        self.setText()
+        self.coord_types = ['BD-09','WGS84','GCJ-02']
+        self.src_cb.addItems(self.coord_types)
+        self.src_cb.setCurrentIndex(0)
+        self.obj_cb.addItems(self.coord_types)
+        self.obj_cb.setCurrentIndex(1)
+        self.convert_bt.clicked.connect(self.convertCoord)
+        self.chose_file_bt.clicked.connect(self.choseFile)
+        self.many_convert_bt.clicked.connect(self.manyConvertCoord)
+        
+        # 添加关闭回调函数
+        self.close_callback = None
+
+    def manyConvertCoord(self):
+        file_path = self.filepath_le.text().strip()
+        if len(file_path) == 0:
+            QMessageBox.information(None, '提示', '请选择文件')
+            return;
+        self.mod_thread = ConvertCoordThread(file_path,self.src_cb.currentText(),self.obj_cb.currentText())
+        self.mod_thread.state_signal.connect(self.showState)
+        self.mod_thread.error_signal.connect(self.showError)
+        self.mod_thread.start()
+
+    def showError(self,msg):
+        QMessageBox.information(None, '错误', msg)
+
+    def showState(self,msg):
+        self.textEdit.append(msg)
+        # 滚动到最后
+        self.textEdit.verticalScrollBar().setValue(self.textEdit.verticalScrollBar().maximum())
+
+    def choseFile(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "选择需求文件", "", "文本文件 (*.xls *.xlsx)")
+        if file_path:
+            self.filepath_le.setText(file_path)
+
+    def convertCoord(self):
+        regex = r'\d+\.\d+'
+        coord_str = self.src_coord_str_le.text().strip()
+        if len(coord_str) == 0:
+            QMessageBox.information(None, '提示', '请输入坐标')
+            return;
+        matches = re.findall(regex, coord_str)
+        if len(matches) >= 2:
+            lon = matches[0]  # 第一个数字（经度）
+            lat = matches[1]  # 第二个数字（纬度）
+        else:
+            QMessageBox.information(None, '提示', '请输入正确的坐标格式')
+            return;
+        oldType = self.src_cb.currentText()
+        newType = self.obj_cb.currentText()
+        lon,lat = convertXY(float(lon),float(lat),oldType,newType)
+        lon = round(lon,6)
+        lat = round(lat,6)
+        self.obj_coord_str_le.setText(f"{lon},{lat}")
 
 
 
+    def setCloseCallback(self, callback):
+        """设置窗口关闭时的回调函数"""
+        self.close_callback = callback
 
+    def closeEvent(self, event):
+        """重写关闭事件，确保回调函数被调用"""
+        if self.close_callback:
+            self.close_callback(self)
+        super().closeEvent(event)
+    
+    def setText(self):
+        self.textEdit.append(100*"*")
+        self.textEdit.append("坐标系类型解释： \n地球坐标 (WGS84)：国际标准(GPS 坐标系)，管线系统地图坐标，google earth地图坐标\n火星坐标 (GCJ-02)：中国标准，国测局坐标系，高德地图/奥维地图坐标\n百度坐标 (BD-09)：百度标准，对火星坐标二次加密，百度地图坐标")
+        self.textEdit.append(100*"*")
 
+class ReadKmlForm(QWidget, Ui_ReadKmlForm):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        # 删除最大化按钮
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
+        self.progressBar.setVisible(False)
+        self.setFixedSize(self.width(), self.height()) #禁止窗口最大化及拉伸		
+        self.selectKmlButton.clicked.connect(self.selectKmlFile)
+        self.readKmlButton.clicked.connect(self.readKmlFile)
+        self.kmlFileName = ''
+        # 添加关闭回调函数
+        self.close_callback = None
+
+    def setCloseCallback(self, callback):
+        """设置窗口关闭时的回调函数"""
+        self.close_callback = callback
+
+    def closeEvent(self, event):
+        """重写关闭事件，确保回调函数被调用"""
+        if self.close_callback:
+            self.close_callback(self)
+        super().closeEvent(event)
+
+    #选择Kml文件
+    def selectKmlFile(self):
+        self.kmlFileName,_ = QFileDialog.getOpenFileName(self, "打开文件", '.', '图层文件(*.kml)')
+        self.kmlPathLabel.setText(self.kmlFileName.split('/')[-1])
+
+    #解析Kml文件
+    def readKmlFile(self):
+        if '.kml' not in self.kmlFileName:
+            QMessageBox.information(None, '提示', '请选择kml后缀名的图层文件')
+            return;
+        if self.pointCheckBox.isChecked() == False and self.lineCheckBox.isChecked() == False and self.polyCheckBox.isChecked() == False:
+            QMessageBox.information(None, '提示', '至少需选择1种资源类型')
+            return;			
+        self.readKmlProcess = readKmlThread(self.kmlFileName,self.pointCheckBox.isChecked(),self.lineCheckBox.isChecked(),self.polyCheckBox.isChecked())
+        self.readKmlProcess.proSignal.connect(self.showProcessBar)
+        self.readKmlProcess.stateSignal.connect(self.showStatus)
+        self.readKmlProcess.start()
+
+    def showProcessBar(self,proSign):
+        isshow,proNum = proSign
+        self.progressBar.setVisible(isshow)
+        self.progressBar.setValue(proNum)
+    def showStatus(self,stateSign):
+        self.stateLabel.setText(stateSign)

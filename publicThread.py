@@ -1,5 +1,5 @@
 # 公共线程模块,Pyside6 QThread
-from PySide6.QtCore import QThread
+
 from PySide6.QtCore import QThread, Signal
 import sqlite3
 import pandas as pd
@@ -1046,3 +1046,62 @@ class DispatchToManyThread(QThread):
             not_df.to_excel(writer,sheet_name='未找到跳纤路径',index=False)
         os.startfile(out_file_name)
         self.state_signal.emit(f'已将结果保存至{out_file_name}')
+
+
+# 分析C+光模块替换分析
+class PonPortReplaceThread(QThread):
+    state_signal = Signal(str)
+    error_signal = Signal(str)
+    def __init__(self,parent=None,folder_path=''):
+        super().__init__(parent)
+        self.folder_path = folder_path
+
+    def run(self):
+        self.state_signal.emit('正在加载弱光ONU清单和光模块清单...')
+        week_onu_file = ''
+        hw_port_file = ''
+        zte_port_file = ''
+        for file in os.listdir(self.folder_path):
+            if '7天内4天弱光清单' in file and '$' not in file and '.xlsx' in file:
+                week_onu_file = self.folder_path + '/' + file
+            elif '华为光模块' in file and '$' not in file and '.xlsx' in file:
+                hw_port_file = self.folder_path + '/' + file
+            elif '中兴光模块' in file and '$' not in file and '.xlsx' in file:
+                zte_port_file = self.folder_path + '/' + file
+                break;
+        if week_onu_file == '' or hw_port_file == '' or zte_port_file == '':
+            self.error_signal.emit('未找到弱光ONU清单、华为光模块清单或中兴光模块清单')
+            return;
+        self.state_signal.emit('正在读取弱光ONU清单')
+        week_onu_df = pd.read_excel(week_onu_file,engine='openpyxl')
+        self.state_signal.emit('正在读取华为光模块清单')
+        hw_port_df = pd.read_excel(hw_port_file,engine='openpyxl')
+        self.state_signal.emit('正在读取中兴光模块清单')
+        zte_port_df = pd.read_excel(zte_port_file,engine='openpyxl')    
+        hw_port_df = hw_port_df[['网元名称','资源名称','PON口光模块子类型','PON口发送光功率 (dBm)','PON口光模块类型']]
+        zte_port_df = zte_port_df[['网元名称','机框','槽位','端口','等级(类型/子类型)','发送光功率(dBm)','业务类型']]
+        hw_port_df['资源名称'] = hw_port_df['资源名称'].astype('str')
+        hw_port_df['机框'],hw_port_df['槽位'],hw_port_df['端口'] = zip(*hw_port_df['资源名称'].apply(self.fixHwPort))
+        hw_port_df = hw_port_df.rename(columns={'PON口光模块类型':'PON口类型'})
+        zte_port_df = zte_port_df.rename(columns={'等级(类型/子类型)':'PON口光模块子类型','发送光功率(dBm)':'PON口发送光功率 (dBm)','业务类型':'PON口类型'})
+        hw_port_df.drop(columns=['资源名称'],inplace=True)
+        port_df = pd.concat([hw_port_df,zte_port_df],ignore_index=True)
+        port_df = port_df.astype('str')
+        port_df['PON'] = port_df['网元名称'] + '-' + port_df['机框'] + '/' + port_df['槽位'] + '/' + port_df['端口']
+        port_df = port_df.groupby(['PON']).first().reset_index(drop=False)
+        week_onu_df = pd.merge(week_onu_df,port_df,on='PON',how='left')
+        self.state_signal.emit('正在生成7天内4天弱光清单匹配光模块信息。')
+        week_onu_df.to_excel('结果/7天内4天弱光清单匹配光模块信息-2026-2-13.xlsx',index=False)
+        self.state_signal.emit('分析完成')
+
+
+    def fixHwPort(self,port_name):
+        regex = r'框:(\d+)/槽:(\d+)/端口:(\d+)'
+        match = re.match(regex,port_name)
+        if match:
+            box = match.group(1)
+            slot = match.group(2)
+            port = match.group(3)
+            return box,slot,port
+        else:
+            return '-','-','-'

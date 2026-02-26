@@ -7,3 +7,6 @@ dist/
 生成应用程序.bat
 结果/
 PON口光数据/
+传输网智能诊断工具.vbs
+run_log.txt
+run_python.bat

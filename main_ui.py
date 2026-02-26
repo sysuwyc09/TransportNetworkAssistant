@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'main.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.6.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1000, 650)
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
@@ -99,7 +99,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.frame)
 
-        self.horizontalSpacer = QSpacerItem(364, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer = QSpacerItem(364, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
@@ -139,7 +139,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addWidget(self.homeBtn)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
 
@@ -168,7 +168,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_4.addWidget(self.menuBtn)
 
-        self.horizontalSpacer_3 = QSpacerItem(30, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(30, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_3)
 
@@ -249,13 +249,13 @@ class Ui_MainWindow(object):
         self.headers.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_5 = QHBoxLayout(self.headers)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.horizontalSpacer_4 = QSpacerItem(213, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_4 = QSpacerItem(213, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_4)
 
         self.label_2 = QLabel(self.headers)
         self.label_2.setObjectName(u"label_2")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Ignored)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Ignored)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
@@ -265,7 +265,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_5.addWidget(self.label_2)
 
-        self.horizontalSpacer_5 = QSpacerItem(213, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_5 = QSpacerItem(213, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_5)
 
@@ -290,7 +290,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_6.addWidget(self.label_3)
 
-        self.horizontalSpacer_6 = QSpacerItem(270, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_6 = QSpacerItem(270, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
         self.horizontalLayout_6.addItem(self.horizontalSpacer_6)
 
@@ -300,7 +300,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_6.addWidget(self.label_4)
 
-        self.horizontalSpacer_7 = QSpacerItem(267, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_7 = QSpacerItem(267, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_6.addItem(self.horizontalSpacer_7)
 
@@ -422,7 +422,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_7.addWidget(self.card2)
 
-        self.horizontalSpacer_8 = QSpacerItem(25, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_8 = QSpacerItem(25, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
         self.horizontalLayout_7.addItem(self.horizontalSpacer_8)
 
@@ -596,7 +596,7 @@ class Ui_MainWindow(object):
         self.action_frame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_8 = QHBoxLayout(self.action_frame)
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
-        self.horizontalSpacer_10 = QSpacerItem(170, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_10 = QSpacerItem(170, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_8.addItem(self.horizontalSpacer_10)
 
@@ -628,7 +628,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_8.addWidget(self.dbmsBtn)
 
-        self.horizontalSpacer_9 = QSpacerItem(170, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_9 = QSpacerItem(170, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_8.addItem(self.horizontalSpacer_9)
 
@@ -640,7 +640,7 @@ class Ui_MainWindow(object):
         self.updatePage.setObjectName(u"updatePage")
         self.verticalLayout_16 = QVBoxLayout(self.updatePage)
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
-        self.verticalSpacer_2 = QSpacerItem(20, 69, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_2 = QSpacerItem(20, 69, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_16.addItem(self.verticalSpacer_2)
 
@@ -651,13 +651,13 @@ class Ui_MainWindow(object):
         self.frame_3.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_11 = QHBoxLayout(self.frame_3)
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
-        self.horizontalSpacer_12 = QSpacerItem(180, 19, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_12 = QSpacerItem(180, 19, QSizePolicy.Fixed, QSizePolicy.Minimum)
 
         self.horizontalLayout_11.addItem(self.horizontalSpacer_12)
 
         self.fileTypeCB = QComboBox(self.frame_3)
         self.fileTypeCB.setObjectName(u"fileTypeCB")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Maximum)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.fileTypeCB.sizePolicy().hasHeightForWidth())
@@ -688,7 +688,7 @@ class Ui_MainWindow(object):
 
         self.filePathLE = QLineEdit(self.frame_3)
         self.filePathLE.setObjectName(u"filePathLE")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.filePathLE.sizePolicy().hasHeightForWidth())
@@ -772,7 +772,7 @@ class Ui_MainWindow(object):
 
         self.frame_28 = QFrame(self.updatePage)
         self.frame_28.setObjectName(u"frame_28")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         sizePolicy4.setHorizontalStretch(0)
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.frame_28.sizePolicy().hasHeightForWidth())
@@ -781,7 +781,7 @@ class Ui_MainWindow(object):
         self.frame_28.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_27 = QHBoxLayout(self.frame_28)
         self.horizontalLayout_27.setObjectName(u"horizontalLayout_27")
-        self.horizontalSpacer_15 = QSpacerItem(728, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_15 = QSpacerItem(728, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_27.addItem(self.horizontalSpacer_15)
 
@@ -847,7 +847,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_16.addWidget(self.frame_28)
 
-        self.verticalSpacer_3 = QSpacerItem(20, 31, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer_3 = QSpacerItem(20, 31, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_16.addItem(self.verticalSpacer_3)
 
@@ -890,7 +890,7 @@ class Ui_MainWindow(object):
 
         self.label_26 = QLabel(self.frame_5)
         self.label_26.setObjectName(u"label_26")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
         sizePolicy5.setHorizontalStretch(0)
         sizePolicy5.setVerticalStretch(0)
         sizePolicy5.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
@@ -1496,7 +1496,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_16.addWidget(self.frame_5)
 
-        self.verticalSpacer = QSpacerItem(20, 91, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding)
+        self.verticalSpacer = QSpacerItem(20, 91, QSizePolicy.Minimum, QSizePolicy.Expanding)
 
         self.verticalLayout_16.addItem(self.verticalSpacer)
 
@@ -1565,7 +1565,7 @@ class Ui_MainWindow(object):
         self.frame_11.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_14 = QHBoxLayout(self.frame_11)
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
-        self.horizontalSpacer_13 = QSpacerItem(855, 19, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_13 = QSpacerItem(855, 19, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_14.addItem(self.horizontalSpacer_13)
 
@@ -1680,7 +1680,7 @@ class Ui_MainWindow(object):
         self.frame_15.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_15 = QHBoxLayout(self.frame_15)
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
-        self.horizontalSpacer_14 = QSpacerItem(855, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_14 = QSpacerItem(855, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_15.addItem(self.horizontalSpacer_14)
 
@@ -1950,13 +1950,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.onuBtn, 1, 1, 1, 1)
 
-        self.ponLineProjectBtn = QPushButton(self.frame_18)
-        self.ponLineProjectBtn.setObjectName(u"ponLineProjectBtn")
-        sizePolicy2.setHeightForWidth(self.ponLineProjectBtn.sizePolicy().hasHeightForWidth())
-        self.ponLineProjectBtn.setSizePolicy(sizePolicy2)
-        self.ponLineProjectBtn.setMinimumSize(QSize(100, 100))
-        self.ponLineProjectBtn.setMaximumSize(QSize(100, 100))
-        self.ponLineProjectBtn.setStyleSheet(u"QPushButton {\n"
+        self.ponPortBtn = QPushButton(self.frame_18)
+        self.ponPortBtn.setObjectName(u"ponPortBtn")
+        sizePolicy2.setHeightForWidth(self.ponPortBtn.sizePolicy().hasHeightForWidth())
+        self.ponPortBtn.setSizePolicy(sizePolicy2)
+        self.ponPortBtn.setMinimumSize(QSize(100, 100))
+        self.ponPortBtn.setMaximumSize(QSize(100, 100))
+        self.ponPortBtn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -1971,7 +1971,7 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout.addWidget(self.ponLineProjectBtn, 1, 2, 1, 1)
+        self.gridLayout.addWidget(self.ponPortBtn, 1, 2, 1, 1)
 
 
         self.verticalLayout_20.addWidget(self.frame_18)
@@ -2245,7 +2245,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_24.setObjectName(u"verticalLayout_24")
         self.uplink_text = QTextEdit(self.frame_23)
         self.uplink_text.setObjectName(u"uplink_text")
-        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
+        sizePolicy6 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
         sizePolicy6.setHorizontalStretch(0)
         sizePolicy6.setVerticalStretch(0)
         sizePolicy6.setHeightForWidth(self.uplink_text.sizePolicy().hasHeightForWidth())
@@ -2331,7 +2331,7 @@ class Ui_MainWindow(object):
 
         self.label_38 = QLabel(self.frame_23)
         self.label_38.setObjectName(u"label_38")
-        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
+        sizePolicy7 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
         sizePolicy7.setHorizontalStretch(0)
         sizePolicy7.setVerticalStretch(0)
         sizePolicy7.setHeightForWidth(self.label_38.sizePolicy().hasHeightForWidth())
@@ -2370,7 +2370,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_26.setObjectName(u"horizontalLayout_26")
         self.label_33 = QLabel(self.frame_27)
         self.label_33.setObjectName(u"label_33")
-        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
+        sizePolicy8 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
         sizePolicy8.setHorizontalStretch(0)
         sizePolicy8.setVerticalStretch(0)
         sizePolicy8.setHeightForWidth(self.label_33.sizePolicy().hasHeightForWidth())
@@ -2448,7 +2448,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_12.setObjectName(u"horizontalLayout_12")
         self.devLE = QLineEdit(self.frame_7)
         self.devLE.setObjectName(u"devLE")
-        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy9 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy9.setHorizontalStretch(0)
         sizePolicy9.setVerticalStretch(0)
         sizePolicy9.setHeightForWidth(self.devLE.sizePolicy().hasHeightForWidth())
@@ -2610,7 +2610,7 @@ class Ui_MainWindow(object):
 
         self.aSiteLabel = QLabel(self.frame_29)
         self.aSiteLabel.setObjectName(u"aSiteLabel")
-        sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
+        sizePolicy10 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
         sizePolicy10.setHorizontalStretch(0)
         sizePolicy10.setVerticalStretch(0)
         sizePolicy10.setHeightForWidth(self.aSiteLabel.sizePolicy().hasHeightForWidth())
@@ -3061,9 +3061,40 @@ class Ui_MainWindow(object):
         self.container.addWidget(self.outsidePage)
         self.insidePage = QWidget()
         self.insidePage.setObjectName(u"insidePage")
-        self.verticalLayout_26 = QVBoxLayout(self.insidePage)
+        self.verticalLayout_33 = QVBoxLayout(self.insidePage)
+        self.verticalLayout_33.setObjectName(u"verticalLayout_33")
+        self.verticalLayout_33.setContentsMargins(-1, -1, 20, -1)
+        self.tabWidget_2 = QTabWidget(self.insidePage)
+        self.tabWidget_2.setObjectName(u"tabWidget_2")
+        self.tabWidget_2.setStyleSheet(u"QTabWidget {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"    }\n"
+"QTabWidget::pane {\n"
+"        border: 1px solid #44cc88;\n"
+"        border-radius: 5px;\n"
+"    }\n"
+"QTabBar::tab {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"        color: #44cc88;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 8px;\n"
+"        border-top-left-radius: 8px;\n"
+"        border-top-right-radius: 8px;\n"
+"    }\n"
+"QTabBar::tab:selected {\n"
+"    background-color: #44cc88;  /* \u7eff\u8272\u80cc\u666f */\n"
+"    color: white;  /* \u767d\u8272\u6587\u5b57 */\n"
+"    border: 1px solid #44cc88;\n"
+"	font: 700 10pt;\n"
+"}\n"
+"QTabBar::tab:hover {\n"
+"        background-color: rgba(50, 55, 66, 255);\n"
+"    }")
+        self.ponPage = QWidget()
+        self.ponPage.setObjectName(u"ponPage")
+        self.verticalLayout_26 = QVBoxLayout(self.ponPage)
         self.verticalLayout_26.setObjectName(u"verticalLayout_26")
-        self.frame_24 = QFrame(self.insidePage)
+        self.frame_24 = QFrame(self.ponPage)
         self.frame_24.setObjectName(u"frame_24")
         self.frame_24.setMinimumSize(QSize(0, 50))
         self.frame_24.setMaximumSize(QSize(16777215, 50))
@@ -3168,7 +3199,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_26.addWidget(self.frame_24)
 
-        self.frame_25 = QFrame(self.insidePage)
+        self.frame_25 = QFrame(self.ponPage)
         self.frame_25.setObjectName(u"frame_25")
         self.frame_25.setStyleSheet(u"")
         self.frame_25.setFrameShape(QFrame.StyledPanel)
@@ -3232,7 +3263,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_26.addWidget(self.frame_25)
 
-        self.frame_26 = QFrame(self.insidePage)
+        self.frame_26 = QFrame(self.ponPage)
         self.frame_26.setObjectName(u"frame_26")
         self.frame_26.setFrameShape(QFrame.StyledPanel)
         self.frame_26.setFrameShadow(QFrame.Raised)
@@ -3334,6 +3365,10 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_26.addWidget(self.frame_26)
 
+        self.tabWidget_2.addTab(self.ponPage, "")
+
+        self.verticalLayout_33.addWidget(self.tabWidget_2)
+
         self.container.addWidget(self.insidePage)
         self.logPage = QWidget()
         self.logPage.setObjectName(u"logPage")
@@ -3421,13 +3456,13 @@ class Ui_MainWindow(object):
         self.frame_31.setFrameShadow(QFrame.Raised)
         self.gridLayout_2 = QGridLayout(self.frame_31)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.writeAggrHouseBtn_2 = QPushButton(self.frame_31)
-        self.writeAggrHouseBtn_2.setObjectName(u"writeAggrHouseBtn_2")
-        sizePolicy2.setHeightForWidth(self.writeAggrHouseBtn_2.sizePolicy().hasHeightForWidth())
-        self.writeAggrHouseBtn_2.setSizePolicy(sizePolicy2)
-        self.writeAggrHouseBtn_2.setMinimumSize(QSize(100, 100))
-        self.writeAggrHouseBtn_2.setMaximumSize(QSize(100, 100))
-        self.writeAggrHouseBtn_2.setStyleSheet(u"QPushButton {\n"
+        self.convert_coord_btn = QPushButton(self.frame_31)
+        self.convert_coord_btn.setObjectName(u"convert_coord_btn")
+        sizePolicy2.setHeightForWidth(self.convert_coord_btn.sizePolicy().hasHeightForWidth())
+        self.convert_coord_btn.setSizePolicy(sizePolicy2)
+        self.convert_coord_btn.setMinimumSize(QSize(100, 100))
+        self.convert_coord_btn.setMaximumSize(QSize(100, 100))
+        self.convert_coord_btn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -3442,15 +3477,15 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout_2.addWidget(self.writeAggrHouseBtn_2, 0, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.convert_coord_btn, 0, 0, 1, 1)
 
-        self.redOltPortSiteBtn_2 = QPushButton(self.frame_31)
-        self.redOltPortSiteBtn_2.setObjectName(u"redOltPortSiteBtn_2")
-        sizePolicy2.setHeightForWidth(self.redOltPortSiteBtn_2.sizePolicy().hasHeightForWidth())
-        self.redOltPortSiteBtn_2.setSizePolicy(sizePolicy2)
-        self.redOltPortSiteBtn_2.setMinimumSize(QSize(100, 100))
-        self.redOltPortSiteBtn_2.setMaximumSize(QSize(100, 100))
-        self.redOltPortSiteBtn_2.setStyleSheet(u"QPushButton {\n"
+        self.read_kml_btn = QPushButton(self.frame_31)
+        self.read_kml_btn.setObjectName(u"read_kml_btn")
+        sizePolicy2.setHeightForWidth(self.read_kml_btn.sizePolicy().hasHeightForWidth())
+        self.read_kml_btn.setSizePolicy(sizePolicy2)
+        self.read_kml_btn.setMinimumSize(QSize(100, 100))
+        self.read_kml_btn.setMaximumSize(QSize(100, 100))
+        self.read_kml_btn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -3465,7 +3500,7 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout_2.addWidget(self.redOltPortSiteBtn_2, 0, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.read_kml_btn, 0, 1, 1, 1)
 
         self.notOltAggrSiteBtn_2 = QPushButton(self.frame_31)
         self.notOltAggrSiteBtn_2.setObjectName(u"notOltAggrSiteBtn_2")
@@ -3704,7 +3739,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_10.addWidget(self.sideClose)
 
-        self.horizontalSpacer_11 = QSpacerItem(301, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
+        self.horizontalSpacer_11 = QSpacerItem(301, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_10.addItem(self.horizontalSpacer_11)
 
@@ -3908,8 +3943,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(8)
-        self.tabWidget.setCurrentIndex(0)
+        self.container.setCurrentIndex(4)
+        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget_2.setCurrentIndex(0)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -3981,8 +4017,8 @@ class Ui_MainWindow(object):
 "\u7d27\u5f20\u7bb1\u4f53", None))
         self.onuBtn.setText(QCoreApplication.translate("MainWindow", u"ONU\u5f31\u5149\n"
 "\u8c03\u4f18\u5206\u6790", None))
-        self.ponLineProjectBtn.setText(QCoreApplication.translate("MainWindow", u"\u5df2\u6709\u7ba1\u9053\n"
-"\u6746\u8def\u5206\u6790", None))
+        self.ponPortBtn.setText(QCoreApplication.translate("MainWindow", u"PON C+\n"
+"\u5149\u6a21\u5757\u66ff\u6362", None))
         self.label_36.setText(QCoreApplication.translate("MainWindow", u"\u5149\u4ea4\u7bb1/\u5206\u7ea4\u7bb1:", None))
         self.searchDevUplinkBtn.setText(QCoreApplication.translate("MainWindow", u"\u67e5\u627e", None))
         self.highScoreBtn.setText(QCoreApplication.translate("MainWindow", u"\u8bc4\u5206\u6700\u9ad8", None))
@@ -4019,11 +4055,12 @@ class Ui_MainWindow(object):
         self.label_40.setText(QCoreApplication.translate("MainWindow", u"\u7f51\u5143\n"
 "\n"
 "\u6e05\u5355", None))
+        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.ponPage), QCoreApplication.translate("MainWindow", u"PON\u53e3", None))
         self.label_43.setText(QCoreApplication.translate("MainWindow", u"\u8fd0\u884c\u65e5\u5fd7", None))
         self.label_44.setText(QCoreApplication.translate("MainWindow", u"\u5de5\u5177\u7bb1", None))
-        self.writeAggrHouseBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u5750\u6807\u7cfb\n"
+        self.convert_coord_btn.setText(QCoreApplication.translate("MainWindow", u"\u5750\u6807\u7cfb\n"
 "\u8f6c\u6362", None))
-        self.redOltPortSiteBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u56fe\u5c42\n"
+        self.read_kml_btn.setText(QCoreApplication.translate("MainWindow", u"\u56fe\u5c42\n"
 "\u89e3\u6790", None))
         self.notOltAggrSiteBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u56fe\u5c42\n"
 "\u751f\u6210", None))

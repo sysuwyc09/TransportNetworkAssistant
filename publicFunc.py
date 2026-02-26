@@ -6,7 +6,7 @@ import pandas as pd
 import datetime
 import numpy as np
 import math
-import cchardet
+import chardet
 import re
 
 
@@ -644,7 +644,7 @@ def getCsvEncoding(file_path, sample_size=10240):
                 return "utf-8", 1.0
             
             # 分析编码
-            result = cchardet.detect(raw_data)
+            result = chardet.detect(raw_data)
             encoding = result['encoding']
             if encoding == 'GB2312':
                 encoding = 'GB18030'

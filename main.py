@@ -16,7 +16,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         super(TNAIWindow, self).__init__()
         # Remove default title bar
         self.setWindowFlags(Qt.WindowFlags(Qt.FramelessWindowHint))
-        self.setupUi(self)
+        self.setupUi(self) 
         self.closeBtn.clicked.connect(self.closeWindow)
         self.miniBtn.clicked.connect(self.minimizeWindow)
         self.sideClose.clicked.connect(self.toggleSideBar)
@@ -73,6 +73,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.outsideBtn.clicked.connect(self.selectPage)
         self.insideBtn.clicked.connect(self.selectPage)
         self.logBtn.clicked.connect(self.selectPage)
+        self.toolBtn.clicked.connect(self.selectPage)
 
         self.oltKeywordLE.returnPressed.connect(self.searchOltSite)
         self.searchOltBtn.clicked.connect(self.searchOltNe)
@@ -113,6 +114,12 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.boxUplinkBusyBtn.clicked.connect(self.busyBoxUplink)
         self.notXgOltBtn.clicked.connect(self.findNoXgOltSite)
         self.onuBtn.clicked.connect(self.findWeekOnu)
+        self.ponPortBtn.clicked.connect(self.searchPonPort)
+
+        # tool工具页面按钮事件
+        self.convert_coord_btn.clicked.connect(self.showToolForm)
+        self.read_kml_btn.clicked.connect(self.showToolForm)
+
 
 
         self.log_str = ''
@@ -124,6 +131,34 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.load_relay_line_thread.start()
         self.dev_df = pd.DataFrame()
 
+    def searchPonPort(self):
+        # C+光模块替换分析
+        # 选择弱光ONU清单和光模块清单
+        folder_path = QFileDialog.getExistingDirectory(self, "选择弱光ONU清单和光模块清单文件夹")
+        if not folder_path:
+            return;
+        self.pon_port_replace_thread = PonPortReplaceThread(folder_path=folder_path)
+        self.pon_port_replace_thread.state_signal.connect(self.showStatus)
+        self.pon_port_replace_thread.error_signal.connect(self.showError)
+        self.pon_port_replace_thread.start()
+
+    # 工具页面按钮事件
+    def showToolForm(self):
+        if self.sender() == self.convert_coord_btn:
+            # 创建新的结果窗口
+            dialog = ConvertCoordForm()
+        elif self.sender() == self.read_kml_btn:
+            # 创建新的结果窗口
+            dialog = ReadKmlForm()
+        else:
+            return;
+        # 添加到窗口列表
+        self.relay_line_result_dialogs.append(dialog)
+        # 使用closeEvent回调替代destroyed信号
+        dialog.setCloseCallback(self.removeClosedDialog)
+        # 显示窗口
+        dialog.show()
+    # 导入批量需求
     def importABsFile(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "导入批量需求文件", "", "Excel Files (*.xlsx)")
         if file_path:
@@ -732,6 +767,10 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         elif self.sender() == self.logBtn:
             page_widget = self.container.findChild(QWidget, "logPage")
             self.container.setCurrentWidget(page_widget)
+        elif self.sender() == self.toolBtn:
+            page_widget = self.container.findChild(QWidget, "toolPage")
+            self.container.setCurrentWidget(page_widget)
+            self.toggleSideBar()
 
 
 
