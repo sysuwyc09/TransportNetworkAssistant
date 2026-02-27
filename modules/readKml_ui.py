@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'readKml.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.3
+## Created by: Qt User Interface Compiler version 6.6.1
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -29,7 +29,7 @@ class Ui_ReadKmlForm(object):
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.frame = QFrame(ReadKmlForm)
         self.frame.setObjectName(u"frame")
-        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.frame.sizePolicy().hasHeightForWidth())
@@ -39,7 +39,7 @@ class Ui_ReadKmlForm(object):
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.selectKmlButton = QPushButton(self.frame)
         self.selectKmlButton.setObjectName(u"selectKmlButton")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.selectKmlButton.sizePolicy().hasHeightForWidth())
@@ -71,7 +71,7 @@ class Ui_ReadKmlForm(object):
 
         self.kmlPathLabel = QLabel(self.frame)
         self.kmlPathLabel.setObjectName(u"kmlPathLabel")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.kmlPathLabel.sizePolicy().hasHeightForWidth())
@@ -96,7 +96,7 @@ class Ui_ReadKmlForm(object):
         self.horizontalLayout.setObjectName(u"horizontalLayout")
         self.frame_2 = QFrame(ReadKmlForm)
         self.frame_2.setObjectName(u"frame_2")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Minimum)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Minimum)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.frame_2.sizePolicy().hasHeightForWidth())

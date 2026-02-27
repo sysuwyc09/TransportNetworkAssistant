@@ -7,8 +7,15 @@ import math
 import re
 from modules.convertCoord_ui import Ui_ConvertCoordForm
 from modules.readKml_ui import Ui_ReadKmlForm
+from modules.writeKml_ui import Ui_writeKmlForm
+from modules.HeatMap_ui import Ui_HeatForm
+from modules.location_ui import Ui_LocationForm
+from modules.site_ui import Ui_SiteAreaForm
+from modules.FuzzyMatch_ui import Ui_FuzzyMatchForm
 from modules.convertXY import convertXY
 from modules.modThread import *
+from publicFunc import *
+from publicThread import *
 
 class CircularProgress(QWidget):
     def __init__(self, parent=None):
@@ -654,13 +661,14 @@ class ReadKmlForm(QWidget, Ui_ReadKmlForm):
         self.setupUi(self)
         # 删除最大化按钮
         self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
+        # 添加关闭回调函数
+        self.close_callback = None
         self.progressBar.setVisible(False)
         self.setFixedSize(self.width(), self.height()) #禁止窗口最大化及拉伸		
         self.selectKmlButton.clicked.connect(self.selectKmlFile)
         self.readKmlButton.clicked.connect(self.readKmlFile)
         self.kmlFileName = ''
-        # 添加关闭回调函数
-        self.close_callback = None
+
 
     def setCloseCallback(self, callback):
         """设置窗口关闭时的回调函数"""
@@ -696,3 +704,329 @@ class ReadKmlForm(QWidget, Ui_ReadKmlForm):
         self.progressBar.setValue(proNum)
     def showStatus(self,stateSign):
         self.stateLabel.setText(stateSign)
+
+
+class WriteKmlForm(QWidget, Ui_writeKmlForm):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        # 删除最大化按钮
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
+        # 添加关闭回调函数
+        self.close_callback = None
+        self.setFixedSize(self.width(), self.height()) #禁止窗口最大化及拉伸		
+        self.setFixedSize(self.width(), self.height()) #禁止窗口最大化及拉伸
+        self.fileTypeCols = ['点资源','线资源（资源中心）','线资源（两点）','线资源（图层解析）','多边形资源']
+        self.fileCols = [['目录','名称','经度','纬度'],
+            ['目录','名称','坐标'],
+            ['目录','名称','A端经度','A端纬度','Z端经度','Z端纬度'],
+            ['目录','名称','坐标'],
+            ['目录','名称','坐标'],
+            ]		
+        self.fileTypeCBox.addItems(self.fileTypeCols)
+        self.changeColLabel()
+        self.fileTypeCBox.currentIndexChanged.connect(self.changeColLabel)
+        self.currentCols = []
+        self.currentLis = []
+        self.filePath = ''
+        self.chosePathButton.clicked.connect(self.choseFile)
+        self.outFileButton.clicked.connect(self.outFile)
+    def setCloseCallback(self, callback):
+        """设置窗口关闭时的回调函数"""
+        self.close_callback = callback
+
+    def closeEvent(self, event):
+        """重写关闭事件，确保回调函数被调用"""
+        if self.close_callback:
+            self.close_callback(self)
+        super().closeEvent(event)
+    
+    #选择导入文件
+    def choseFile(self):
+        self.filePath,_ = QFileDialog.getOpenFileName(self, '选择资源表格', '', "Excel表格 (*.xlsx *.xls)")
+        self.filePathLEdit.setText(self.filePath)
+        if len(self.filePath)==0:
+            return;
+        self.readFileTD = ImportFileThread([self.filePath],'生成图层表格',1)
+        self.readFileTD.state_signal.connect(self.showStatus)
+        self.readFileTD.result_signal.connect(self.readFileCols)
+        self.readFileTD.start()
+
+
+    def changeColLabel(self):
+        self.currentCols = []
+        self.currentLis = []
+        for row in range(0,4,2):
+            for col in range(3):
+                self.gridLayout.itemAtPosition(row, col).widget().setText("- - - -")
+                self.gridLayout.itemAtPosition(row+1, col).widget().clear()
+                self.filePathLEdit.setText("")
+        cols = self.fileCols[self.fileTypeCBox.currentIndex()]
+        for i in range(len(cols)):
+            row = 2*int(i/3)
+            col = i % 3
+            self.gridLayout.itemAtPosition(row, col).widget().setText(cols[i])
+
+    #获取导入文件标题栏
+    def readFileCols(self,result):
+        print(result)
+        self.currentCols = result.columns.tolist()
+        self.currentLis = result.values.tolist()
+        cols = self.fileCols[self.fileTypeCBox.currentIndex()]
+        for i in range(len(cols)):
+            row = 2*int(i/3) + 1
+            col = i % 3
+            self.gridLayout.itemAtPosition(row, col).widget().clear()
+            self.gridLayout.itemAtPosition(row, col).widget().addItems(self.currentCols)
+            tempCol = self.gridLayout.itemAtPosition(row-1, col).widget().text()
+            if tempCol in self.currentCols:
+                self.gridLayout.itemAtPosition(row, col).widget().setCurrentIndex(self.currentCols.index(tempCol))
+            else:
+                tempMark = mostLike(tempCol,self.currentCols)
+                if tempMark:
+                    self.gridLayout.itemAtPosition(row, col).widget().setCurrentIndex(self.currentCols.index(tempMark))
+
+
+    def outFile(self):
+        if len(self.currentCols) == 0:
+            QMessageBox.information(None,"提示","未选择导入文件！",QMessageBox.Yes)
+            return;
+        tempDf = pd.DataFrame(self.currentLis,columns=self.currentCols)
+        cols = self.fileCols[self.fileTypeCBox.currentIndex()]
+        for i in range(len(cols)):
+            row = 2*int(i/3) + 1
+            col = i % 3
+            oldCol = self.gridLayout.itemAtPosition(row, col).widget().currentText()
+            if oldCol != cols[i]:
+                tempDf.rename(columns={oldCol:cols[i]},inplace=True)
+        tempFileType = self.fileTypeCBox.currentIndex()
+        tempDf = tempDf.astype('str')
+        tempDf = tempDf.fillna('None')
+        outFileName = self.filePathLEdit.text().split('/')[-1].split('.')[0]
+        self.writeKmlTD = WriteKmlThread(outFileName,tempDf,tempFileType)
+        self.writeKmlTD.stateSignal.connect(self.showStatus)
+        self.writeKmlTD.start()
+
+    def showStatus(self,status):
+        self.statusLabel.setText(status)
+
+
+class WriteHeatMapForm(QWidget, Ui_HeatForm):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        # 删除最大化按钮
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
+        # 添加关闭回调函数
+        self.close_callback = None
+        self.setFixedSize(self.width(), self.height()) #禁止窗口最大化及拉伸
+        self.srcButton.clicked.connect(self.selectSrcFile)
+        self.kmlButton.clicked.connect(self.selectKmlFile)
+        self.srcFileName = ''
+        self.kmlFileName = ''
+        self.outFileButton.clicked.connect(self.outHeatFile)
+        self.modFileButton.clicked.connect(self.outModFile)
+    
+    def setCloseCallback(self, callback):
+        """设置窗口关闭时的回调函数"""
+        self.close_callback = callback
+
+    def closeEvent(self, event):
+        """重写关闭事件，确保回调函数被调用"""
+        if self.close_callback:
+            self.close_callback(self)
+        super().closeEvent(event)
+
+    def selectSrcFile(self):
+        self.srcFileName,_ = QFileDialog.getOpenFileName(self, "打开文件（需包含【需求名称、经度、纬度、热力数据】列）", '.', '需求点文件(*.xlsx)')
+        self.srcFilePathLE.setText(self.srcFileName)			
+    def selectKmlFile(self):
+        self.kmlFileName,_ = QFileDialog.getOpenFileName(self, "打开文件", '.', '图层文件(*.kml)')
+        self.kmlFilePathLE.setText(self.kmlFileName)
+    def outModFile(self):
+        file_name, _ = QFileDialog.getSaveFileName(None,"保存文件","热力图模板.xlsx","Excel表格 (*.xlsx)")
+        if file_name:
+            heatDf = pd.DataFrame({'热力点':[],'经度':[],'纬度':[],'热力数据':[]})
+            pointDf = pd.DataFrame({'标记名称':[],'经度':[],'纬度':[],'备注':[]})
+            with pd.ExcelWriter(file_name,engine='xlsxwriter') as writer:
+                heatDf.to_excel(writer,sheet_name='热力数据',index=False)
+                pointDf.to_excel(writer,sheet_name='标记数据',index=False)
+        else:
+            return;
+
+    def outHeatFile(self):
+        if self.srcFileName and self.kmlFileName:
+            self.heatMapTD = HeatMapThread(self.srcFileName,self.kmlFileName,self.heatNumSlider.value())
+            self.heatMapTD.stateSignal.connect(self.showStatus)
+            self.heatMapTD.start()
+        else:
+            QMessageBox.information(None,"错误提示","请先选择需求文件和搜索库表格！",QMessageBox.Yes)
+            return;
+    def showStatus(self,status):
+        self.statusLabel.setText(status)
+
+
+class LocationForm(QWidget, Ui_LocationForm):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        # 删除最大化按钮
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
+        # 添加关闭回调函数
+        self.close_callback = None
+        self.setFixedSize(self.width(), self.height()) #禁止窗口最大化及拉伸
+        self.srcButton.clicked.connect(self.selectSrcFile)
+        self.objButton.clicked.connect(self.selectObjFile)
+        self.srcFileName = ''
+        self.objFileName = ''
+        self.searchButton.clicked.connect(self.searchResource)
+        self.srcModButton.clicked.connect(self.srcModFile)
+        self.objModButton.clicked.connect(self.objModFile)
+
+    def setCloseCallback(self, callback):
+        """设置窗口关闭时的回调函数"""
+        self.close_callback = callback
+
+    def closeEvent(self, event):
+        """重写关闭事件，确保回调函数被调用"""
+        if self.close_callback:
+            self.close_callback(self)
+        super().closeEvent(event)
+    
+    def selectSrcFile(self):
+        self.srcFileName,_ = QFileDialog.getOpenFileName(self, "打开文件（需包含【需求名称、经度、纬度】列）", '.', '需求点文件(*.xlsx)')
+        self.srcFilePathLE.setText(self.srcFileName)	
+    def selectObjFile(self):
+        self.objFileName,_ = QFileDialog.getOpenFileName(self, "打开文件（需包含【资源名称、经度、纬度】列）", '.', '搜索库文件(*.xlsx)')
+        self.objFilePathLE.setText(self.objFileName)
+    def srcModFile(self):
+        file_name, _ = QFileDialog.getSaveFileName(None,"保存文件","需求表模板.xlsx","Excel表格 (*.xlsx)")
+        if file_name:
+            srcDf = pd.DataFrame({'需求名称':[],'经度':[],'纬度':[]})
+            with pd.ExcelWriter(file_name,engine='xlsxwriter') as writer:
+                srcDf.to_excel(writer,sheet_name='需求',index=False)
+        else:
+            return;
+    def objModFile(self):
+        file_name, _ = QFileDialog.getSaveFileName(None,"保存文件","搜索库模板.xlsx","Excel表格 (*.xlsx)")
+        if file_name:
+            objDf = pd.DataFrame({'资源名称':[],'经度':[],'纬度':[]})
+            with pd.ExcelWriter(file_name,engine='xlsxwriter') as writer:
+                objDf.to_excel(writer,sheet_name='搜索库',index=False)
+        else:
+            return;
+    def searchResource(self):
+        try:
+            distance = float(self.distanceLE.text())
+        except:
+            QMessageBox.information(None,"错误提示","请正确填写搜索范围",QMessageBox.Yes)
+            return;
+        if self.srcFileName and self.objFileName:
+            self.searchTD = SearchThread(self.srcFileName,self.objFileName,distance)
+            self.searchTD.stateSignal.connect(self.showStatus)
+            self.searchTD.start()
+        else:
+            QMessageBox.information(None,"错误提示","请先选择需求文件和搜索库表格！",QMessageBox.Yes)
+
+            return;
+    def showStatus(self,status):
+        self.statusLabel.setText(status)
+
+
+class SiteAreaForm(QWidget, Ui_SiteAreaForm):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        # 删除最大化按钮
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
+        # 添加关闭回调函数
+        self.close_callback = None
+        self.setFixedSize(self.width(), self.height()) #禁止窗口最大化及拉伸
+        self.selectKmlButton.clicked.connect(self.selectKmlFile)
+        self.selectFileButton.clicked.connect(self.selectObjFile)
+        self.kmlFileName = ''
+        self.objFileName = ''
+        self.analysisButton.clicked.connect(self.locationAnalysis)
+        self.modFileButton.clicked.connect(self.outModFile)
+
+    def setCloseCallback(self, callback):
+        """设置窗口关闭时的回调函数"""
+        self.close_callback = callback
+
+    def closeEvent(self, event):
+        """重写关闭事件，确保回调函数被调用"""
+        if self.close_callback:
+            self.close_callback(self)
+        super().closeEvent(event)
+
+    def selectKmlFile(self):
+        self.kmlFileName,_ = QFileDialog.getOpenFileName(self, "打开文件", '.', '图层文件(*.kml)')
+        self.kmlFilePathLE.setText(self.kmlFileName)
+
+    def selectObjFile(self):
+        self.objFileName,_ = QFileDialog.getOpenFileName(self, "打开文件", '.', '需求文件(*.xlsx)')
+        self.filePathLE.setText(self.objFileName)
+    def outModFile(self):
+        file_name, _ = QFileDialog.getSaveFileName(None,"保存文件","需求表模板.xlsx","Excel表格 (*.xlsx)")
+        if file_name:
+            srcDf = pd.DataFrame({'需求名称':[],'经度':[],'纬度':[]})
+            with pd.ExcelWriter(file_name,engine='xlsxwriter') as writer:
+                srcDf.to_excel(writer,sheet_name='需求',index=False)
+        else:
+            return;
+    def locationAnalysis(self):
+        if self.kmlFileName and self.objFileName:
+            self.siteLocationTD = SiteLocationThread(self.kmlFileName,self.objFileName)
+            self.siteLocationTD.stateSignal.connect(self.showStatus)
+            self.siteLocationTD.start()
+        else:
+            QMessageBox.information(None,"错误提示","请先选择图层文件和需求点表格！",QMessageBox.Yes)
+            return;
+    def showStatus(self,status):
+        self.statusLabel.setText(status)
+
+
+class FuzzyMatchForm(QWidget, Ui_FuzzyMatchForm):
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setupUi(self)
+        # 删除最大化按钮
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowMaximizeButtonHint)
+        # 添加关闭回调函数
+        self.close_callback = None
+        self.setFixedSize(self.width(), self.height()) #禁止窗口最大化及拉伸
+        self.fuzzyTypeCols = ['双字匹配','最长匹配','单字匹配']
+        self.fuzzyTypeCBox.addItems(self.fuzzyTypeCols)
+        self.srcFileName = ''
+        self.objFileName = ''
+        self.srcFileButton.clicked.connect(self.selectSrcFile)
+        self.objFileButton.clicked.connect(self.selectObjFile)
+        self.fuzzyButton.clicked.connect(self.fuzzyMatch)
+
+    def setCloseCallback(self, callback):
+        """设置窗口关闭时的回调函数"""
+        self.close_callback = callback
+
+    def closeEvent(self, event):
+        """重写关闭事件，确保回调函数被调用"""
+        if self.close_callback:
+            self.close_callback(self)
+        super().closeEvent(event)
+
+    def selectSrcFile(self):
+        self.srcFileName,_ = QFileDialog.getOpenFileName(self, "选择待匹配的需求文件，文件格式要求UTF-8", '.', '需求文件(*.txt)')
+        self.srcFilePathLE.setText(self.srcFileName)
+    def selectObjFile(self):
+        self.objFileName,_ = QFileDialog.getOpenFileName(self, "选择匹配库文件，文件格式要求UTF-8", '.', '匹配库(*.txt)')
+        self.objFilePathLE.setText(self.objFileName)
+
+    def fuzzyMatch(self):
+        if self.srcFileName and self.objFileName:
+            self.fuzzyTD = FuzzyThread(self.srcFileName,self.objFileName,self.fuzzyTypeCBox.currentIndex(),self.notMatchStrLE.text())
+            self.fuzzyTD.stateSignal.connect(self.showStatus)
+            self.fuzzyTD.start()
+        else:
+            QMessageBox.information(None,"错误提示","请先选择匹配需求和匹配库文件！",QMessageBox.Yes)
+            return;		
+    def showStatus(self,status):
+        self.statusLabel.setText(status)

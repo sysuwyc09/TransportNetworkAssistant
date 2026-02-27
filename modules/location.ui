@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LocationForm</class>
+ <widget class="QWidget" name="LocationForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>513</width>
+    <height>273</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>资源探针</string>
+  </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>icon/search.ico</normaloff>icon/search.ico</iconset>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget{background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0.236422 rgba(28, 33, 44, 255), stop:0.760383 rgba(41, 48, 60, 255));}
+QPushButton {
+    background-color: rgba(28, 33, 44, 255);
+    color: #44cc88;
+    border: 1px solid #44cc88;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+QPushButton:hover {
+    background-color: rgba(40, 45, 56, 255);
+}
+
+QPushButton:pressed {
+    background-color: rgba(20, 25, 36, 255);
+}
+QComboBox {
+    background-color: rgba(28, 33, 44, 255);
+    color: #44cc88;
+    border: 1px solid #44cc88;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+
+QLabel {
+    background-color: #44cc88;  /* 绿色背景 */
+    color: white;  /* 白色文字 */
+    padding: 5px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+QLineEdit {
+    background-color: rgba(28, 33, 44, 255);
+    color: #44cc88;
+    border: 1px solid #44cc88;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="leftMargin">
+      <number>250</number>
+     </property>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>搜索范围(单位：公里)：</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLineEdit" name="distanceLE"/>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <property name="rightMargin">
+      <number>300</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="srcButton">
+       <property name="text">
+        <string>选择需求点</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="srcModButton">
+       <property name="text">
+        <string>需求库模板下载</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="srcFilePathLE"/>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <property name="rightMargin">
+      <number>300</number>
+     </property>
+     <item>
+      <widget class="QPushButton" name="objButton">
+       <property name="text">
+        <string>选择搜索库</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="objModButton">
+       <property name="text">
+        <string>搜索库模板下载</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="objFilePathLE"/>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="searchButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>150</width>
+         <height>40</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>资源搜索</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="statusLabel">
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+                background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0.236422 rgba(28, 33, 44, 255), stop:0.760383 rgba(41, 48, 60, 255));
+                color: #e0e5ec;          /* 浅灰白色文字，适配深色背景 */
+                font-size: 12px;         /* 基础字号 */
+                font-family: &quot;Microsoft YaHei&quot;, Arial, sans-serif; /* 清晰字体 */
+                padding: 6px 8px;        /* 内边距，提升可读性 */
+            }</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

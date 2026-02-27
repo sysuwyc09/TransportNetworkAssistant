@@ -8,7 +8,6 @@ from PySide6.QtUiTools import loadUiType
 from main_ui import Ui_MainWindow
 from publicFunc import *
 from publicThread import *
-from datetime import datetime
 from customnWidget import *
 
 class TNAIWindow(QMainWindow, Ui_MainWindow):
@@ -119,7 +118,11 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         # tool工具页面按钮事件
         self.convert_coord_btn.clicked.connect(self.showToolForm)
         self.read_kml_btn.clicked.connect(self.showToolForm)
-
+        self.write_kml_btn.clicked.connect(self.showToolForm)
+        self.write_heatMap_btn.clicked.connect(self.showToolForm)
+        self.find_location_btn.clicked.connect(self.showToolForm)
+        self.site_area_btn.clicked.connect(self.showToolForm)
+        self.fuzzy_match_btn.clicked.connect(self.showToolForm)
 
 
         self.log_str = ''
@@ -145,11 +148,19 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
     # 工具页面按钮事件
     def showToolForm(self):
         if self.sender() == self.convert_coord_btn:
-            # 创建新的结果窗口
             dialog = ConvertCoordForm()
         elif self.sender() == self.read_kml_btn:
-            # 创建新的结果窗口
             dialog = ReadKmlForm()
+        elif self.sender() == self.write_kml_btn:
+            dialog = WriteKmlForm()
+        elif self.sender() == self.write_heatMap_btn:
+            dialog = WriteHeatMapForm()
+        elif self.sender() == self.find_location_btn:
+            dialog = LocationForm()
+        elif self.sender() == self.site_area_btn:
+            dialog = SiteAreaForm()
+        elif self.sender() == self.fuzzy_match_btn:
+            dialog = FuzzyMatchForm()
         else:
             return;
         # 添加到窗口列表
@@ -158,12 +169,12 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         dialog.setCloseCallback(self.removeClosedDialog)
         # 显示窗口
         dialog.show()
+    
     # 导入批量需求
     def importABsFile(self):
         file_path, _ = QFileDialog.getOpenFileName(self, "导入批量需求文件", "", "Excel Files (*.xlsx)")
         if file_path:
             self.absFileLE.setText(file_path)
-
 
     # 跳纤开始按钮
     def dispatchFunc(self):
@@ -606,7 +617,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.analysis_thread.start()
 
     def showAnalysisStatus(self,msg,percent,time):
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.needTalbeTE.append(f"{current_time} 当前进度：{msg}")
         self.runProgressBar.setValue(percent)
         if percent == 100:
@@ -625,7 +636,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
 
     def showCheckResult(self, result):
         # 将result结果加入到 needTalbeTE
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.needTalbeTE.append(f"{current_time} {result}")
     
     def enableCheck(self, result):
@@ -719,7 +730,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
 
 
     def showStatus(self, state):
-        current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.statusLabel.setText(f"{current_time} {state}")
         self.log_str += f"{current_time} {state}\n"
         self.logTE.setText(self.log_str)
@@ -838,6 +849,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == '__main__':
+
     app = QApplication(sys.argv)
     # 设置图标
     app.setWindowIcon(QIcon('assets/main.png'))

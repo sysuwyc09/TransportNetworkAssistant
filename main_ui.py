@@ -3502,13 +3502,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.read_kml_btn, 0, 1, 1, 1)
 
-        self.notOltAggrSiteBtn_2 = QPushButton(self.frame_31)
-        self.notOltAggrSiteBtn_2.setObjectName(u"notOltAggrSiteBtn_2")
-        sizePolicy2.setHeightForWidth(self.notOltAggrSiteBtn_2.sizePolicy().hasHeightForWidth())
-        self.notOltAggrSiteBtn_2.setSizePolicy(sizePolicy2)
-        self.notOltAggrSiteBtn_2.setMinimumSize(QSize(100, 100))
-        self.notOltAggrSiteBtn_2.setMaximumSize(QSize(100, 100))
-        self.notOltAggrSiteBtn_2.setStyleSheet(u"QPushButton {\n"
+        self.write_kml_btn = QPushButton(self.frame_31)
+        self.write_kml_btn.setObjectName(u"write_kml_btn")
+        sizePolicy2.setHeightForWidth(self.write_kml_btn.sizePolicy().hasHeightForWidth())
+        self.write_kml_btn.setSizePolicy(sizePolicy2)
+        self.write_kml_btn.setMinimumSize(QSize(100, 100))
+        self.write_kml_btn.setMaximumSize(QSize(100, 100))
+        self.write_kml_btn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -3523,15 +3523,15 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout_2.addWidget(self.notOltAggrSiteBtn_2, 0, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.write_kml_btn, 0, 2, 1, 1)
 
-        self.notXgOltBtn_2 = QPushButton(self.frame_31)
-        self.notXgOltBtn_2.setObjectName(u"notXgOltBtn_2")
-        sizePolicy2.setHeightForWidth(self.notXgOltBtn_2.sizePolicy().hasHeightForWidth())
-        self.notXgOltBtn_2.setSizePolicy(sizePolicy2)
-        self.notXgOltBtn_2.setMinimumSize(QSize(100, 100))
-        self.notXgOltBtn_2.setMaximumSize(QSize(100, 100))
-        self.notXgOltBtn_2.setStyleSheet(u"QPushButton {\n"
+        self.write_heatMap_btn = QPushButton(self.frame_31)
+        self.write_heatMap_btn.setObjectName(u"write_heatMap_btn")
+        sizePolicy2.setHeightForWidth(self.write_heatMap_btn.sizePolicy().hasHeightForWidth())
+        self.write_heatMap_btn.setSizePolicy(sizePolicy2)
+        self.write_heatMap_btn.setMinimumSize(QSize(100, 100))
+        self.write_heatMap_btn.setMaximumSize(QSize(100, 100))
+        self.write_heatMap_btn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -3546,15 +3546,15 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout_2.addWidget(self.notXgOltBtn_2, 0, 3, 1, 1)
+        self.gridLayout_2.addWidget(self.write_heatMap_btn, 0, 3, 1, 1)
 
-        self.blueAggrSiteBtn_2 = QPushButton(self.frame_31)
-        self.blueAggrSiteBtn_2.setObjectName(u"blueAggrSiteBtn_2")
-        sizePolicy2.setHeightForWidth(self.blueAggrSiteBtn_2.sizePolicy().hasHeightForWidth())
-        self.blueAggrSiteBtn_2.setSizePolicy(sizePolicy2)
-        self.blueAggrSiteBtn_2.setMinimumSize(QSize(100, 100))
-        self.blueAggrSiteBtn_2.setMaximumSize(QSize(100, 100))
-        self.blueAggrSiteBtn_2.setStyleSheet(u"QPushButton {\n"
+        self.find_location_btn = QPushButton(self.frame_31)
+        self.find_location_btn.setObjectName(u"find_location_btn")
+        sizePolicy2.setHeightForWidth(self.find_location_btn.sizePolicy().hasHeightForWidth())
+        self.find_location_btn.setSizePolicy(sizePolicy2)
+        self.find_location_btn.setMinimumSize(QSize(100, 100))
+        self.find_location_btn.setMaximumSize(QSize(100, 100))
+        self.find_location_btn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -3569,15 +3569,15 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout_2.addWidget(self.blueAggrSiteBtn_2, 0, 4, 1, 1)
+        self.gridLayout_2.addWidget(self.find_location_btn, 0, 4, 1, 1)
 
-        self.boxUplinkBusyBtn_2 = QPushButton(self.frame_31)
-        self.boxUplinkBusyBtn_2.setObjectName(u"boxUplinkBusyBtn_2")
-        sizePolicy2.setHeightForWidth(self.boxUplinkBusyBtn_2.sizePolicy().hasHeightForWidth())
-        self.boxUplinkBusyBtn_2.setSizePolicy(sizePolicy2)
-        self.boxUplinkBusyBtn_2.setMinimumSize(QSize(100, 100))
-        self.boxUplinkBusyBtn_2.setMaximumSize(QSize(100, 100))
-        self.boxUplinkBusyBtn_2.setStyleSheet(u"QPushButton {\n"
+        self.site_area_btn = QPushButton(self.frame_31)
+        self.site_area_btn.setObjectName(u"site_area_btn")
+        sizePolicy2.setHeightForWidth(self.site_area_btn.sizePolicy().hasHeightForWidth())
+        self.site_area_btn.setSizePolicy(sizePolicy2)
+        self.site_area_btn.setMinimumSize(QSize(100, 100))
+        self.site_area_btn.setMaximumSize(QSize(100, 100))
+        self.site_area_btn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -3592,15 +3592,15 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout_2.addWidget(self.boxUplinkBusyBtn_2, 1, 0, 1, 1)
+        self.gridLayout_2.addWidget(self.site_area_btn, 1, 0, 1, 1)
 
-        self.onuBtn_2 = QPushButton(self.frame_31)
-        self.onuBtn_2.setObjectName(u"onuBtn_2")
-        sizePolicy2.setHeightForWidth(self.onuBtn_2.sizePolicy().hasHeightForWidth())
-        self.onuBtn_2.setSizePolicy(sizePolicy2)
-        self.onuBtn_2.setMinimumSize(QSize(100, 100))
-        self.onuBtn_2.setMaximumSize(QSize(100, 100))
-        self.onuBtn_2.setStyleSheet(u"QPushButton {\n"
+        self.fuzzy_match_btn = QPushButton(self.frame_31)
+        self.fuzzy_match_btn.setObjectName(u"fuzzy_match_btn")
+        sizePolicy2.setHeightForWidth(self.fuzzy_match_btn.sizePolicy().hasHeightForWidth())
+        self.fuzzy_match_btn.setSizePolicy(sizePolicy2)
+        self.fuzzy_match_btn.setMinimumSize(QSize(100, 100))
+        self.fuzzy_match_btn.setMaximumSize(QSize(100, 100))
+        self.fuzzy_match_btn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -3615,15 +3615,15 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout_2.addWidget(self.onuBtn_2, 1, 1, 1, 1)
+        self.gridLayout_2.addWidget(self.fuzzy_match_btn, 1, 1, 1, 1)
 
-        self.ponLineProjectBtn_2 = QPushButton(self.frame_31)
-        self.ponLineProjectBtn_2.setObjectName(u"ponLineProjectBtn_2")
-        sizePolicy2.setHeightForWidth(self.ponLineProjectBtn_2.sizePolicy().hasHeightForWidth())
-        self.ponLineProjectBtn_2.setSizePolicy(sizePolicy2)
-        self.ponLineProjectBtn_2.setMinimumSize(QSize(100, 100))
-        self.ponLineProjectBtn_2.setMaximumSize(QSize(100, 100))
-        self.ponLineProjectBtn_2.setStyleSheet(u"QPushButton {\n"
+        self.to_be_continue = QPushButton(self.frame_31)
+        self.to_be_continue.setObjectName(u"to_be_continue")
+        sizePolicy2.setHeightForWidth(self.to_be_continue.sizePolicy().hasHeightForWidth())
+        self.to_be_continue.setSizePolicy(sizePolicy2)
+        self.to_be_continue.setMinimumSize(QSize(100, 100))
+        self.to_be_continue.setMaximumSize(QSize(100, 100))
+        self.to_be_continue.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -3638,7 +3638,7 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout_2.addWidget(self.ponLineProjectBtn_2, 1, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.to_be_continue, 1, 2, 1, 1)
 
 
         self.verticalLayout_32.addWidget(self.frame_31)
@@ -3943,7 +3943,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(4)
+        self.container.setCurrentIndex(8)
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(0)
 
@@ -4062,17 +4062,17 @@ class Ui_MainWindow(object):
 "\u8f6c\u6362", None))
         self.read_kml_btn.setText(QCoreApplication.translate("MainWindow", u"\u56fe\u5c42\n"
 "\u89e3\u6790", None))
-        self.notOltAggrSiteBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u56fe\u5c42\n"
+        self.write_kml_btn.setText(QCoreApplication.translate("MainWindow", u"\u56fe\u5c42\n"
 "\u751f\u6210", None))
-        self.notXgOltBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u70ed\u529b\u56fe\n"
+        self.write_heatMap_btn.setText(QCoreApplication.translate("MainWindow", u"\u70ed\u529b\u56fe\n"
 "\u7ed8\u5236", None))
-        self.blueAggrSiteBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u533a\u57df\n"
-"\u5f52\u5c5e", None))
-        self.boxUplinkBusyBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u8d44\u6e90\n"
+        self.find_location_btn.setText(QCoreApplication.translate("MainWindow", u"\u8d44\u6e90\n"
 "\u63a2\u9488", None))
-        self.onuBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u6a21\u7cca\n"
+        self.site_area_btn.setText(QCoreApplication.translate("MainWindow", u"\u533a\u57df\n"
+"\u5f52\u5c5e", None))
+        self.fuzzy_match_btn.setText(QCoreApplication.translate("MainWindow", u"\u6a21\u7cca\n"
 "\u5339\u914d", None))
-        self.ponLineProjectBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u5f85\u7eed", None))
+        self.to_be_continue.setText(QCoreApplication.translate("MainWindow", u"\u5f85\u7eed", None))
         self.statusLabel.setText("")
         self.sideClose.setText("")
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:700; color:#ffffff;\">\u4f7f\u7528\u8bf4\u660e</span></p><p align=\"center\"><span style=\" font-size:12pt; font-weight:700; color:#ffffff;\">\u9700\u5468\u671f\u66f4\u65b0\u6570\u636e </span></p></body></html>", None))

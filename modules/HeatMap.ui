@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>HeatForm</class>
+ <widget class="QWidget" name="HeatForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>521</width>
+    <height>319</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>热力图生成器</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QWidget{background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0.236422 rgba(28, 33, 44, 255), stop:0.760383 rgba(41, 48, 60, 255));}
+QPushButton {
+    background-color: rgba(28, 33, 44, 255);
+    color: #44cc88;
+    border: 1px solid #44cc88;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+QPushButton:hover {
+    background-color: rgba(40, 45, 56, 255);
+}
+
+QPushButton:pressed {
+    background-color: rgba(20, 25, 36, 255);
+}
+
+QLineEdit {
+    background-color: rgba(28, 33, 44, 255);
+    color: #44cc88;
+    border: 1px solid #44cc88;
+    border-radius: 5px;
+    padding: 5px 10px;
+}
+QSlider::groove:horizontal {
+                height: 6px;
+                background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                                           stop:0 rgba(60, 70, 85, 255), 
+                                           stop:1 rgba(80, 90, 105, 255));
+                border-radius: 3px;
+                margin: 0 10px;
+            }
+            QSlider::groove:vertical {
+                width: 6px;
+                background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                                           stop:0 rgba(60, 70, 85, 255), 
+                                           stop:1 rgba(80, 90, 105, 255));
+                border-radius: 3px;
+                margin: 10px 0;
+            }
+
+            /* 滑块手柄部分 */
+            QSlider::handle:horizontal {
+                background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                                           stop:0 rgba(100, 115, 135, 255), 
+                                           stop:1 rgba(80, 95, 115, 255));
+                border: 1px solid rgba(120, 135, 155, 255);
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                margin: -7px 0; /* 超出轨道上下方 */
+            }
+            QSlider::handle:vertical {
+                background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                                           stop:0 rgba(100, 115, 135, 255), 
+                                           stop:1 rgba(80, 95, 115, 255));
+                border: 1px solid rgba(120, 135, 155, 255);
+                width: 20px;
+                height: 20px;
+                border-radius: 10px;
+                margin: 0 -7px; /* 超出轨道左右方 */
+            }
+
+            /* 手柄悬停状态 */
+            QSlider::handle:horizontal:hover, QSlider::handle:vertical:hover {
+                background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                                           stop:0 rgba(120, 135, 155, 255), 
+                                           stop:1 rgba(100, 115, 135, 255));
+                border-color: rgba(140, 155, 175, 255);
+            }
+
+            /* 手柄按下状态 */
+            QSlider::handle:horizontal:pressed, QSlider::handle:vertical:pressed {
+                background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:1, 
+                                           stop:0 rgba(80, 95, 115, 255), 
+                                           stop:1 rgba(60, 75, 95, 255));
+                border-color: rgba(100, 115, 135, 255);
+            }
+
+            /* 已滑动部分的填充（可选） */
+            QSlider::sub-page:horizontal {
+                background: qlineargradient(spread:pad, x1:0, y1:0, x2:1, y2:0, 
+                                           stop:0 rgba(90, 105, 125, 255), 
+                                           stop:1 rgba(110, 125, 145, 255));
+                border-radius: 3px;
+            }
+            QSlider::sub-page:vertical {
+                background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
+                                           stop:0 rgba(90, 105, 125, 255), 
+                                           stop:1 rgba(110, 125, 145, 255));
+                border-radius: 3px;
+            }
+</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2">
+     <item>
+      <widget class="QPushButton" name="kmlButton">
+       <property name="text">
+        <string>选择区域图层</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="kmlFilePathLE"/>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QPushButton" name="srcButton">
+       <property name="text">
+        <string>选择热力数据</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="modFileButton">
+       <property name="text">
+        <string>模板下载</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_2">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="srcFilePathLE"/>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+    background-color: #44cc88;  /* 绿色背景 */
+    color: white;  /* 白色文字 */
+    padding: 5px;
+	
+	font: 10pt &quot;Microsoft YaHei UI&quot;;
+
+    border: 1px solid white;
+    border-radius: 10px;
+}</string>
+       </property>
+       <property name="text">
+        <string>设置热力点半径：</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSlider" name="heatNumSlider">
+       <property name="value">
+        <number>20</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <item>
+      <spacer name="horizontalSpacer_3">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="outFileButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize">
+        <size>
+         <width>0</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>16777215</width>
+         <height>50</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>生成热力图</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QLabel" name="statusLabel">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>0</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>30</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+                background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0.236422 rgba(28, 33, 44, 255), stop:0.760383 rgba(41, 48, 60, 255));
+                color: #e0e5ec;          /* 浅灰白色文字，适配深色背景 */
+                font-size: 12px;         /* 基础字号 */
+                font-family: &quot;Microsoft YaHei&quot;, Arial, sans-serif; /* 清晰字体 */
+                padding: 6px 8px;        /* 内边距，提升可读性 */
+            }</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
