@@ -814,7 +814,7 @@ class Ui_MainWindow(object):
 "    font-size: 12px;\n"
 "    font-weight: bold;\n"
 "}")
-        self.muti_file_cb.setChecked(False)
+        self.muti_file_cb.setChecked(True)
 
         self.horizontalLayout_27.addWidget(self.muti_file_cb)
 
@@ -1972,6 +1972,52 @@ class Ui_MainWindow(object):
 "    }")
 
         self.gridLayout.addWidget(self.ponPortBtn, 1, 2, 1, 1)
+
+        self.notUseLineBtn = QPushButton(self.frame_18)
+        self.notUseLineBtn.setObjectName(u"notUseLineBtn")
+        sizePolicy2.setHeightForWidth(self.notUseLineBtn.sizePolicy().hasHeightForWidth())
+        self.notUseLineBtn.setSizePolicy(sizePolicy2)
+        self.notUseLineBtn.setMinimumSize(QSize(100, 100))
+        self.notUseLineBtn.setMaximumSize(QSize(100, 100))
+        self.notUseLineBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout.addWidget(self.notUseLineBtn, 1, 3, 1, 1)
+
+        self.boxLevelBtn = QPushButton(self.frame_18)
+        self.boxLevelBtn.setObjectName(u"boxLevelBtn")
+        sizePolicy2.setHeightForWidth(self.boxLevelBtn.sizePolicy().hasHeightForWidth())
+        self.boxLevelBtn.setSizePolicy(sizePolicy2)
+        self.boxLevelBtn.setMinimumSize(QSize(100, 100))
+        self.boxLevelBtn.setMaximumSize(QSize(100, 100))
+        self.boxLevelBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout.addWidget(self.boxLevelBtn, 1, 4, 1, 1)
 
 
         self.verticalLayout_20.addWidget(self.frame_18)
@@ -3943,7 +3989,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(8)
+        self.container.setCurrentIndex(4)
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(0)
 
@@ -4019,6 +4065,10 @@ class Ui_MainWindow(object):
 "\u8c03\u4f18\u5206\u6790", None))
         self.ponPortBtn.setText(QCoreApplication.translate("MainWindow", u"PON C+\n"
 "\u5149\u6a21\u5757\u66ff\u6362", None))
+        self.notUseLineBtn.setText(QCoreApplication.translate("MainWindow", u"\u96f6\u5229\u7528\u7387\n"
+"\u5149\u7f06\u6bb5\u5206\u6790", None))
+        self.boxLevelBtn.setText(QCoreApplication.translate("MainWindow", u"\u673a\u623f\u7bb1\u4f53\n"
+"\u5206\u7ea4\u7ea7\u522b", None))
         self.label_36.setText(QCoreApplication.translate("MainWindow", u"\u5149\u4ea4\u7bb1/\u5206\u7ea4\u7bb1:", None))
         self.searchDevUplinkBtn.setText(QCoreApplication.translate("MainWindow", u"\u67e5\u627e", None))
         self.highScoreBtn.setText(QCoreApplication.translate("MainWindow", u"\u8bc4\u5206\u6700\u9ad8", None))

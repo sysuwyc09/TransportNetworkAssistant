@@ -59,8 +59,6 @@ class CheckTableThread(QThread):
         elif self.analysis_type == "主光路":
             return ['主光路', '箱体上联OLT跳纤路径表','光交箱','分纤箱','ODF']
 
-
-
 class ImportFileThread(QThread):
     # 定义两个信号
     state_signal = Signal(str)  # 状态信号
@@ -1105,3 +1103,348 @@ class PonPortReplaceThread(QThread):
             return box,slot,port
         else:
             return '-','-','-'
+
+# 分析零利用率的光缆段
+class NotUseLineThread(QThread):
+    state_signal = Signal(str)
+    error_signal = Signal(str)
+    def __init__(self,parent=None,file_path=''):
+        super().__init__(parent)
+        self.file_path = file_path
+    
+    def run(self):
+        self.state_signal.emit('正在校验数据库表格')
+        needs_files = ['中继段至光缆段','中继段','光缆段']
+        # 查看data\transportNetwork.db是否存在这些表
+        conn = sqlite3.connect('data/transportNetwork.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT name FROM sqlite_master WHERE type="table";')
+        tables = cursor.fetchall()
+        tables = [table[0] for table in tables]
+        for table in needs_files:
+            if table not in tables:
+                self.error_signal.emit(f'数据库表格中不存在{table}表')
+                return;
+        relay_to_line_df = pd.read_sql_query(f'SELECT * FROM {needs_files[0]}',conn)
+        relay_df = pd.read_sql_query(f'SELECT * FROM {needs_files[1]}',conn)
+        line_df = pd.read_sql_query(f'SELECT * FROM {needs_files[2]}',conn)
+        # 筛选清单
+        line_df = line_df[line_df['红线范围']=='红线外']
+        line_df = line_df[line_df['资源状态']=='在网']
+
+        conn.close()
+        self.state_signal.emit('正在分析零利用率的光缆段')
+        table,not_use_line_df,sub_df_1,sub_df_2,sub_df_3 = self.analyzeNotUseLine(relay_to_line_df,relay_df,line_df)
+        self.state_signal.emit('正在生成零利用率光缆段分析结果')
+        with pd.ExcelWriter(self.file_path) as writer:
+            table.to_excel(writer,sheet_name='零利用率光缆段统计结果',index=False)
+            not_use_line_df.to_excel(writer,sheet_name='零利用率光缆段清单',index=False)
+            sub_df_1.to_excel(writer,sheet_name='无中继段疑似垃圾数据清单',index=False)
+            sub_df_2.to_excel(writer,sheet_name='实际有占用清单',index=False)
+            sub_df_3.to_excel(writer,sheet_name='实际无占用清单',index=False)
+        self.state_signal.emit('零利用率光缆段分析结果已生成！')
+    
+    def analyzeNotUseLine(self,relay_to_line_df,relay_df,line_df):
+        line_df['初验时间'] = pd.to_datetime(line_df['初验时间'],errors='coerce')
+        line_df['时间类型'] = line_df['初验时间'].apply(self.timeType)
+        relay_df = relay_df[['名称','中继纤芯数量','占用数量']].rename(columns={'名称':'中继段'})
+        relay_to_line_df = relay_to_line_df.merge(relay_df,on='中继段',how='left')
+        relay_to_line_df = relay_to_line_df.drop_duplicates()
+        line_table = pd.pivot_table(relay_to_line_df,index=['光缆段'],aggfunc={'中继段':'count','中继纤芯数量':'sum','占用数量':'sum'})
+        line_table = line_table.reset_index().rename(columns={'光缆段':'名称','中继段':'中继段数','中继纤芯数量':'成端纤芯数','占用数量':'纤芯占用数'})
+        line_df = line_df.merge(line_table,on='名称',how='left')
+        # 聚合中继段详细情况
+        relay_to_line_df = relay_to_line_df.astype('str')
+        relay_to_line_df['详细'] = relay_to_line_df['中继段'] + '(' + relay_to_line_df['占用数量'] + '/' + relay_to_line_df['中继纤芯数量'] + ')'
+        line_detail_df = relay_to_line_df[['光缆段','详细']]
+        line_detail_df = line_detail_df.groupby('光缆段')['详细'].agg(lambda x: ','.join(x)).reset_index().rename(columns={'光缆段':'名称'})
+        line_df = line_df.merge(line_detail_df,on='名称',how='left')
+
+        line_df['中继段数'] = line_df['中继段数'].fillna(0).astype('int')
+        not_use_line_df = line_df[line_df['纤芯占用率']==0]
+        # 统计表
+        table = pd.pivot_table(not_use_line_df,index=['维护部门'],aggfunc={'名称':'count'})
+        table = table.reset_index().rename(columns={'名称':'零利用率光缆段数'})
+
+        # 子表1 纤芯占用率为0 且 中继段数为0
+        sub_df_1 = not_use_line_df[not_use_line_df['中继段数']==0]
+        table1 = pd.pivot_table(sub_df_1,index=['维护部门'],aggfunc={'名称':'count'})
+        table1 = table1.reset_index().rename(columns={'名称':'零利用率光缆段数-无中继段'})
+        table = table.merge(table1,on='维护部门',how='left')
+        # 子表2 纤芯占用率为0 且 纤芯占用数不为0
+        sub_df_2 = not_use_line_df[not_use_line_df['纤芯占用数']>0]
+        table2 = pd.pivot_table(sub_df_2,index=['维护部门'],aggfunc={'名称':'count'})
+        table2 = table2.reset_index().rename(columns={'名称':'零利用率光缆段数-实际有占用'})
+        table = table.merge(table2,on='维护部门',how='left')
+        # 子表3 纤芯占用率为0 且 纤芯占用数确实为0 且 中继段数不为0
+        sub_df_3 = not_use_line_df[(not_use_line_df['纤芯占用数']==0) & (not_use_line_df['中继段数']>0)]
+        table3 = pd.pivot_table(sub_df_3,index=['维护部门'],columns=['时间类型'],aggfunc={'名称':'count'})
+        table3.columns = table3.columns.droplevel(0)
+        table3 = table3.reset_index().rename(columns={
+            '未满1年':'实际无占用-未满1年',
+            '满1年未满2年':'实际无占用-满1年未满2年',
+            '满2年未满3年':'实际无占用-满2年未满3年',
+            '满3年以上':'实际无占用-满3年以上'
+        })
+        table = table.merge(table3,on='维护部门',how='left')
+        table4 = pd.pivot_table(sub_df_3,index=['维护部门'],aggfunc={'名称':'count'})
+        table4 = table4.reset_index().rename(columns={'名称':'零利用率光缆段数-实际无占用'})
+        table = table.merge(table4,on='维护部门',how='left')
+        table = table.fillna(0)
+        table.set_index('维护部门',inplace=True)
+        table.loc['合计'] = table.sum()
+        table = table.reset_index()
+        return table,not_use_line_df,sub_df_1,sub_df_2,sub_df_3
+
+
+    def timeType(self,inSys_time):
+        if pd.isna(inSys_time):
+            return "满3年以上"
+        # 根据时间判别未满一年，满一年未满两年，满两年未满三年，满三年以上
+        now = pd.Timestamp.now()
+        one_year_ago = now - pd.DateOffset(years=1)  # 1年前
+        two_years_ago = now - pd.DateOffset(years=2)  # 2年前
+        three_years_ago = now - pd.DateOffset(years=3)  # 3年前
+        # 按区间判断
+        if inSys_time >= one_year_ago:
+            return "未满1年"
+        elif inSys_time >= two_years_ago:
+            return "满1年未满2年"
+        elif inSys_time >= three_years_ago:
+            return "满2年未满3年"
+        else:
+            return "满3年以上"
+
+
+# 箱体分纤箱级别定义逻辑
+'''直连纤芯需要12芯以上，机房为本地接入；
+1、OLT机房、汇聚机房：一级分纤点【机房】
+2、直达一级机房：288以上GJ：一级分纤点【光交箱】
+3、直达一级分纤点的设施：定义为二级分纤点【光交箱+96芯以上分纤箱+本地接入机房】
+4、直达二级分纤点的设施：定义为二级分纤点【光交箱+96芯以上分纤箱+本地接入机房】；循环次数4次
+5、集群光交箱：就高的箱体级别
+'''
+class BoxLevelThread(QThread):
+    state_signal = Signal(str)
+    error_signal = Signal(str)
+    def __init__(self,parent=None,file_path=''):
+        super().__init__(parent)
+        self.file_path = file_path
+    
+    def run(self):
+        if self.fileNotRequired():
+            return;
+        house_df = readDataBase('机房')
+        olt_df = readDataBase('OLT网元')
+        self.state_signal.emit('正在分析一级分纤点机房...')
+        point_df = self.houseLevel(house_df,olt_df)
+        line_df = readDataBase('中继段')
+        box_df = readDataBase('光交箱')
+        oBox_df = readDataBase('分纤箱')
+        box_grp_df = readDataBase('集群管理')
+        self.state_signal.emit(f'已完成一级机房分析，共{point_df.shape[0]}个分纤点')
+        point_df = self.getLevel(house_df,point_df,line_df,box_df,oBox_df,box_grp_df)
+        self.state_signal.emit('正在生成分析表格...')
+        point_df.to_excel(self.file_path,index=False)
+        self.state_signal.emit('已完成！')
+
+    def fileNotRequired(self):
+        # 校验数据库表格需求文件是否存在
+        self.state_signal.emit('正在校验数据库表格')
+        needs_files = ['OLT网元','机房','光交箱','分纤箱','中继段','集群管理']
+        # 查看data\transportNetwork.db是否存在这些表
+        conn = sqlite3.connect('data/transportNetwork.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT name FROM sqlite_master WHERE type="table";')
+        tables = cursor.fetchall()
+        tables = [table[0] for table in tables]
+        for table in needs_files:
+            if table not in tables:
+                self.error_signal.emit(f'数据库表格中不存在{table}表')
+                return True
+        return False
+
+    def houseLevel(self,house_df,olt_df):
+        # step 1 OLT机房和汇聚机房定义为一级分纤点
+        house_df = house_df[house_df['机房类型']=='传输机房']
+        house_df = house_df[house_df['业务级别']!='用户']
+        house_df = house_df[house_df['业务级别']!='本地接入']
+        house_df = house_df[house_df['生命周期状态']!='退网']
+        point_df = house_df[['机房名称','业务级别']].copy().rename(columns={'机房名称':'分纤点名称','业务级别':'细分'})
+        olt_house_df = olt_df[['所属机房']].copy().rename(columns={'所属机房':'分纤点名称'}).drop_duplicates()
+        olt_house_df['细分'] = 'OLT机房'
+        point_df = pd.concat([point_df,olt_house_df],ignore_index=True)
+        point_df = point_df.groupby('分纤点名称')['细分'].apply(lambda x: ','.join(x)).reset_index()
+        point_df['类型'] = '机房'
+        point_df['级别'] = 1
+        return point_df
+
+    def getLevel(self,house_df,point_df,line_df,box_df,oBox_df,box_grp_df):
+        '''
+        本地接入机房、箱体分纤箱级别定义逻辑
+        1、直连纤芯需要12芯以上；机房为本地接入，不含退网态；
+        2、直达一级机房：288以上GJ：一级分纤点【光交箱】
+        3、直达一级分纤点的设施：定义为二级分纤点【光交箱+96芯以上分纤箱+本地接入机房】
+        4、直达二级分纤点的设施：定义为二级分纤点【光交箱+96芯以上分纤箱+本地接入机房】；循环次数4次
+        5、集群光交箱：就高的箱体级别
+        '''
+        line_df = line_df[['名称','中继纤芯数量','始端机房','终端机房','始端设施','终端设施']]
+        line_df = line_df[line_df['中继纤芯数量']>=12]
+
+        line_df2 = line_df.copy().rename(columns={'始端机房':'终端机房','终端机房':'始端机房','始端设施':'终端设施','终端设施':'始端设施'})
+        line_df = pd.concat([line_df,line_df2],ignore_index=True)
+
+        # 判断直达一级机房的接入机房及光交设施；
+        temp_df = point_df[['分纤点名称']].copy().rename(columns={'分纤点名称':'始端机房'})
+        link_to_level1_house = line_df.merge(temp_df,on='始端机房')
+
+        # 判断直达一级机房的288以上光交箱；
+        box_288up_df = box_df[box_df['容量']>=288].copy()
+        box_288up_df = box_288up_df[['设施名称','容量']].rename(columns={'设施名称':'终端设施'})
+        first_box = link_to_level1_house.merge(box_288up_df,on='终端设施')
+        first_box = first_box[['终端设施','始端机房']].drop_duplicates(subset=['终端设施'],keep='first').rename(columns={'终端设施':'分纤点名称'})
+        first_box['级别'] = 1
+        first_box['类型'] = '光交箱'
+        first_box['细分'] = '直达一级机房:' + first_box['始端机房']
+        step_1_box = first_box[['分纤点名称','级别','细分','类型']].drop_duplicates()
+        point_df = pd.concat([point_df,step_1_box],ignore_index=True)
+        # 集群分析
+        point_df = self.boxGrpLevel(box_grp_df,point_df)
+        self.state_signal.emit(f'已完成一级分纤点分析，已分析{point_df.shape[0]}个分纤点')
+
+        # 所有接入设施
+        all_dev_df,house_box_df = self.getAllDev(house_df,box_df,oBox_df)
+        line_df['始端'] = fixSite(line_df['始端机房'],line_df['始端设施'])
+        line_df['终端'] = fixSite(line_df['终端机房'],line_df['终端设施'])
+        line_df = line_df[['始端','终端']]
+
+        # 循环分析直连一级及二级的设施及箱体
+        run_flag = True
+        run_count = 1
+        current_shape = point_df.shape[0]
+        while run_flag:
+            # 未纳入分级的设施,分析直连一级的设施及箱体
+            not_level_df = self.notLevelDev(all_dev_df,point_df)
+            point_df = self.findDevLevel(not_level_df,point_df,line_df,run_count)
+            self.state_signal.emit(f'完成第{run_count}轮二级的设施及箱体分析，已分析{point_df.shape[0]}个分纤点')
+            if point_df.shape[0] == current_shape:
+                run_flag = False
+            else:
+                current_shape = point_df.shape[0]
+                run_count += 1
+            point_df = self.boxGrpLevel(box_grp_df,point_df)
+            if run_count > 4:
+                run_flag = False
+        # 归属机房的箱体按机房级别定义：
+        point_df = self.houseBoxLevel(house_box_df,point_df)
+        # 未纳入分级的设施；定义为级别3
+        not_level_df = self.notLevelDev(all_dev_df,point_df)
+        # not_level_df = not_level_df[not_level_df['设施类型']!='本地接入']
+        not_level_df = not_level_df.rename(columns={'设施类型':'类型'})
+        not_level_df['级别'] = 3
+        not_level_df['细分'] = '未纳入分级的设施'
+        point_df = pd.concat([point_df,not_level_df],ignore_index=True)
+        return point_df
+
+    def houseBoxLevel(self,house_box_df,point_df):
+        '''
+        归属到机房的箱体的级别，按照机房的级别进行定义
+        '''
+        temp_df = point_df[['分纤点名称','级别']].copy().rename(columns={'级别':'分纤点级别'})
+        house_box_df = house_box_df.merge(temp_df,on='分纤点名称',how='left')
+        house_box_df = house_box_df[house_box_df['分纤点级别'].isnull()]
+        temp_df = point_df[['分纤点名称','级别']].copy().rename(columns={'分纤点名称':'机房名称','级别':'机房级别'})
+        house_box_df = house_box_df.merge(temp_df,on='机房名称')
+        house_box_df['级别'] = house_box_df['机房级别']
+        house_box_df['类型'] = house_box_df['设施类型']
+        house_box_df['机房级别'] = house_box_df['机房级别'].astype(str)
+        house_box_df['细分'] = '归属机房:' + house_box_df['机房名称'] + '(级别：' + house_box_df['机房级别'] + ')'
+        house_box_df = house_box_df[['分纤点名称','级别','细分','类型']].drop_duplicates()
+        point_df = pd.concat([point_df,house_box_df],ignore_index=True)
+        return point_df
+
+    def boxGrpLevel(self,box_grp_df,point_df):
+        '''
+        集群管理：
+        1、集群光交箱：就高的箱体级别
+        '''
+        box_grp_df = box_grp_df.rename(columns={'设备名称':'分纤点名称'})
+        # 将匹配哪些无级别的分纤点
+        box_grp_df = box_grp_df.merge(point_df,on='分纤点名称',how='left')
+        box_grp_df['级别'] = box_grp_df['级别'].fillna(3)
+        not_level_box_grp = box_grp_df[box_grp_df['级别']==3]
+        if not_level_box_grp.empty:
+            return point_df
+        box_min_level = box_grp_df.groupby('集群列表')['级别'].min().reset_index().rename(columns={'级别':'最高级别'})
+        box_grp_df = box_grp_df.merge(box_min_level,on='集群列表',how='left')
+        # 获取最高级别的分纤点名称
+        best_box = box_grp_df[box_grp_df['级别']==box_grp_df['最高级别']]
+        best_box = best_box.drop_duplicates(subset=['集群列表'],keep='first')[['集群列表','分纤点名称','最高级别']].rename(columns={'分纤点名称':'最高级别的分纤点名称'})
+        not_level_box_grp = not_level_box_grp.merge(best_box,on='集群列表',how='left')        
+        # 未纳入1,2级的清单
+        not_level_box_grp  = not_level_box_grp[not_level_box_grp['最高级别']<3]
+        if not_level_box_grp.empty:
+            return point_df
+        not_level_box_grp['最高级别'] = not_level_box_grp['最高级别'].astype(int)
+        not_level_box_grp = not_level_box_grp[['分纤点名称','最高级别','最高级别的分纤点名称']].astype(str)
+        not_level_box_grp['细分'] = '集群箱体：' + not_level_box_grp['最高级别的分纤点名称'] + '(' + not_level_box_grp['最高级别'] + ')'
+        not_level_box_grp['最高级别'] = not_level_box_grp['最高级别'].astype(int)
+        not_level_box_grp = not_level_box_grp[['分纤点名称','细分','最高级别']].rename(columns={'最高级别':'级别'}).drop_duplicates()
+        not_level_box_grp['类型'] = '集群箱体'
+        point_df = pd.concat([point_df,not_level_box_grp],ignore_index=True)
+
+        return point_df
+
+    def findDevLevel(self,not_level_df,point_df,line_df,run_count):
+        '''根据line_df判断level2的接入设施'''
+        if not_level_df.empty:
+            return point_df
+        line_df = line_df.merge(point_df,left_on='始端',right_on='分纤点名称')[['始端','终端']]
+        line_df = line_df.merge(not_level_df,left_on='终端',right_on='分纤点名称')
+        temp_df = line_df[['分纤点名称','设施类型','始端']]
+        temp_df = temp_df.drop_duplicates(subset=['分纤点名称'],keep='first')
+        temp_df['级别'] = 2
+        temp_df['细分'] = f'第{run_count}轮二级分纤点分析出，上联：'+temp_df['始端']
+        temp_df['类型'] = temp_df['设施类型']
+        temp_df = temp_df[['分纤点名称','级别','细分','类型']]
+        point_df = pd.concat([point_df,temp_df],ignore_index=True)
+        return point_df
+
+    def notLevelDev(self,dev_df,point_df):
+        '''分析未有级别的分纤点设施'''
+        not_level_dev = dev_df.merge(point_df,on='分纤点名称',how='left')
+        not_level_dev = not_level_dev[not_level_dev['级别'].isnull()][['分纤点名称','设施类型']]
+        not_level_dev = not_level_dev.drop_duplicates()
+        return not_level_dev
+    
+    def getAllDev(self,house_df,box_df,oBox_df):
+        '''
+        汇总所有接入点设施：
+        1、业务级别为本地接入，非退网态的机房；
+        2、96芯以上的光交箱；
+        3、96芯以上的分纤箱
+        '''
+        house_df = house_df[house_df['业务级别']=='本地接入']
+        house_df = house_df[house_df['生命周期状态']!='退网']
+        house_df = house_df[['机房名称']].rename(columns={'机房名称':'分纤点名称'})
+        house_df['设施类型'] = '接入机房'
+        box_df = box_df[box_df['容量']>=96]
+        box_df = box_df[['设施名称','机房名称']].rename(columns={'设施名称':'分纤点名称'})
+        box_df['设施类型'] = '光交箱'
+        oBox_df = oBox_df[oBox_df['容量']>=96]
+        oBox_df = oBox_df[['设施名称','机房名称']].rename(columns={'设施名称':'分纤点名称'})
+        oBox_df['设施类型'] = '分纤箱'
+
+        house_box_df = pd.concat([box_df,oBox_df],ignore_index=True)
+
+        temp_df = house_box_df[['分纤点名称','设施类型']]
+        dev_df = pd.concat([temp_df,house_df],ignore_index=True)
+        dev_df = dev_df.drop_duplicates()
+
+        house_box_df['机房名称'] = house_box_df['机房名称'].fillna('')
+        house_box_df['机房名称'] = house_box_df['机房名称'].astype(str)
+        house_box_df = house_box_df[house_box_df['机房名称']!='']
+
+        return dev_df,house_box_df
+
+

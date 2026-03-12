@@ -491,7 +491,7 @@ QPushButton:pressed {
           <enum>QFrame::Raised</enum>
          </property>
          <property name="currentIndex">
-          <number>8</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="homePage">
           <property name="maximumSize">
@@ -1807,7 +1807,7 @@ QCheckBox {
                  <string>多个文件</string>
                 </property>
                 <property name="checked">
-                 <bool>false</bool>
+                 <bool>true</bool>
                 </property>
                </widget>
               </item>
@@ -3752,6 +3752,90 @@ OLT站点</string>
                 <property name="text">
                  <string>PON C+
 光模块替换</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="3">
+               <widget class="QPushButton" name="notUseLineBtn">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                </property>
+                <property name="text">
+                 <string>零利用率
+光缆段分析</string>
+                </property>
+               </widget>
+              </item>
+              <item row="1" column="4">
+               <widget class="QPushButton" name="boxLevelBtn">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                </property>
+                <property name="text">
+                 <string>机房箱体
+分纤级别</string>
                 </property>
                </widget>
               </item>

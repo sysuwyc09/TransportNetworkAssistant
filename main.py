@@ -27,10 +27,9 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.cardShadow(self.card3)
         self.cardShadow(self.card4)
         self.cardShadow(self.card5)
-
         # 数据库更新页面
         self.file_type_cols = [
-            'OLT网元', '主光路', 'PON端口', '中继段', '光缆段', '站点', '机房', '光交箱', '分纤箱', 'ODF', '华为PON单板','中兴PON单板','CRAN机房'
+            'OLT网元', '主光路', 'PON端口', '中继段', '光缆段', '站点', '机房', '光交箱', '分纤箱', 'ODF', '集群管理', '华为PON单板','中兴PON单板','CRAN机房'
         ]
         # 数据库更新页面 列名
         self.file_cols = [
@@ -38,17 +37,17 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
             (['OLT名称', 'PON口', 'PON下挂ONU数量', 'OBD所属对象', '光路名称', '光路长度','光路文本路由'],['str','str','int','str','str','float','str']),
             (['所属传输网元', '端口名称', 'PONID', '端口状态', 'PON口下挂用户数', '端口子类型'],['str','str','str','str','int','str']),
             (['名称', '长度', '空闲数量', '占用数量', '中继纤芯数量', '始端站点', '终端站点', '始端机房','终端机房', '始端设施', '终端设施'],['str','float','int','int','int','str','str','str','str','str','str']),
-            (['名称','所属光缆','实际长度','纤芯占用率','光纤数目','业务级别','敷设方式'],['str','str','float','float','int','str','str']),
+            (['名称','所属光缆','实际长度','纤芯占用率','光纤数目','业务级别','敷设方式','维护部门','红线范围','初验时间','资源状态'],['str','str','float','float','int','str','str','str','str','str','str']),
             (['站点名称', '所属区县', '乡镇街道'],['str','str','str']),
             (['所属站点', '机房类型', '机房名称', '业务级别', '生命周期状态'],['str','str','str','str','str']),
             (['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','int','float','float']),
             (['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','int','float','float']),
             (['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','int','float','float']),
+            (['设备名称','集群列表'],['str','str']),
             (['所属网元','槽位号','单板类型','单板状态'],['str','str','str','str']),
             (['网元名称','板卡槽位','板卡类型','板卡状态'],['str','str','str','str']),
             (['机房名称', '机房类型'],['str','str'])
         ]
-
         self.fileTypeCB.currentIndexChanged.connect(self.updateFileCols)
         self.fileTypeCB.addItems(self.file_type_cols)
         self.current_cols = []
@@ -114,6 +113,8 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.notXgOltBtn.clicked.connect(self.findNoXgOltSite)
         self.onuBtn.clicked.connect(self.findWeekOnu)
         self.ponPortBtn.clicked.connect(self.searchPonPort)
+        self.notUseLineBtn.clicked.connect(self.findNotUseLine)
+        self.boxLevelBtn.clicked.connect(self.findBoxLevel)
 
         # tool工具页面按钮事件
         self.convert_coord_btn.clicked.connect(self.showToolForm)
@@ -133,6 +134,27 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.load_relay_line_thread.result_signal.connect(self.loadRelayLineResult)
         self.load_relay_line_thread.start()
         self.dev_df = pd.DataFrame()
+
+    def findBoxLevel(self):
+        # 查找机房箱体的分纤点级别
+        now_time = datetime.datetime.now().strftime('%Y%m%d%H%M')
+        file_path = QFileDialog.getSaveFileName(self, "保存文件", f'分纤点级别分析结果_{now_time}.xlsx', "Excel 文件 (*.xlsx)")[0]
+        self.box_level_thread = BoxLevelThread(file_path=file_path)
+        self.box_level_thread.state_signal.connect(self.showStatus)
+        self.box_level_thread.error_signal.connect(self.showError)
+        self.box_level_thread.start()
+
+
+    def findNotUseLine(self):
+        # 查找零利用率的光缆段
+        now_time = datetime.datetime.now().strftime('%Y%m%d%H%M')
+        file_path = QFileDialog.getSaveFileName(self, "保存文件", f'零利用率光缆段分析结果_{now_time}.xlsx', "Excel 文件 (*.xlsx)")[0]
+        self.not_use_line_thread = NotUseLineThread(file_path=file_path)
+        self.not_use_line_thread.state_signal.connect(self.showStatus)
+        self.not_use_line_thread.error_signal.connect(self.showError)
+        self.not_use_line_thread.start()
+
+
 
     def searchPonPort(self):
         # C+光模块替换分析
