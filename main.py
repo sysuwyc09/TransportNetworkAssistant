@@ -40,9 +40,9 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
             (['名称','所属光缆','实际长度','纤芯占用率','光纤数目','业务级别','敷设方式','维护部门','红线范围','初验时间','资源状态'],['str','str','float','float','int','str','str','str','str','str','str']),
             (['站点名称', '所属区县', '乡镇街道'],['str','str','str']),
             (['所属站点', '机房类型', '机房名称', '业务级别', '生命周期状态'],['str','str','str','str','str']),
-            (['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','int','float','float']),
-            (['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','int','float','float']),
-            (['设施名称', '机房名称', '所属综合业务区', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','int','float','float']),
+            (['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
+            (['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
+            (['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
             (['设备名称','集群列表'],['str','str']),
             (['所属网元','槽位号','单板类型','单板状态'],['str','str','str','str']),
             (['网元名称','板卡槽位','板卡类型','板卡状态'],['str','str','str','str']),
@@ -72,6 +72,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.insideBtn.clicked.connect(self.selectPage)
         self.logBtn.clicked.connect(self.selectPage)
         self.toolBtn.clicked.connect(self.selectPage)
+        self.agentBtn.clicked.connect(self.selectPage)
 
         self.oltKeywordLE.returnPressed.connect(self.searchOltSite)
         self.searchOltBtn.clicked.connect(self.searchOltNe)
@@ -101,6 +102,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.dispatchTypeCB.currentIndexChanged.connect(self.updateDispatchType)
         self.dispatchBtn.clicked.connect(self.dispatchFunc)
         self.importABsBtn.clicked.connect(self.importABsFile)
+        self.devCB.currentTextChanged.connect(self.copyDevName)
 
         # 设置首页
         page_widget = self.container.findChild(QWidget, "homePage")
@@ -135,11 +137,31 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.load_relay_line_thread.start()
         self.dev_df = pd.DataFrame()
 
+        # Ai智能体知识库按钮事件
+        self.oltDocBtn.clicked.connect(self.generateOltKnowledge)
+    
+    def generateOltKnowledge(self):
+        # 生成OLT网元知识库
+        now_time = datetime.datetime.now().strftime('%Y%m%d%H%M')
+        path = QFileDialog.getSaveFileName(self, "保存文件", f'OLT网元知识库_{now_time}.md', "Markdown 文件 (*.md)")[0]
+        self.olt_knowledge_thread = OltKnowledgeThread(output_path=path)
+        self.olt_knowledge_thread.state_signal.connect(self.showStatus)
+        self.olt_knowledge_thread.error_signal.connect(self.showError)
+        self.olt_knowledge_thread.start()
+
+    def copyDevName(self):
+        text = self.devCB.currentText()
+        # 4. 获取剪贴板对象
+        clipboard = QApplication.clipboard()
+        # 5. 把文本复制到剪贴板（模式：普通文本）
+        clipboard.setText(text, QClipboard.Clipboard)
+
+
     def findBoxLevel(self):
         # 查找机房箱体的分纤点级别
         now_time = datetime.datetime.now().strftime('%Y%m%d%H%M')
         file_path = QFileDialog.getSaveFileName(self, "保存文件", f'分纤点级别分析结果_{now_time}.xlsx', "Excel 文件 (*.xlsx)")[0]
-        self.box_level_thread = BoxLevelThread(file_path=file_path)
+        self.box_level_thread = BoxLevelThreadV2(file_path=file_path)
         self.box_level_thread.state_signal.connect(self.showStatus)
         self.box_level_thread.error_signal.connect(self.showError)
         self.box_level_thread.start()
@@ -682,8 +704,8 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.container.setCurrentWidget(page_widget)
         # 设置 runProgressBar、needTime隐藏
         self.runAnalysisBtn.setEnabled(False)
-        self.runProgressBar.hide()
-        self.needTime.hide()
+        self.runProgressBar.setValue(0)
+
 
     def initDataBase(self):
         initDB()
@@ -804,6 +826,11 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
             page_widget = self.container.findChild(QWidget, "toolPage")
             self.container.setCurrentWidget(page_widget)
             self.toggleSideBar()
+        elif self.sender() == self.agentBtn:
+            page_widget = self.container.findChild(QWidget, "agentDocPage")
+            self.container.setCurrentWidget(page_widget)
+            self.toggleSideBar()
+
 
 
 
@@ -871,7 +898,6 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == '__main__':
-
     app = QApplication(sys.argv)
     # 设置图标
     app.setWindowIcon(QIcon('assets/main.png'))

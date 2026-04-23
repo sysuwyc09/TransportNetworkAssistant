@@ -9,6 +9,7 @@ from publicFunc import *
 import time
 import re
 
+# 检查数据库表格是否存在线程
 class CheckTableThread(QThread):
     tableReady = Signal(str)  # 信号：表名和查询结果
     resultReady = Signal(bool)  # 信号：表名和查询结果
@@ -59,6 +60,7 @@ class CheckTableThread(QThread):
         elif self.analysis_type == "主光路":
             return ['主光路', '箱体上联OLT跳纤路径表','光交箱','分纤箱','ODF']
 
+# 导入文件线程
 class ImportFileThread(QThread):
     # 定义两个信号
     state_signal = Signal(str)  # 状态信号
@@ -102,6 +104,7 @@ class ImportFileThread(QThread):
         result.rename(columns={'名称':'中继段'},inplace=True)
         writeDataBase('中继段至光缆段',result)
 
+# 更新数据库线程
 class UpdateDBThread(QThread):
     # 定义两个信号
     state_signal = Signal(str)  # 状态信号
@@ -357,12 +360,13 @@ class BoxUpLineThread(QThread):
         self.all_dev['设施所属位置'] = fixSite(self.all_dev['设施所属机房'],self.all_dev['设施名称'])
         obds = list(set(list(self.all_dev['设施所属位置'])))
         self.state_signal.emit(f'已查询到{len(obds)}个光交设施...',0,'')
-        # 按500一组进行分组，如果最后一组不足500则为剩余值
-        obds_groups = [obds[i:i+500] for i in range(0, len(obds), 500)]
+        # 按300一组进行分组，如果最后一组不足300则为剩余值
+        obds_groups = [obds[i:i+300] for i in range(0, len(obds), 300)]
         result_dfs = []
         start_time = time.time()
+        self.state_signal.emit(f'按300个为一组，共{len(obds_groups)}组光交设施进行跳纤路径分析，正在进行第1组...',0,'')
         for i,obds_group in enumerate(obds_groups):
-            temp_df = dispatchToMany(obds_group,line2Df,oltDf)
+            temp_df = dispatchToMany(obds_group,line2Df,oltDf,'OLT',7,15)
             if temp_df.shape[0] > 0:
                 temp_df = selectBestPath(temp_df)
             result_dfs.append(temp_df)
@@ -657,6 +661,8 @@ class FindLongPonLineThread(QThread):
             pon_df['光衰'] = pon_df['跳数'] * 1 + pon_df['光路长度'] / 1000 * 0.35
             lon_pon_df = pon_df[pon_df['光衰'] >= 6]
             self.state_signal.emit(f'按1跳1dB、1公里0.35dB估算，共有{lon_pon_df.shape[0]}条主光路超6dB',10,'')
+            lon_pon_df.sort_values(by=['光衰'],ascending=False,inplace=True)
+            writeDataBase('超长主光路清单',lon_pon_df)
             
             box_up_df = readDataBase('箱体上联OLT跳纤路径表')
             box_up_df = box_up_df[['设施名称','目标OLT机房','跳纤距离','跳数','光衰预算','跳纤路径']].rename(
@@ -914,7 +920,10 @@ class DispatchABThread(QThread):
                     resultDf.drop(columns=['最小空闲芯数得分'],inplace=True)
                     resultDf = resultDf.sort_values(by='方案得分',ascending=False)
                     dt = datetime.datetime.now().strftime('%Y%m%d%H%M')
-                    out_file_name = f'结果\\{self.a_name}_{self.b_name}_跳纤路径{dt}.xlsx'
+                    # 清除a_name和b_name不符合文件命名的字符
+                    temp_a_name = re.sub(r'[^\w]','',self.a_name)
+                    temp_b_name = re.sub(r'[^\w]','',self.b_name)
+                    out_file_name = f'结果\\{temp_a_name}_{temp_b_name}_跳纤路径{dt}.xlsx'
                     resultDf.to_excel(out_file_name,index=False)
                     os.startfile(out_file_name)
                     self.state_signal.emit(f'已将结果保存至{out_file_name}')
@@ -1046,7 +1055,13 @@ class DispatchToManyThread(QThread):
         self.state_signal.emit(f'已将结果保存至{out_file_name}')
 
 
-# 分析C+光模块替换分析
+'''
+通报弱光清单分析
+1、分析C+光模块替换分析
+2、分析可优化主光路清单,选取不能替换的光模块PON口
+3、弱光ODB经纬度匹配,全量匹配
+4、展开弱光匹配
+''' 
 class PonPortReplaceThread(QThread):
     state_signal = Signal(str)
     error_signal = Signal(str)
@@ -1066,7 +1081,7 @@ class PonPortReplaceThread(QThread):
                 hw_port_file = self.folder_path + '/' + file
             elif '中兴光模块' in file and '$' not in file and '.xlsx' in file:
                 zte_port_file = self.folder_path + '/' + file
-                break;
+
         if week_onu_file == '' or hw_port_file == '' or zte_port_file == '':
             self.error_signal.emit('未找到弱光ONU清单、华为光模块清单或中兴光模块清单')
             return;
@@ -1075,7 +1090,8 @@ class PonPortReplaceThread(QThread):
         self.state_signal.emit('正在读取华为光模块清单')
         hw_port_df = pd.read_excel(hw_port_file,engine='openpyxl')
         self.state_signal.emit('正在读取中兴光模块清单')
-        zte_port_df = pd.read_excel(zte_port_file,engine='openpyxl')    
+        zte_port_df = pd.read_excel(zte_port_file,engine='openpyxl')  
+        self.state_signal.emit('正在分析弱光清单U')
         hw_port_df = hw_port_df[['网元名称','资源名称','PON口光模块子类型','PON口发送光功率 (dBm)','PON口光模块类型']]
         zte_port_df = zte_port_df[['网元名称','机框','槽位','端口','等级(类型/子类型)','发送光功率(dBm)','业务类型']]
         hw_port_df['资源名称'] = hw_port_df['资源名称'].astype('str')
@@ -1088,9 +1104,133 @@ class PonPortReplaceThread(QThread):
         port_df['PON'] = port_df['网元名称'] + '-' + port_df['机框'] + '/' + port_df['槽位'] + '/' + port_df['端口']
         port_df = port_df.groupby(['PON']).first().reset_index(drop=False)
         week_onu_df = pd.merge(week_onu_df,port_df,on='PON',how='left')
+        self.state_signal.emit('正在分析弱光清单U的光模块替换分析')
+        week_onu_df,week_port_table = self.analyzePonModel(week_onu_df)
+        self.state_signal.emit('正在分析弱光清单U的可优化主光路清单,分析结构主光路问题')
+        opt_port_df,long_pon_up_link,adjust_port_df,dev_df = self.analyzeLongPonLine(week_port_table)
+
         self.state_signal.emit('正在生成7天内4天弱光清单匹配光模块信息。')
-        week_onu_df.to_excel('结果/7天内4天弱光清单匹配光模块信息-2026-2-13.xlsx',index=False)
+        dt = datetime.datetime.now().strftime('%Y%m%d%H%M')
+        with pd.ExcelWriter(f'结果/7天内4天弱光清单匹配光模块信息{dt}.xlsx') as writer:
+            week_onu_df.to_excel(writer,sheet_name='弱光ONU清单',index=False)
+            week_port_table.to_excel(writer,sheet_name='弱光PON口替换光模块分析过程',index=False)
+            opt_port_df.to_excel(writer,sheet_name='可光模块替代的端口清单',index=False)
+            long_pon_up_link.to_excel(writer,sheet_name='超长主光路调优方案',index=False)
+            adjust_port_df.to_excel(writer,sheet_name='待调整结构的清单',index=False)
+            dev_df.to_excel(writer,sheet_name='弱光聚合情况',index=False)
         self.state_signal.emit('分析完成')
+
+    def analyzeLongPonLine(self,week_port_table):
+        # 筛选可光模块替代的端口清单
+        opt_port_df = week_port_table[week_port_table['替换光模块类型']!='--']
+
+        # 分析可调优清单
+        not_opt_port_df = week_port_table[week_port_table['替换光模块类型']=='--']
+        long_pon_port = readDataBase('超长主光路清单')
+        long_pon_port['PON'] = long_pon_port['PON口'].apply(self.fixLongPonPort)
+
+        long_pon_port = long_pon_port.merge(not_opt_port_df,on='PON')
+
+        long_pon_up_link = readDataBase('超长主光路调优方案')
+        long_pon_up_link = long_pon_up_link[long_pon_up_link['割接可用芯数']>0]
+        temp_df = long_pon_port[['区域','新网格','PON口类型','PON','PON口','弱光ONU数','预估替换光模块可整治数','PON口光模块子类型','PON口发送光功率 (dBm)','替换光模块类型']]
+
+        long_pon_up_link = long_pon_up_link.merge(temp_df,on='PON口')
+        temp_df = long_pon_up_link[['PON']].copy()
+        temp_df['是否可主光路调整'] = '是'
+
+        long_pon_port = long_pon_port.merge(temp_df,on='PON',how='left')
+        long_pon_port['是否可主光路调整'] = long_pon_port['是否可主光路调整'].fillna('否')
+
+        # 分析待调整结构的清单
+        adjust_port_df = long_pon_port[long_pon_port['是否可主光路调整']=='否']
+        all_dev_df = readDevsWithCoord()[['设施名称','经度','纬度']]
+        all_dev_df.rename(columns={'设施名称':'OBD所属对象'},inplace=True)
+        adjust_port_df = adjust_port_df.merge(all_dev_df,on='OBD所属对象',how='left')
+
+        # 分析弱光聚合情况
+        dfs = adjust_port_df['光路文本路由'].apply(self.fixPathPoint)
+        pon_path_df = pd.concat(dfs.tolist(),ignore_index=True)
+        pon_path_df = pon_path_df.drop_duplicates()
+        dev_df = pd.pivot_table(pon_path_df,index='光交设施',aggfunc={'光路文本路由':'count'},fill_value=0)
+        dev_df = dev_df.reset_index()
+        dev_df.columns = ['光交设施','光路数']
+        adjust_port_unique = adjust_port_df[['光路文本路由','PON口']].drop_duplicates(subset=['光路文本路由'], keep='first')
+        pon_path_df = pon_path_df.merge(adjust_port_unique,on='光路文本路由',how='left')
+        temp_df = pon_path_df[['光交设施','PON口']]
+        temp_grp = temp_df.groupby('光交设施').agg('、'.join)
+        temp_grp = temp_grp.reset_index().rename(columns={'PON口':'弱光PON口清单'})
+        dev_df = dev_df.merge(temp_grp,on='光交设施',how='left')
+        dev_df.sort_values(by='光路数',ascending=False,inplace=True)
+
+        return opt_port_df,long_pon_up_link,adjust_port_df,dev_df
+
+    def fixLongPonPort(self,pon_port):
+        parts = pon_port.split('-')
+        olt_name = '-'.join(parts[:-5])
+        return olt_name + '-' + parts[-5] + '/' + parts[-4] + '/' + parts[-2]
+
+    def fixPathPoint(self,pon_path):
+        sites = re.findall('>(.*?)\([AB正反/面ODM0-9]+-\d+-\d+',pon_path)
+        items = []
+        # 倒序查询割接路径上的割接点,排除空字符串和NA值
+        for site in sites:
+            if site not in items:
+                items.append(site)
+        items = items[1:]
+        df = pd.DataFrame(items,columns=['光交设施'])
+        df['光路文本路由'] = pon_path
+        return df
+
+
+    def analyzePonModel(self,week_onu_df):
+        '''
+        分析更换光模块可解决的弱光PON口
+        '''
+        isOnuGoodm_vec = np.vectorize(self.isOnuDBmGood)
+        week_onu_df['PON口发送光功率 (dBm)'] = pd.to_numeric(week_onu_df['PON口发送光功率 (dBm)'],errors='coerce')
+        week_onu_df['RMS收光+软探针'] = pd.to_numeric(week_onu_df['RMS收光+软探针'],errors='coerce')
+        week_onu_df['预估替换光模块可整治'] = isOnuGoodm_vec(week_onu_df['RMS收光+软探针'],week_onu_df['PON口发送光功率 (dBm)'],week_onu_df['PON口类型'],week_onu_df['PON口光模块子类型'])
+        week_port_table = pd.pivot_table(week_onu_df,index=['PON'],columns=['预估替换光模块可整治'],aggfunc={'区域':'count'},fill_value=0)
+        week_port_table.columns = week_port_table.columns.droplevel(0)
+        week_port_table = week_port_table.reset_index()
+        week_port_table['弱光ONU数'] = week_port_table['是'] + week_port_table['否']
+        week_port_table.rename(columns={'是':'预估替换光模块可整治数'},inplace=True)
+        week_port_table = week_port_table[['PON','弱光ONU数','预估替换光模块可整治数']]
+        temp_df = week_onu_df[['区域','新网格','PON','PON口类型','PON口光模块子类型','PON口发送光功率 (dBm)']].copy()
+        temp_df = temp_df.drop_duplicates(subset=['PON'],keep='first')
+        week_port_table = pd.merge(week_port_table,temp_df,on='PON',how='left')
+        install_opt_model_vec = np.vectorize(self.installOptModel)
+        week_port_table['替换光模块类型'] = install_opt_model_vec(week_port_table['预估替换光模块可整治数'],week_port_table['PON口类型'])
+        
+        return week_onu_df,week_port_table
+
+    def installOptModel(self,onu_num,port_type):
+        '''
+        判断更换光模块的类型
+        '''
+        if onu_num > 0:
+            if port_type == 'GPON':
+                return 'Class C++'
+            else:
+                return 'Class D'
+        return '--'
+
+    def isOnuDBmGood(self,onu_dbm,port_dbm,port_type,opt_type):
+        '''
+        判断弱光ONU收光是否可以通过更换光模块解决
+        '''
+        if port_type == '10GGPON' or port_type == 'XGPON+GPON' or port_type == 'XGSPON':
+            if opt_type == 'CLASS C+' or opt_type == 'N2a' or opt_type == 'CLASS B+':
+                new_onu_dbm = onu_dbm + 7.8 - port_dbm
+                if new_onu_dbm > -27:
+                    return '是'
+        if port_type == 'GPON':
+            if opt_type == 'CLASS C+' or opt_type == 'CLASS B+':
+                new_onu_dbm = onu_dbm + 7 - port_dbm
+                if new_onu_dbm > -27:
+                    return '是'
+        return '否'
 
 
     def fixHwPort(self,port_name):
@@ -1103,6 +1243,8 @@ class PonPortReplaceThread(QThread):
             return box,slot,port
         else:
             return '-','-','-'
+
+
 
 # 分析零利用率的光缆段
 class NotUseLineThread(QThread):
@@ -1216,13 +1358,14 @@ class NotUseLineThread(QThread):
             return "满3年以上"
 
 
-# 箱体分纤箱级别定义逻辑
-'''直连纤芯需要12芯以上，机房为本地接入；
-1、OLT机房、汇聚机房：一级分纤点【机房】
-2、直达一级机房：288以上GJ：一级分纤点【光交箱】
-3、直达一级分纤点的设施：定义为二级分纤点【光交箱+96芯以上分纤箱+本地接入机房】
-4、直达二级分纤点的设施：定义为二级分纤点【光交箱+96芯以上分纤箱+本地接入机房】；循环次数4次
+# 机房箱体分纤点级别定义业务逻辑
+'''直连纤芯需要12芯以上，二级分纤点机房为本地接入；
+1、OLT机房、汇聚机房：一级分纤点
+2、直达一级机房：288以上【光交箱】：一级分纤点
+3、直达一级分纤点的设施【光交箱+96芯以上分纤箱+本地接入机房】：定义为二级分纤点
+4、直达二级分纤点的设施【光交箱+96芯以上分纤箱+本地接入机房】：定义为二级分纤点；循环次数4次
 5、集群光交箱：就高的箱体级别
+6、归属机房的光交箱、分纤箱：按照机房的分纤点级别
 '''
 class BoxLevelThread(QThread):
     state_signal = Signal(str)
@@ -1447,4 +1590,288 @@ class BoxLevelThread(QThread):
 
         return dev_df,house_box_df
 
+
+# 机房箱体分纤点级别定义业务逻辑
+'''直连纤芯需要12芯以上，二级分纤点机房为本地接入；
+1、汇聚机房：一级分纤点
+2、直达一级机房：576以上【光交箱】：一级分纤点
+3、OLT机房：一级分纤点
+3、直达一级分纤点的设施【光交箱+96芯以上分纤箱+本地接入机房】：定义为二级分纤点
+4、直达二级分纤点的设施【光交箱+96芯以上分纤箱+本地接入机房】：定义为二级分纤点；循环次数4次
+5、集群光交箱：就高的箱体级别
+6、归属机房的光交箱、分纤箱：按照机房的分纤点级别
+'''
+class BoxLevelThreadV2(QThread):
+    state_signal = Signal(str)
+    error_signal = Signal(str)
+    def __init__(self,parent=None,file_path=''):
+        super().__init__(parent)
+        self.file_path = file_path
+    
+    def run(self):
+        if self.fileNotRequired():
+            return;
+        house_df = readDataBase('机房')
+        olt_df = readDataBase('OLT网元')
+        self.state_signal.emit('正在分析一级分纤点机房...')
+        aggr_house_df,olt_house_df = self.houseLevel(house_df,olt_df)
+        line_df = readDataBase('中继段')
+        box_df = readDataBase('光交箱')
+        oBox_df = readDataBase('分纤箱')
+        box_grp_df = readDataBase('集群管理')
+        self.state_signal.emit(f'已完成机房分析。')
+        point_df = self.getLevel(house_df,aggr_house_df,olt_house_df,line_df,box_df,oBox_df,box_grp_df)
+        self.state_signal.emit('正在生成分析表格...')
+        point_df.to_excel(self.file_path,index=False)
+        self.state_signal.emit('已完成！')
+
+    def fileNotRequired(self):
+        # 校验数据库表格需求文件是否存在
+        self.state_signal.emit('正在校验数据库表格')
+        needs_files = ['OLT网元','机房','光交箱','分纤箱','中继段','集群管理']
+        # 查看data\transportNetwork.db是否存在这些表
+        conn = sqlite3.connect('data/transportNetwork.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT name FROM sqlite_master WHERE type="table";')
+        tables = cursor.fetchall()
+        tables = [table[0] for table in tables]
+        for table in needs_files:
+            if table not in tables:
+                self.error_signal.emit(f'数据库表格中不存在{table}表')
+                return True
+        return False
+
+    def houseLevel(self,house_df,olt_df):
+        # step 1 OLT机房和汇聚机房定义为一级分纤点
+        house_df = house_df[house_df['机房类型']=='传输机房']
+        house_df = house_df[house_df['业务级别']!='用户']
+        house_df = house_df[house_df['业务级别']!='本地接入']
+        house_df = house_df[house_df['生命周期状态']!='退网']
+        house_df = house_df[['机房名称','业务级别']].copy().rename(columns={'机房名称':'分纤点名称','业务级别':'细分'})
+        house_df['类型'] = '汇聚机房'
+        house_df['级别'] = 1
+        olt_house_df = olt_df[['所属机房']].copy().rename(columns={'所属机房':'分纤点名称'}).drop_duplicates()
+        olt_house_df = olt_house_df.merge(house_df,on='分纤点名称',how='left')
+        olt_house_df = olt_house_df[olt_house_df['类型'].isnull()]
+        olt_house_df['细分'] = 'OLT机房'
+        olt_house_df['类型'] = 'OLT机房'
+        olt_house_df['级别'] = 1
+        return house_df,olt_house_df
+
+    def getLevel(self,house_df,aggr_house_df,olt_house_df,line_df,box_df,oBox_df,box_grp_df):
+        '''
+        本地接入机房、箱体分纤箱级别定义逻辑
+        1、直连纤芯需要12芯以上；机房为本地接入，不含退网态；
+        2、直达一级机房：288以上GJ：一级分纤点【光交箱】
+        3、直达一级分纤点的设施：定义为二级分纤点【光交箱+96芯以上分纤箱+本地接入机房】
+        4、直达二级分纤点的设施：定义为二级分纤点【光交箱+96芯以上分纤箱+本地接入机房】；循环次数4次
+        5、集群光交箱：就高的箱体级别
+        '''
+        line_df = line_df[['名称','中继纤芯数量','始端机房','终端机房','始端设施','终端设施']]
+        line_df = line_df[line_df['中继纤芯数量']>=12]
+
+        line_df2 = line_df.copy().rename(columns={'始端机房':'终端机房','终端机房':'始端机房','始端设施':'终端设施','终端设施':'始端设施'})
+        line_df = pd.concat([line_df,line_df2],ignore_index=True)
+
+        # 判断直达一级机房的接入机房及光交设施；
+        temp_df = aggr_house_df[['分纤点名称']].copy().rename(columns={'分纤点名称':'始端机房'})
+        link_to_level1_house = line_df.merge(temp_df,on='始端机房')
+
+        # 判断直达一级机房的576以上光交箱；
+        box_576up_df = box_df[box_df['容量']>=576].copy()
+        box_576up_df = box_576up_df[['设施名称','容量']].rename(columns={'设施名称':'终端设施'})
+        first_box = link_to_level1_house.merge(box_576up_df,on='终端设施')
+        first_box = first_box[['终端设施','始端机房','容量']].drop_duplicates(subset=['终端设施'],keep='first').rename(columns={'终端设施':'分纤点名称'})
+        first_box['级别'] = 1
+        first_box['类型'] = '光交箱'
+        first_box['细分'] = '直达汇聚:' + first_box['始端机房']
+        step_1_box = first_box[['分纤点名称','级别','细分','类型','容量']].drop_duplicates()
+        point_df = pd.concat([aggr_house_df,olt_house_df,step_1_box],ignore_index=True)
+
+        # 集群分析
+        point_df = self.boxGrpLevel(box_grp_df,point_df)
+        self.state_signal.emit(f'已完成一级分纤点分析，已分析{point_df.shape[0]}个分纤点')
+
+        # 所有接入设施
+        all_dev_df,house_box_df = self.getAllDev(house_df,box_df,oBox_df)
+        line_df['始端'] = fixSite(line_df['始端机房'],line_df['始端设施'])
+        line_df['终端'] = fixSite(line_df['终端机房'],line_df['终端设施'])
+        line_df = line_df[['始端','终端']]
+
+        # 循环分析直连一级及二级的设施及箱体
+        run_flag = True
+        run_count = 1
+        current_shape = point_df.shape[0]
+        while run_flag:
+            # 未纳入分级的设施,分析直连一级的设施及箱体
+            not_level_df = self.notLevelDev(all_dev_df,point_df)
+            point_df = self.findDevLevel(not_level_df,point_df,line_df,run_count)
+            self.state_signal.emit(f'完成第{run_count}轮二级的设施及箱体分析，已分析{point_df.shape[0]}个分纤点')
+            if point_df.shape[0] == current_shape:
+                run_flag = False
+            else:
+                current_shape = point_df.shape[0]
+                run_count += 1
+            point_df = self.boxGrpLevel(box_grp_df,point_df)
+            if run_count > 4:
+                run_flag = False
+        # 归属机房的箱体按机房级别定义：
+        point_df = self.houseBoxLevel(house_box_df,point_df)
+        # 未纳入分级的设施；定义为级别3
+        not_level_df = self.notLevelDev(all_dev_df,point_df)
+        # not_level_df = not_level_df[not_level_df['设施类型']!='本地接入']
+        not_level_df = not_level_df.rename(columns={'设施类型':'类型'})
+        not_level_df['级别'] = 3
+        not_level_df['细分'] = '未纳入分级的设施'
+        point_df = pd.concat([point_df,not_level_df],ignore_index=True)
+        return point_df
+
+    def houseBoxLevel(self,house_box_df,point_df):
+        '''
+        归属到机房的箱体的级别，按照机房的级别进行定义
+        '''
+        temp_df = point_df[['分纤点名称','级别']].copy().rename(columns={'级别':'分纤点级别'})
+        house_box_df = house_box_df.merge(temp_df,on='分纤点名称',how='left')
+        house_box_df = house_box_df[house_box_df['分纤点级别'].isnull()]
+        temp_df = point_df[['分纤点名称','级别']].copy().rename(columns={'分纤点名称':'机房名称','级别':'机房级别'})
+        house_box_df = house_box_df.merge(temp_df,on='机房名称')
+        house_box_df['级别'] = house_box_df['机房级别']
+        house_box_df['类型'] = house_box_df['设施类型']
+        house_box_df['机房级别'] = house_box_df['机房级别'].astype(str)
+        house_box_df['细分'] = '归属机房:' + house_box_df['机房名称'] + '(级别：' + house_box_df['机房级别'] + ')'
+        house_box_df = house_box_df[['分纤点名称','级别','细分','类型']].drop_duplicates()
+        point_df = pd.concat([point_df,house_box_df],ignore_index=True)
+        return point_df
+
+    def boxGrpLevel(self,box_grp_df,point_df):
+        '''
+        集群管理：
+        1、集群光交箱：就高的箱体级别
+        '''
+        box_grp_df = box_grp_df.rename(columns={'设备名称':'分纤点名称'})
+        # 将匹配哪些无级别的分纤点
+        box_grp_df = box_grp_df.merge(point_df,on='分纤点名称',how='left')
+        box_grp_df['级别'] = box_grp_df['级别'].fillna(3)
+        not_level_box_grp = box_grp_df[box_grp_df['级别']==3]
+        if not_level_box_grp.empty:
+            return point_df
+        box_min_level = box_grp_df.groupby('集群列表')['级别'].min().reset_index().rename(columns={'级别':'最高级别'})
+        box_grp_df = box_grp_df.merge(box_min_level,on='集群列表',how='left')
+        # 获取最高级别的分纤点名称
+        best_box = box_grp_df[box_grp_df['级别']==box_grp_df['最高级别']]
+        best_box = best_box.drop_duplicates(subset=['集群列表'],keep='first')[['集群列表','分纤点名称','最高级别']].rename(columns={'分纤点名称':'最高级别的分纤点名称'})
+        not_level_box_grp = not_level_box_grp.merge(best_box,on='集群列表',how='left')        
+        # 未纳入1,2级的清单
+        not_level_box_grp  = not_level_box_grp[not_level_box_grp['最高级别']<3]
+        if not_level_box_grp.empty:
+            return point_df
+        not_level_box_grp['最高级别'] = not_level_box_grp['最高级别'].astype(int)
+        not_level_box_grp = not_level_box_grp[['分纤点名称','最高级别','最高级别的分纤点名称']].astype(str)
+        not_level_box_grp['细分'] = '集群箱体：' + not_level_box_grp['最高级别的分纤点名称'] + '(' + not_level_box_grp['最高级别'] + ')'
+        not_level_box_grp['最高级别'] = not_level_box_grp['最高级别'].astype(int)
+        not_level_box_grp = not_level_box_grp[['分纤点名称','细分','最高级别']].rename(columns={'最高级别':'级别'}).drop_duplicates()
+        not_level_box_grp['类型'] = '集群箱体'
+        point_df = pd.concat([point_df,not_level_box_grp],ignore_index=True)
+
+        return point_df
+
+    def findDevLevel(self,not_level_df,point_df,line_df,run_count):
+        '''根据line_df判断level2的接入设施'''
+        if not_level_df.empty:
+            return point_df
+        line_df = line_df.merge(point_df,left_on='始端',right_on='分纤点名称')[['始端','终端']]
+        line_df = line_df.merge(not_level_df,left_on='终端',right_on='分纤点名称')
+        temp_df = line_df[['分纤点名称','设施类型','始端','容量']]
+        temp_df = temp_df.drop_duplicates(subset=['分纤点名称'],keep='first')
+        temp_df['级别'] = 2
+        temp_df['细分'] = f'第{run_count}轮二级分纤点分析出，上联：'+temp_df['始端']
+        temp_df['类型'] = temp_df['设施类型']
+        temp_df = temp_df[['分纤点名称','级别','细分','类型','容量']]
+        point_df = pd.concat([point_df,temp_df],ignore_index=True)
+        return point_df
+
+    def notLevelDev(self,dev_df,point_df):
+        '''分析未有级别的分纤点设施'''
+        temp_df = point_df[['分纤点名称','级别']]
+        not_level_dev = dev_df.merge(temp_df,on='分纤点名称',how='left')
+        not_level_dev = not_level_dev[not_level_dev['级别'].isnull()][['分纤点名称','设施类型','容量']]
+        not_level_dev = not_level_dev.drop_duplicates()
+        return not_level_dev
+    
+    def getAllDev(self,house_df,box_df,oBox_df):
+        '''
+        汇总所有接入点设施：
+        1、业务级别为本地接入，非退网态的机房；
+        2、96芯以上的光交箱；
+        3、96芯以上的分纤箱
+        '''
+        house_df = house_df[house_df['业务级别']=='本地接入']
+        house_df = house_df[house_df['生命周期状态']!='退网']
+        house_df = house_df[['机房名称']].rename(columns={'机房名称':'分纤点名称'})
+        house_df['设施类型'] = '接入机房'
+        box_df = box_df[box_df['容量']>=96]
+        box_df = box_df[['设施名称','机房名称','容量']].rename(columns={'设施名称':'分纤点名称'})
+        box_df['设施类型'] = '光交箱'
+        oBox_df = oBox_df[oBox_df['容量']>=96]
+        oBox_df = oBox_df[['设施名称','机房名称','容量']].rename(columns={'设施名称':'分纤点名称'})
+        oBox_df['设施类型'] = '分纤箱'
+
+        house_box_df = pd.concat([box_df,oBox_df],ignore_index=True)
+
+        temp_df = house_box_df[['分纤点名称','设施类型','容量']]
+        dev_df = pd.concat([temp_df,house_df],ignore_index=True)
+        dev_df = dev_df.drop_duplicates()
+
+        house_box_df['机房名称'] = house_box_df['机房名称'].fillna('')
+        house_box_df['机房名称'] = house_box_df['机房名称'].astype(str)
+        house_box_df = house_box_df[house_box_df['机房名称']!='']
+
+        return dev_df,house_box_df
+
+
+
+# 知识库相关进程
+'''
+OLT 站点知识库的进程，读取OLT表格，然后获取OLT的markdown格式文档
+'''
+class OltKnowledgeThread(QThread):
+    error_signal = Signal(str)
+    state_signal = Signal(str)
+    def __init__(self, parent=None,output_path=None):
+        super().__init__(parent)
+        self.output_path = output_path
+    
+    def run(self):
+        '''
+        运程函数，读取OLT表格，然后获取OLT的markdown格式文档
+        '''
+        if self.tableNotRequired():
+            error_str =  '数据库不存在这些表格：' + '、'.join(self.tableNotRequired())
+            self.error_signal.emit(f'OLT网元数据集表格{error_str}')
+            return;
+        olt_df = readDataBase('OLT网元数据集')
+        detail_cols = ['用户数','PON口总数','PON口空闲数','XGPON口总数','XGPON口空闲数']
+        for col in detail_cols:
+            olt_df[col] = olt_df[col].astype(int).astype(str)
+        olt_df['详细信息'] = '网元:' + olt_df['OLT网元'] + ' 设备型号:'+ olt_df['设备型号'] + ' '
+        for col in detail_cols:
+            olt_df['详细信息'] += col + ':' + olt_df[col] + ' '
+        olt_df = olt_df[['所属站点','详细信息']]
+        result = dfToMarkdownKnowledge(olt_df,self.output_path)
+        if result[0]:
+            self.state_signal.emit(f'OLT网元知识库已生成，路径：{self.output_path}')
+        else:
+            self.error_signal.emit(result[1])
+
+    def tableNotRequired(self):
+        '''
+        校验数据库表格是否存在满足，一次返回不满足的表格清单
+        '''
+        check_tales = ['OLT网元数据集']
+        conn = sqlite3.connect('data/TransportNetwork.db')
+        cursor = conn.cursor()
+        tables = cursor.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
+        tables = [table[0] for table in tables]
+        not_required_tables = [table for table in check_tales if table not in tables]
+        return not_required_tables
 

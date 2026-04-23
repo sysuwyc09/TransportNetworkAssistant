@@ -42,6 +42,23 @@ def readDevs():
     all_dev = pd.concat([all_dev,oBox_df],axis=0)
     return all_dev
 
+def readDevsWithCoord():
+    sql = '''
+        SELECT dev.设施名称, dev.所属区县, dev.所属镇街, dev.机房名称, dev.经度, dev.纬度
+        FROM (
+            SELECT 设施名称,所属区县,所属镇街,机房名称,经度,纬度 FROM 光交箱
+            UNION ALL
+            SELECT 设施名称,所属区县,所属镇街,机房名称,经度,纬度 FROM 分纤箱
+            UNION ALL
+            SELECT 设施名称,所属区县,所属镇街,机房名称,经度,纬度 FROM ODF
+            
+        ) as dev
+    '''
+    all_dev = queryDataBase(sql)
+    house_dev = all_dev[all_dev['机房名称']!=''][['所属区县','所属镇街','机房名称','经度','纬度']].drop_duplicates(subset=['机房名称'],keep='first').rename(columns={'机房名称':'设施名称'})
+    all_dev = all_dev[['设施名称','所属区县','所属镇街','经度','纬度']]
+    all_dev = pd.concat([all_dev,house_dev],axis=0)
+    return all_dev
 
 
 # 分析跳纤至OLT、CRAN机房的跳纤方案路径
@@ -705,7 +722,11 @@ def findKeyPoint(currentPath,objPath,site_dict):
     objPath = '=>' + objPath + '<='
     parts = re.findall('=>(.*?)<=',objPath)
     for i in range(len(parts)):
-        if parts[i] != items[i] or i > len(items)-1:
+        flag = False
+        if i < len(items)-1:
+            if parts[i] != items[i]:
+                flag = True
+        if flag or i > len(items)-1:
             index = objPath.index('=>' + parts[i-1])
             path = objPath[index+2:-2]
             min_num = 300
@@ -726,3 +747,48 @@ def fixSrcPoNPort(port_name):
         return slot,port
     else:
         return '-','-'
+    
+
+def dfToMarkdownKnowledge(df, output_path="dify_knowledge.md", encoding="utf-8"):
+    """
+    将 DataFrame 转换为 Dify 知识库专用的 Markdown（父子分段结构）文件
+    规则：
+    - 第一列：父块（# 一级标题）
+    - 第二列：子块（## 二级标题）+ 子块详细内容
+    - 父段之间用\n\n分割，子块之间用\n分隔
+    """
+    try:
+         # 校验列数
+        if len(df.columns) < 2:
+            raise ValueError("DataFrame 必须至少包含 2 列：第一列=父块，第二列=子块内容")
+
+        md_content = []
+
+        # 按第一列分组（核心修改）
+        for parent, group in df.groupby(df.columns[0]):
+            parent = str(parent).strip()
+            if not parent:
+                continue
+
+            # 1. 添加一级标题
+            parent_section = [f"# {parent}"]
+
+            # 2. 遍历该父块下的所有子内容
+            for _, row in group.iterrows():
+                child_content = str(row.iloc[1]).strip()
+                if child_content:
+                    parent_section.append(f"{child_content}")
+
+            # 3. 拼接当前父块所有内容
+            md_content.append("\n".join(parent_section))
+
+        # 父块之间用两个换行分隔
+        final_content = "\n\n\n".join(md_content)
+
+        # 写入文件
+        with open(output_path, "w", encoding=encoding) as f:
+            f.write(final_content)
+
+        return True,f"✅ 生成成功：{output_path}"
+    except Exception as e:
+        return False,f"❌ 生成 Dify 知识库失败，错误：{e}"

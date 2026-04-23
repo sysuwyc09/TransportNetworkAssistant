@@ -491,7 +491,7 @@ QPushButton:pressed {
           <enum>QFrame::Raised</enum>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>5</number>
          </property>
          <widget class="QWidget" name="homePage">
           <property name="maximumSize">
@@ -3750,8 +3750,8 @@ OLT站点</string>
     }</string>
                 </property>
                 <property name="text">
-                 <string>PON C+
-光模块替换</string>
+                 <string>通报弱光
+解决分析</string>
                 </property>
                </widget>
               </item>
@@ -3836,6 +3836,134 @@ OLT站点</string>
                 <property name="text">
                  <string>机房箱体
 分纤级别</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+         <widget class="QWidget" name="agentDocPage">
+          <layout class="QVBoxLayout" name="verticalLayout_35" stretch="1,10">
+           <item>
+            <widget class="QFrame" name="frame_33">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_34">
+              <item>
+               <widget class="QLabel" name="label_47">
+                <property name="styleSheet">
+                 <string notr="true">QLabel {
+    color: #44cc88;
+    background-color: transparent;
+    padding: 5px;
+    font-size: 16px;
+    font-weight: bold;
+}</string>
+                </property>
+                <property name="text">
+                 <string>【AI 智能体】</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QFrame" name="frame_34">
+             <property name="frameShape">
+              <enum>QFrame::StyledPanel</enum>
+             </property>
+             <property name="frameShadow">
+              <enum>QFrame::Raised</enum>
+             </property>
+             <layout class="QGridLayout" name="gridLayout_3">
+              <item row="0" column="1">
+               <widget class="QPushButton" name="boxDocBtn">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                </property>
+                <property name="text">
+                 <string>接入箱体
+知识库</string>
+                </property>
+               </widget>
+              </item>
+              <item row="0" column="0">
+               <widget class="QPushButton" name="oltDocBtn">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>100</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>100</width>
+                  <height>100</height>
+                 </size>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                </property>
+                <property name="text">
+                 <string>OLT站点
+知识库</string>
                 </property>
                </widget>
               </item>
@@ -6958,7 +7086,7 @@ QPushButton:pressed {
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="aboutBtn">
+              <widget class="QPushButton" name="agentBtn">
                <property name="minimumSize">
                 <size>
                  <width>320</width>
@@ -6996,11 +7124,11 @@ QPushButton:pressed {
 }</string>
                </property>
                <property name="text">
-                <string>关于</string>
+                <string>知识库</string>
                </property>
                <property name="icon">
                 <iconset resource="resources.qrc">
-                 <normaloff>:/icons/assets/about.svg</normaloff>:/icons/assets/about.svg</iconset>
+                 <normaloff>:/icons/assets/document.svg</normaloff>:/icons/assets/document.svg</iconset>
                </property>
                <property name="iconSize">
                 <size>

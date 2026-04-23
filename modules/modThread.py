@@ -406,22 +406,22 @@ class HeatMapThread(QThread):  # 步骤1.创建一个线程实例
         self.srcDf = pd.DataFrame()
         self.pointDf = pd.DataFrame()
     def run(self):
-        try:
-            self.stateSignal.emit('正在读取图层文件。。。')
-            self.loadAreaCoord()
-            self.stateSignal.emit('读取图层文件完成！')
-            self.stateSignal.emit('正在读取热力值数据。。。')
-            self.loadSrcFile()
-            self.stateSignal.emit('读取热力值数据文件完成！')
-            areaGrped = self.srcDf.groupby('归属区域')
-            for areaGrp in areaGrped:
-                area = areaGrp[0]
-                tempPointDf = self.pointDf[self.pointDf['归属区域']==area]
-                self.writeHeat(areaGrp[1],tempPointDf,area)
-                self.stateSignal.emit(f'已生成区域【{area}】热力图！')
-            self.stateSignal.emit('已生成所有热力图！')
-        except:
-            self.stateSignal.emit('读取热力值数据文件完成！')
+        # try:
+        self.stateSignal.emit('正在读取图层文件。。。')
+        self.loadAreaCoord()
+        self.stateSignal.emit('读取图层文件完成！')
+        self.stateSignal.emit('正在读取热力值数据。。。')
+        self.loadSrcFile()
+        self.stateSignal.emit('读取热力值数据文件完成！')
+        areaGrped = self.srcDf.groupby('归属区域')
+        for areaGrp in areaGrped:
+            area = areaGrp[0]
+            tempPointDf = self.pointDf[self.pointDf['归属区域']==area]
+            self.writeHeat(areaGrp[1],tempPointDf,area)
+            self.stateSignal.emit(f'已生成区域【{area}】热力图！')
+        self.stateSignal.emit('已生成所有热力图！')
+        # except Exception as e:
+        #     self.stateSignal.emit(f'生成热力图失败！{e}')
 
 
 
@@ -464,14 +464,16 @@ class HeatMapThread(QThread):  # 步骤1.创建一个线程实例
             self.pointDf['备注'] = '无'
         self.pointDf = self.pointDf[['标记名称','经度','纬度','备注']]
         self.pointDf = self.pointDf.fillna('None')
-        self.pointDf['归属区域'] = findArea_vec(self.pointDf['经度'],self.pointDf['纬度'])
+        if self.pointDf.shape[0]>0:
+            self.pointDf['归属区域'] = findArea_vec(self.pointDf['经度'],self.pointDf['纬度'])
+        else:
+            self.pointDf['归属区域'] = '-'
 
     def findArea(self,lon,lat):
         for name,netArea in self.areas.items():
             if lon <= netArea.maxX and lon >= netArea.minX and lat <= netArea.maxY and lat >= netArea.minY:
                 if IsPtInPoly(lon,lat,netArea.coordinates):
                     return name
-                    break
         return '-'
 
     def writeHeat(self,heatDf,pointDf,area):
