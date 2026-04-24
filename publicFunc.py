@@ -44,22 +44,36 @@ def readDevs():
 
 def readDevsWithCoord():
     sql = '''
-        SELECT dev.设施名称, dev.所属区县, dev.所属镇街, dev.机房名称, dev.经度, dev.纬度
+        SELECT dev.设施名称, dev.机房名称, dev.经度, dev.纬度
         FROM (
-            SELECT 设施名称,所属区县,所属镇街,机房名称,经度,纬度 FROM 光交箱
+            SELECT 设施名称,机房名称,经度,纬度 FROM 光交箱
             UNION ALL
-            SELECT 设施名称,所属区县,所属镇街,机房名称,经度,纬度 FROM 分纤箱
+            SELECT 设施名称,机房名称,经度,纬度 FROM 分纤箱
             UNION ALL
-            SELECT 设施名称,所属区县,所属镇街,机房名称,经度,纬度 FROM ODF
+            SELECT 设施名称,机房名称,经度,纬度 FROM ODF
             
         ) as dev
     '''
     all_dev = queryDataBase(sql)
-    house_dev = all_dev[all_dev['机房名称']!=''][['所属区县','所属镇街','机房名称','经度','纬度']].drop_duplicates(subset=['机房名称'],keep='first').rename(columns={'机房名称':'设施名称'})
-    all_dev = all_dev[['设施名称','所属区县','所属镇街','经度','纬度']]
+    house_dev = all_dev[all_dev['机房名称']!=''][['机房名称','经度','纬度']].drop_duplicates(subset=['机房名称'],keep='first').rename(columns={'机房名称':'设施名称'})
+    all_dev = all_dev[['设施名称','经度','纬度']]
     all_dev = pd.concat([all_dev,house_dev],axis=0)
     return all_dev
 
+def readBoxKnowledge():
+    sql = '''
+        SELECT dev.设施名称, dev.所属区县, dev.所属镇街, dev.经度, dev.纬度, dev.容量
+        FROM (
+            SELECT 设施名称,所属区县,所属镇街,经度,纬度,容量 FROM 光交箱
+            UNION ALL
+            SELECT 设施名称,所属区县,所属镇街,经度,纬度,容量 FROM 分纤箱
+            UNION ALL
+            SELECT 设施名称,所属区县,所属镇街,经度,纬度,容量 FROM ODF
+            
+        ) as dev
+    '''
+    all_dev = queryDataBase(sql)
+    return all_dev
 
 # 分析跳纤至OLT、CRAN机房的跳纤方案路径
 #  ['A端','B端','最小空闲芯数','跳纤距离','跳数','光衰预算','跳纤路径','B端类型']

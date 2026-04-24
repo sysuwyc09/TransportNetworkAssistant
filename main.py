@@ -139,11 +139,26 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
 
         # Ai智能体知识库按钮事件
         self.oltDocBtn.clicked.connect(self.generateOltKnowledge)
+        self.boxDocBtn.clicked.connect(self.generateBoxKnowledge)
+    
+    def generateBoxKnowledge(self):
+        # 生成箱体知识库
+        dir = QFileDialog.getExistingDirectory(self, "选择目录")
+        if not dir:
+            return;
+        self.box_knowledge_thread = BoxKnowledgeThread(output_dir=dir)
+        self.box_knowledge_thread.state_signal.connect(self.showStatus)
+        self.box_knowledge_thread.error_signal.connect(self.showError)
+        self.box_knowledge_thread.start()
+
+
     
     def generateOltKnowledge(self):
         # 生成OLT网元知识库
         now_time = datetime.datetime.now().strftime('%Y%m%d%H%M')
         path = QFileDialog.getSaveFileName(self, "保存文件", f'OLT网元知识库_{now_time}.md', "Markdown 文件 (*.md)")[0]
+        if not path:
+            return;
         self.olt_knowledge_thread = OltKnowledgeThread(output_path=path)
         self.olt_knowledge_thread.state_signal.connect(self.showStatus)
         self.olt_knowledge_thread.error_signal.connect(self.showError)
