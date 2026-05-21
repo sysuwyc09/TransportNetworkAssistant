@@ -117,6 +117,8 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.ponPortBtn.clicked.connect(self.searchPonPort)
         self.notUseLineBtn.clicked.connect(self.findNotUseLine)
         self.boxLevelBtn.clicked.connect(self.findBoxLevel)
+        self.weekPortBtn.clicked.connect(self.findWeekPort)
+        self.boxKmlBtn.clicked.connect(self.writeBoxKml)
 
         # tool工具页面按钮事件
         self.convert_coord_btn.clicked.connect(self.showToolForm)
@@ -140,7 +142,27 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         # Ai智能体知识库按钮事件
         self.oltDocBtn.clicked.connect(self.generateOltKnowledge)
         self.boxDocBtn.clicked.connect(self.generateBoxKnowledge)
-    
+
+    def writeBoxKml(self):
+        # 生成箱体KML文件
+        dir = QFileDialog.getExistingDirectory(self, "选择目录")
+        if not dir:
+            return;
+        self.box_kml_thread = WriteBoxKmlThread(output_dir=dir)
+        self.box_kml_thread.state_signal.connect(self.showStatus)
+        self.box_kml_thread.error_signal.connect(self.showError)
+        self.box_kml_thread.start()
+
+    def findWeekPort(self):
+        # 弱光+临界弱光ONU清单
+        file_path = QFileDialog.getOpenFileName(self, "选择文件", "", "Excel 文件 (*.xlsx)")[0]
+        if not file_path:
+            return;
+        self.week_port_thread = WeekOnuPortAnalyzeThread(file_path=file_path)
+        self.week_port_thread.state_signal.connect(self.showStatus)
+        self.week_port_thread.error_signal.connect(self.showError)
+        self.week_port_thread.start()
+
     def generateBoxKnowledge(self):
         # 生成箱体知识库
         dir = QFileDialog.getExistingDirectory(self, "选择目录")
@@ -797,7 +819,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.logTE.verticalScrollBar().setValue(self.logTE.verticalScrollBar().maximum())
 
     def showError(self,err_msg):
-        QMessageBox.critical(self, "错误", err_msg)
+        QMessageBox.critical(self, "提示", err_msg)
 
 
     def updateFileCols(self):

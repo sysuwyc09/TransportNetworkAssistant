@@ -688,6 +688,13 @@ class FindLongPonLineThread(QThread):
             # print(findKeyPoint(lon_pon_df.iloc[0]['光路文本路由'],lon_pon_df.iloc[0]['调整路径'],site_dict=site_dict))
             lon_pon_df['割接点'],lon_pon_df['割接路由'],lon_pon_df['割接可用芯数'] = findKeyPointVec(lon_pon_df['光路文本路由'],lon_pon_df['调整路径'],site_dict=site_dict)
             
+            # 剔除割接点，原机房，目标OLT机房 三者同时相同的主光路
+            olt_df = readDataBase('OLT网元')[['网元名称','所属机房']].rename(columns={'网元名称':'OLT名称','所属机房':'原机房'})
+            lon_pon_df = lon_pon_df.merge(olt_df,on='OLT名称',how='left')
+            lon_pon_df = lon_pon_df[(lon_pon_df['割接点'] != lon_pon_df['原机房']) | (lon_pon_df['割接点'] != lon_pon_df['目标OLT机房'])]
+            lon_pon_df = lon_pon_df.reset_index(drop=True)
+            lon_pon_df.drop(columns=['原机房'],inplace=True)
+
             self.state_signal.emit('割接路由分析完成，正在写入数据库，请稍后...',90,'')
             writeDataBase('超长主光路调优方案',lon_pon_df)
             self.state_signal.emit('已完成...',100,'')
@@ -1244,7 +1251,186 @@ class PonPortReplaceThread(QThread):
         else:
             return '-','-','-'
 
+'''
+临界弱光+弱光，主光路调优分析
+1、分析弱光+临界弱光ONU的清单，分析主光路可调优数量
+2、根据分析结果，生成主光路调优建议
+'''
+class WeekOnuPortAnalyzeThread(QThread):
+    state_signal = Signal(str)
+    error_signal = Signal(str)
+    def __init__(self,parent=None,file_path=''):
+        super().__init__(parent)
+        self.file_path = file_path
 
+    def run(self):
+        self.state_signal.emit('正在加载弱光ONU清单清单...')
+        week_onu_df = pd.read_excel(self.file_path,engine='openpyxl')
+        self.state_signal.emit('正在分析弱光清单U')
+        week_onu_df,week_port_table = self.analyzeWeekPort(week_onu_df)
+
+        self.state_signal.emit('正在分析弱光清单U的可优化主光路清单,分析结构主光路问题')
+        week_port_table,long_pon_up_link,adjust_port_df,dev_df = self.analyzeLongPonLine(week_port_table)
+
+
+        self.state_signal.emit('正在生成分析结果。')
+        dt = datetime.datetime.now().strftime('%Y%m%d%H%M')
+        out_file_path = '结果/'+self.file_path.split('/')[-1].split('.')[0]+'_分析结果'+dt+'.xlsx'
+
+        with pd.ExcelWriter(out_file_path) as writer:
+            week_onu_df.to_excel(writer,sheet_name='弱光ONU清单',index=False)
+            week_port_table.to_excel(writer,sheet_name='弱光PON口清单',index=False)
+            long_pon_up_link.to_excel(writer,sheet_name='超长主光路可调优方案',index=False)
+            adjust_port_df.to_excel(writer,sheet_name='超长待调整结构的清单',index=False)
+            dev_df.to_excel(writer,sheet_name='弱光聚合情况',index=False)
+        self.state_signal.emit('分析完成')
+
+    def analyzeWeekPort(self,week_onu_df):
+        '''
+        分析弱光清单U的弱光类型
+        '''
+        week_onu_df['接收光功率(dBm)'] = pd.to_numeric(week_onu_df['接收光功率(dBm)'],errors='coerce')
+        week_onu_df['弱光类型'] = week_onu_df['接收光功率(dBm)'].apply(lambda x: '弱光' if x <= -27 else ('临界弱光' if x <= -25 else '正常'))
+        week_onu_df['弱光类型'] = week_onu_df['弱光类型'].fillna('正常') 
+        anaylyzeArea_vec = np.vectorize(self.anaylyzeArea)
+        week_onu_df['区域'] = anaylyzeArea_vec(week_onu_df['区域'],week_onu_df['PON'])
+        week_port_table = pd.pivot_table(week_onu_df,index=['PON'],columns=['弱光类型'],aggfunc='size',fill_value=0)
+        week_port_table = week_port_table.reset_index()
+        week_port_table = week_port_table.rename(columns={'弱光':'弱光ONU数','临界弱光':'临界弱光ONU数'})
+        week_port_table['待整治数'] = week_port_table['弱光ONU数'] + week_port_table['临界弱光ONU数']
+        port_area = week_onu_df[['PON','区域','网格']].drop_duplicates(subset=['PON'],keep='first')
+        week_port_table = week_port_table.merge(port_area,on='PON',how='left')
+        return week_onu_df,week_port_table
+
+    def anaylyzeArea(self,company,olt_name):
+        if pd.isnull(company):
+            company = fixCompany(olt_name)
+        elif company == '':
+            company = fixCompany(olt_name)    
+        return company
+
+    def analyzeLongPonLine(self,week_port_table):
+
+        # 分析可调优清单
+        long_pon_port = readDataBase('超长主光路清单')
+        long_pon_port['PON'] = long_pon_port['PON口'].apply(self.fixLongPonPort)
+
+        temp_df = long_pon_port[['PON','PON口']].copy()
+        temp_df['是否超长主光路'] = '是'
+        week_port_table = week_port_table.merge(temp_df,on='PON',how='left')
+        week_port_table['是否超长主光路'] = week_port_table['是否超长主光路'].fillna('否')
+
+        long_pon_up_link = readDataBase('超长主光路调优方案')
+        long_pon_up_link = long_pon_up_link[long_pon_up_link['割接可用芯数']>0]
+        long_pon_up_link = long_pon_up_link.merge(week_port_table,on='PON口')
+
+
+        temp_df = long_pon_up_link[['PON口']].copy()
+        temp_df['是否可主光路调整'] = '是'
+        week_port_table = week_port_table.merge(temp_df,on='PON口',how='left')
+        week_port_table['是否可主光路调整'] = week_port_table['是否可主光路调整'].fillna('否')
+
+        # 分析待调整结构的清单
+        adjust_port_df = week_port_table[week_port_table['是否可主光路调整']=='否'].merge(long_pon_port,on=['PON','PON口'])
+        all_dev_df = readDevsWithCoord()[['设施名称','经度','纬度']]
+        all_dev_df.rename(columns={'设施名称':'OBD所属对象'},inplace=True)
+        adjust_port_df = adjust_port_df.merge(all_dev_df,on='OBD所属对象',how='left')
+
+        # 分析弱光聚合情况
+        dfs = adjust_port_df['光路文本路由'].apply(self.fixPathPoint)
+        pon_path_df = pd.concat(dfs.tolist(),ignore_index=True)
+        pon_path_df = pon_path_df.drop_duplicates()
+        dev_df = pd.pivot_table(pon_path_df,index='光交设施',aggfunc={'光路文本路由':'count'},fill_value=0)
+        dev_df = dev_df.reset_index()
+        dev_df.columns = ['光交设施','光路数']
+        adjust_port_unique = adjust_port_df[['光路文本路由','PON口']].drop_duplicates(subset=['光路文本路由'], keep='first')
+        pon_path_df = pon_path_df.merge(adjust_port_unique,on='光路文本路由',how='left')
+        temp_df = pon_path_df[['光交设施','PON口']]
+        temp_grp = temp_df.groupby('光交设施').agg('、'.join)
+        temp_grp = temp_grp.reset_index().rename(columns={'PON口':'弱光PON口清单'})
+        dev_df = dev_df.merge(temp_grp,on='光交设施',how='left')
+        dev_df.sort_values(by='光路数',ascending=False,inplace=True)
+
+        return week_port_table,long_pon_up_link,adjust_port_df,dev_df
+
+    def fixLongPonPort(self,pon_port):
+        parts = pon_port.split('-')
+        olt_name = '-'.join(parts[:-5])
+        return olt_name + '-' + parts[-5] + '/' + parts[-4] + '/' + parts[-2]
+
+    def fixPathPoint(self,pon_path):
+        sites = re.findall('>(.*?)\([AB正反/面ODM0-9]+-\d+-\d+',pon_path)
+        items = []
+        # 倒序查询割接路径上的割接点,排除空字符串和NA值
+        for site in sites:
+            if site not in items:
+                items.append(site)
+        items = items[1:]
+        df = pd.DataFrame(items,columns=['光交设施'])
+        df['光路文本路由'] = pon_path
+        return df
+
+
+    def analyzePonModel(self,week_onu_df):
+        '''
+        分析更换光模块可解决的弱光PON口
+        '''
+        isOnuGoodm_vec = np.vectorize(self.isOnuDBmGood)
+        week_onu_df['PON口发送光功率 (dBm)'] = pd.to_numeric(week_onu_df['PON口发送光功率 (dBm)'],errors='coerce')
+        week_onu_df['RMS收光+软探针'] = pd.to_numeric(week_onu_df['RMS收光+软探针'],errors='coerce')
+        week_onu_df['预估替换光模块可整治'] = isOnuGoodm_vec(week_onu_df['RMS收光+软探针'],week_onu_df['PON口发送光功率 (dBm)'],week_onu_df['PON口类型'],week_onu_df['PON口光模块子类型'])
+        week_port_table = pd.pivot_table(week_onu_df,index=['PON'],columns=['预估替换光模块可整治'],aggfunc={'区域':'count'},fill_value=0)
+        week_port_table.columns = week_port_table.columns.droplevel(0)
+        week_port_table = week_port_table.reset_index()
+        week_port_table['弱光ONU数'] = week_port_table['是'] + week_port_table['否']
+        week_port_table.rename(columns={'是':'预估替换光模块可整治数'},inplace=True)
+        week_port_table = week_port_table[['PON','弱光ONU数','预估替换光模块可整治数']]
+        temp_df = week_onu_df[['区域','新网格','PON','PON口类型','PON口光模块子类型','PON口发送光功率 (dBm)']].copy()
+        temp_df = temp_df.drop_duplicates(subset=['PON'],keep='first')
+        week_port_table = pd.merge(week_port_table,temp_df,on='PON',how='left')
+        install_opt_model_vec = np.vectorize(self.installOptModel)
+        week_port_table['替换光模块类型'] = install_opt_model_vec(week_port_table['预估替换光模块可整治数'],week_port_table['PON口类型'])
+        
+        return week_onu_df,week_port_table
+
+    def installOptModel(self,onu_num,port_type):
+        '''
+        判断更换光模块的类型
+        '''
+        if onu_num > 0:
+            if port_type == 'GPON':
+                return 'Class C++'
+            else:
+                return 'Class D'
+        return '--'
+
+    def isOnuDBmGood(self,onu_dbm,port_dbm,port_type,opt_type):
+        '''
+        判断弱光ONU收光是否可以通过更换光模块解决
+        '''
+        if port_type == '10GGPON' or port_type == 'XGPON+GPON' or port_type == 'XGSPON':
+            if opt_type == 'CLASS C+' or opt_type == 'N2a' or opt_type == 'CLASS B+':
+                new_onu_dbm = onu_dbm + 7.8 - port_dbm
+                if new_onu_dbm > -27:
+                    return '是'
+        if port_type == 'GPON':
+            if opt_type == 'CLASS C+' or opt_type == 'CLASS B+':
+                new_onu_dbm = onu_dbm + 7 - port_dbm
+                if new_onu_dbm > -27:
+                    return '是'
+        return '否'
+
+
+    def fixHwPort(self,port_name):
+        regex = r'框:(\d+)/槽:(\d+)/端口:(\d+)'
+        match = re.match(regex,port_name)
+        if match:
+            box = match.group(1)
+            slot = match.group(2)
+            port = match.group(3)
+            return box,slot,port
+        else:
+            return '-','-','-'
 
 # 分析零利用率的光缆段
 class NotUseLineThread(QThread):
@@ -1857,6 +2043,8 @@ class OltKnowledgeThread(QThread):
         for col in detail_cols:
             olt_df['详细信息'] += col + ':' + olt_df[col] + ' '
         olt_df = olt_df[['所属站点','详细信息']]
+        # 只布放100个点的测试数据
+        # olt_df = olt_df.head(100)
         result = dfToMarkdownKnowledge(olt_df,self.output_path)
         if result[0]:
             self.state_signal.emit(f'OLT网元知识库已生成，路径：{self.output_path}')
@@ -1895,38 +2083,55 @@ class BoxKnowledgeThread(QThread):
         self.state_signal.emit('开始读取箱体清单...')
         all_dev = readBoxKnowledge()
         # 测试只取200数据测试，正式版全选
-        all_dev = all_dev.head(200)
+        # all_dev = all_dev.head(200)
         all_dev = self.getAllDev(all_dev)
         self.state_signal.emit('箱体清单读取完成')
         self.state_signal.emit('开始读取箱体上联方案...')
-        all_dev, uplink_df = self.getDevUplink(all_dev)
+        grped = all_dev.groupby('所属区县')
         self.state_signal.emit('正在生成箱体知识库...')
-        now = datetime.datetime.now().strftime('%Y%m%d%H%M')
-        self.devToKnowledge(all_dev,now)
-        self.state_signal.emit('正在生成箱体上联方案知识库...')
-        self.uplinkToKnowledge(uplink_df,now)
+        for area,group in grped:
+            all_dev, uplink_df = self.getDevUplink(group)
+            now = datetime.datetime.now().strftime('%Y%m%d%H%M')
+            self.devToKnowledge(all_dev,now,area)
+            self.uplinkToKnowledge(uplink_df,now,area)
         self.state_signal.emit('已完成')
 
 
-    def uplinkToKnowledge(self,uplink_df,now):
+    def uplinkToKnowledge(self,uplink_df,now,area):
         '''
         将箱体上联方案表转换为Dify知识库格式的Markdown文档
         '''
-        uplink_df['详细信息'] = ''
+        uplink_df['跳纤路径'] = uplink_df['跳纤路径'].apply(self.fixPonLine)
+        uplink_df['详细信息'] = '设施名称:' + uplink_df['设施名称'] + ' '
+        uplink_df['最小空闲芯数'] = uplink_df['最小空闲芯数'].astype(int)
+
         uplink_df = uplink_df.astype(str)
-        uplink_df['详细信息'] = uplink_df['目标OLT机房'] + '【' + uplink_df['机房详细信息'] + '】 '
-        for col in uplink_df.columns.tolist():
-            if col=='设施名称' or col=='详细信息' or col=='目标OLT机房' or col=='机房详细信息' or col =='方案得分':
-                continue
-            else:
-                uplink_df['详细信息'] =  uplink_df['详细信息']  + col + ':' + uplink_df[col] + ' '
+        uplink_df['详细信息'] = uplink_df['详细信息'] + '上联机房:' + uplink_df['目标OLT机房'] + '【' + uplink_df['机房详细信息'] + '】 '
+        uplink_df['详细信息'] = uplink_df['详细信息'] + '上联路由:' + uplink_df['跳纤路径'] + ' '
+        uplink_df['详细信息'] = uplink_df['详细信息'] + '【空闲芯数:' + uplink_df['最小空闲芯数'] + '芯 | '
+        uplink_df['详细信息'] = uplink_df['详细信息'] + '跳纤距离:' + uplink_df['跳纤距离'] + 'km | '
+        uplink_df['详细信息'] = uplink_df['详细信息'] + '光衰预算:' + uplink_df['光衰预算'] + 'dB】'
+
         uplink_df = uplink_df[['设施名称','详细信息']]
         uplink_df = uplink_df.drop_duplicates()
-        dfToMarkdownKnowledge(uplink_df,self.output_dir+'/箱体上联方案_'+now+'.md')
+        flag,result = dfToMarkdownKnowledge(uplink_df,self.output_dir+'/箱体上联方案_'+area+'_'+now+'.md')
+        if flag:
+            self.state_signal.emit(result)
+        else:
+            self.error_signal.emit(result)
+
+    def fixPonLine(self,path):
+        '''
+        修正跳纤路径，只保留跳纤信息
+        '''
+        path = '=>' + path + '<='
+        points = re.findall('=>(.*?)<=',path)
+        path = '《=》'.join(points)
+        return path
 
 
 
-    def devToKnowledge(self,all_dev,now):
+    def devToKnowledge(self,all_dev,now,area):
         '''
         将箱体清单和上联方案表转换为Dify知识库格式的Markdown文档
         '''
@@ -1937,14 +2142,15 @@ class BoxKnowledgeThread(QThread):
             '设施名称:' + all_dev['设施名称'] + ' ' +
             all_dev['所属区县'] + ' ' +
             all_dev['所属镇街'] + ' ' +
-            '经度:' + all_dev['经度'] + ' ' +
-            '纬度:' + all_dev['纬度'] + ' ' +
             '容量:' + all_dev['容量']
         )
         all_dev = all_dev[['设施名称','详细信息']]
         all_dev = all_dev.drop_duplicates()
-        dfToMarkdownKnowledge(all_dev,self.output_dir+'/箱体清单_'+now+'.md')
-
+        flag,result = dfToMarkdownKnowledge(all_dev,self.output_dir+'/箱体清单_'+area+'_'+now+'.md')
+        if flag:
+            self.state_signal.emit(result)
+        else:
+            self.error_signal.emit(result)
 
 
     def loadOltHouseCount(self):
@@ -2015,3 +2221,108 @@ class BoxKnowledgeThread(QThread):
         tables = [table[0] for table in tables]
         not_required_tables = [table for table in check_tales if table not in tables]
         return not_required_tables
+
+
+'''
+调用数据库data\transportNetwork.db中的'机房','光交箱', '分纤箱', 'ODF'表格，按类型生成箱体图层，分区域输出文件；
+数据库表格数据结构：
+所属站点(TEXT), 机房类型(TEXT), 机房名称(TEXT), 业务级别(TEXT), 生命周期状态(TEXT)
+(['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
+(['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
+(['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
+处理过程：
+1、ODF表格 取 机房名称、所属区县、经度、纬度 四列去重，形成机房清单，设置类型为机房
+2、光交箱表格 取 设施名称、所属区县、经度、纬度、分纤点级别 五列去重，形成光交箱清单，设置类型为分纤点级别-光交箱
+3、分纤箱表格 取 设施名称、所属区县、经度、纬度、容量 五列去重，筛选容量大于等于72的箱体，形成分纤箱清单，设置类型为分纤箱
+合并三个清单，根据类型分文件夹，按所属区县逐个输出文件；调用PublicFunc.py中的writeDoc\writeFolder\writePoint函数，生成KML文件；不同类型的icon不同；
+'''
+class WriteBoxKmlThread(QThread):
+    state_signal = Signal(str)
+    error_signal = Signal(str)
+
+    def __init__(self, output_dir='结果/箱体图层', parent=None):
+        super().__init__(parent)
+        self.output_dir = output_dir
+        
+    def run(self):
+        try:
+            self.state_signal.emit('开始读取数据库...')
+            conn = sqlite3.connect('data/TransportNetwork.db')
+            
+            self.state_signal.emit('读取ODF表格...')
+            odf_df = pd.read_sql('SELECT 机房名称, 所属区县, 经度, 纬度 FROM ODF', conn)
+            odf_df = odf_df.drop_duplicates()
+            house_df = pd.read_sql('SELECT 机房名称, 业务级别 FROM 机房', conn)
+            house_df = house_df.merge(odf_df,on='机房名称').drop_duplicates()
+            house_df['类型'] = house_df['业务级别'] + '机房'
+            house_df['名称'] = house_df['机房名称']
+            house_df = house_df[['名称', '所属区县', '经度', '纬度', '类型']]
+            
+            self.state_signal.emit('读取光交箱表格...')
+            gjx_df = pd.read_sql('SELECT 设施名称, 所属区县, 经度, 纬度, 分纤点级别 FROM 光交箱', conn)
+            gjx_df = gjx_df.drop_duplicates()
+            gjx_df['类型'] = gjx_df['分纤点级别'] + '光交箱'
+            gjx_df['名称'] = gjx_df['设施名称']
+            gjx_df = gjx_df[['名称', '所属区县', '经度', '纬度', '类型']]
+            
+            self.state_signal.emit('读取分纤箱表格...')
+            fqx_df = pd.read_sql('SELECT 设施名称, 所属区县, 经度, 纬度, 容量 FROM 分纤箱', conn)
+            fqx_df = fqx_df[fqx_df['容量'] >= 72].drop_duplicates()
+            fqx_df['类型'] = '分纤箱'
+            fqx_df['名称'] = fqx_df['设施名称']
+            fqx_df = fqx_df[['名称', '所属区县', '经度', '纬度', '类型']]
+            
+            conn.close()
+            
+            all_df = pd.concat([house_df, gjx_df, fqx_df], ignore_index=True)
+            all_df = all_df.drop_duplicates().astype(str)
+            
+            os.makedirs(self.output_dir, exist_ok=True)
+            type_icon_map = {
+                '核心(本地骨干)机房': 'star.png',
+                '核心(省际)机房': 'star.png',
+                '核心(省内)机房': 'star.png',
+                '普通汇聚机房': 'homegardenbusiness.png',
+                '业务汇聚机房': 'ranger_station.png',
+                '本地接入机房': 'campground.png',
+                '用户机房': 'info-i.png',
+                '重要汇聚机房': 'sunny.png',
+                '分纤箱': 'open-diamond.png',
+                '一级光交箱': 'post_office.png',
+                '二级光交箱': 'track.png',
+                '接入网分纤箱光交箱': 'placemark_circle.png',
+                '末端光交箱': 'placemark_circle.png',
+                '普通光交箱': 'placemark_square.png'
+            }
+            
+            districts = all_df['所属区县'].unique()
+            total_districts = len(districts)
+            
+            for idx, district in enumerate(districts):
+                self.state_signal.emit(f'正在处理 {district} ({idx+1}/{total_districts})...')
+                district_df = all_df[all_df['所属区县'] == district]
+                
+                types = district_df['类型'].unique()
+                folders = []
+                
+                for box_type in types:
+                    type_df = district_df[district_df['类型'] == box_type]
+                    places = []
+                    icon = type_icon_map.get(box_type, 'donut.png')
+                    
+                    for _, row in type_df.iterrows():
+                        places.append(writePoint(row['名称'], row['经度'], row['纬度'], icon, row['类型']))
+                    
+                    folders.append(writeFolder(box_type, places))
+                
+                kml_content = writeDoc(f'{district}机房箱体图层', folders)
+                dt = datetime.datetime.now().strftime('%Y%m%d')
+                file_path = os.path.join(self.output_dir, f'{district}箱体_{dt}.kml')
+                
+                with open(file_path, 'w', encoding='UTF-8') as f:
+                    f.write(kml_content)
+            
+            self.state_signal.emit(f'已完成！共处理 {total_districts} 个区县，输出至 {self.output_dir}')
+            
+        except Exception as e:
+            self.error_signal.emit(f'处理失败: {str(e)}')

@@ -2019,6 +2019,52 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.boxLevelBtn, 1, 4, 1, 1)
 
+        self.weekPortBtn = QPushButton(self.frame_18)
+        self.weekPortBtn.setObjectName(u"weekPortBtn")
+        sizePolicy2.setHeightForWidth(self.weekPortBtn.sizePolicy().hasHeightForWidth())
+        self.weekPortBtn.setSizePolicy(sizePolicy2)
+        self.weekPortBtn.setMinimumSize(QSize(100, 100))
+        self.weekPortBtn.setMaximumSize(QSize(100, 100))
+        self.weekPortBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout.addWidget(self.weekPortBtn, 2, 0, 1, 1)
+
+        self.boxKmlBtn = QPushButton(self.frame_18)
+        self.boxKmlBtn.setObjectName(u"boxKmlBtn")
+        sizePolicy2.setHeightForWidth(self.boxKmlBtn.sizePolicy().hasHeightForWidth())
+        self.boxKmlBtn.setSizePolicy(sizePolicy2)
+        self.boxKmlBtn.setMinimumSize(QSize(100, 100))
+        self.boxKmlBtn.setMaximumSize(QSize(100, 100))
+        self.boxKmlBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout.addWidget(self.boxKmlBtn, 2, 1, 1, 1)
+
 
         self.verticalLayout_20.addWidget(self.frame_18)
 
@@ -3746,13 +3792,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.fuzzy_match_btn, 1, 1, 1, 1)
 
-        self.to_be_continue = QPushButton(self.frame_31)
-        self.to_be_continue.setObjectName(u"to_be_continue")
-        sizePolicy2.setHeightForWidth(self.to_be_continue.sizePolicy().hasHeightForWidth())
-        self.to_be_continue.setSizePolicy(sizePolicy2)
-        self.to_be_continue.setMinimumSize(QSize(100, 100))
-        self.to_be_continue.setMaximumSize(QSize(100, 100))
-        self.to_be_continue.setStyleSheet(u"QPushButton {\n"
+        self.to_be_continue_2 = QPushButton(self.frame_31)
+        self.to_be_continue_2.setObjectName(u"to_be_continue_2")
+        sizePolicy2.setHeightForWidth(self.to_be_continue_2.sizePolicy().hasHeightForWidth())
+        self.to_be_continue_2.setSizePolicy(sizePolicy2)
+        self.to_be_continue_2.setMinimumSize(QSize(100, 100))
+        self.to_be_continue_2.setMaximumSize(QSize(100, 100))
+        self.to_be_continue_2.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -3767,7 +3813,7 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout_2.addWidget(self.to_be_continue, 1, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.to_be_continue_2, 1, 2, 1, 1)
 
 
         self.verticalLayout_32.addWidget(self.frame_31)
@@ -4070,7 +4116,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(5)
+        self.container.setCurrentIndex(4)
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(0)
 
@@ -4150,6 +4196,10 @@ class Ui_MainWindow(object):
 "\u5149\u7f06\u6bb5\u5206\u6790", None))
         self.boxLevelBtn.setText(QCoreApplication.translate("MainWindow", u"\u673a\u623f\u7bb1\u4f53\n"
 "\u5206\u7ea4\u7ea7\u522b", None))
+        self.weekPortBtn.setText(QCoreApplication.translate("MainWindow", u"\u5f31\u5149&\u4e34\u754c\n"
+"\u8c03\u4f18\u5206\u6790", None))
+        self.boxKmlBtn.setText(QCoreApplication.translate("MainWindow", u"\u673a\u623f\u7bb1\u4f53\n"
+"\u56fe\u5c42", None))
         self.label_47.setText(QCoreApplication.translate("MainWindow", u"\u3010AI \u667a\u80fd\u4f53\u3011", None))
         self.boxDocBtn.setText(QCoreApplication.translate("MainWindow", u"\u63a5\u5165\u7bb1\u4f53\n"
 "\u77e5\u8bc6\u5e93", None))
@@ -4208,7 +4258,7 @@ class Ui_MainWindow(object):
 "\u5f52\u5c5e", None))
         self.fuzzy_match_btn.setText(QCoreApplication.translate("MainWindow", u"\u6a21\u7cca\n"
 "\u5339\u914d", None))
-        self.to_be_continue.setText(QCoreApplication.translate("MainWindow", u"\u5f85\u7eed", None))
+        self.to_be_continue_2.setText(QCoreApplication.translate("MainWindow", u"\u5f85\u7eed", None))
         self.statusLabel.setText("")
         self.sideClose.setText("")
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:700; color:#ffffff;\">\u4f7f\u7528\u8bf4\u660e</span></p><p align=\"center\"><span style=\" font-size:12pt; font-weight:700; color:#ffffff;\">\u9700\u5468\u671f\u66f4\u65b0\u6570\u636e </span></p></body></html>", None))
