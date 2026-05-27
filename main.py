@@ -65,6 +65,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.updateDataBaseBtn.clicked.connect(self.updateDataBase)
         self.dbmsBtn.clicked.connect(self.selectPage)
         self.dbTableBtn.clicked.connect(self.searchDBTableInfo)
+        self.updateOneKeyBtn.clicked.connect(self.updateOneKey)
 
         # 设置页面按钮事件
         self.kpiBtn.clicked.connect(self.selectPage)
@@ -933,6 +934,18 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
                 self.move(last_pos)
                 event.accept()
 
+    def updateOneKey(self):
+        folder_path = QFileDialog.getExistingDirectory(self, "选择需求表格文件夹")
+        if not folder_path:
+            return
+        self.update_one_key_thread = UpdateOneKeyQThread(folder_path=folder_path)
+        self.update_one_key_thread.state_signal.connect(self.showStatus)
+        self.update_one_key_thread.error_signal.connect(self.showError)
+        self.update_one_key_thread.start()
+        # 切换到日志页面logPage
+        page_widget = self.container.findChild(QWidget, "logPage")
+        self.container.setCurrentWidget(page_widget)
+        
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

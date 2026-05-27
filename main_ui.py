@@ -640,10 +640,7 @@ class Ui_MainWindow(object):
         self.updatePage.setObjectName(u"updatePage")
         self.verticalLayout_16 = QVBoxLayout(self.updatePage)
         self.verticalLayout_16.setObjectName(u"verticalLayout_16")
-        self.verticalSpacer_2 = QSpacerItem(20, 69, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_16.addItem(self.verticalSpacer_2)
-
+        self.verticalLayout_16.setContentsMargins(-1, 80, -1, -1)
         self.frame_3 = QFrame(self.updatePage)
         self.frame_3.setObjectName(u"frame_3")
         self.frame_3.setMaximumSize(QSize(16777215, 50))
@@ -846,10 +843,6 @@ class Ui_MainWindow(object):
 
 
         self.verticalLayout_16.addWidget(self.frame_28)
-
-        self.verticalSpacer_3 = QSpacerItem(20, 31, QSizePolicy.Minimum, QSizePolicy.Expanding)
-
-        self.verticalLayout_16.addItem(self.verticalSpacer_3)
 
         self.frame_5 = QFrame(self.updatePage)
         self.frame_5.setObjectName(u"frame_5")
@@ -1496,9 +1489,44 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_16.addWidget(self.frame_5)
 
-        self.verticalSpacer = QSpacerItem(20, 91, QSizePolicy.Minimum, QSizePolicy.Expanding)
+        self.frame_35 = QFrame(self.updatePage)
+        self.frame_35.setObjectName(u"frame_35")
+        self.frame_35.setFrameShape(QFrame.StyledPanel)
+        self.frame_35.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_31 = QHBoxLayout(self.frame_35)
+        self.horizontalLayout_31.setObjectName(u"horizontalLayout_31")
+        self.updateOneKeyBtn = QPushButton(self.frame_35)
+        self.updateOneKeyBtn.setObjectName(u"updateOneKeyBtn")
+        sizePolicy6 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy6.setHorizontalStretch(0)
+        sizePolicy6.setVerticalStretch(0)
+        sizePolicy6.setHeightForWidth(self.updateOneKeyBtn.sizePolicy().hasHeightForWidth())
+        self.updateOneKeyBtn.setSizePolicy(sizePolicy6)
+        self.updateOneKeyBtn.setMinimumSize(QSize(150, 40))
+        self.updateOneKeyBtn.setMaximumSize(QSize(150, 40))
+        self.updateOneKeyBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        icon13 = QIcon()
+        icon13.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.updateOneKeyBtn.setIcon(icon13)
 
-        self.verticalLayout_16.addItem(self.verticalSpacer)
+        self.horizontalLayout_31.addWidget(self.updateOneKeyBtn)
+
+
+        self.verticalLayout_16.addWidget(self.frame_35)
 
         self.container.addWidget(self.updatePage)
         self.analysisPage = QWidget()
@@ -1588,9 +1616,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon13 = QIcon()
-        icon13.addFile(u":/icons/assets/check.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.checkTableBtn.setIcon(icon13)
+        icon14 = QIcon()
+        icon14.addFile(u":/icons/assets/check.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.checkTableBtn.setIcon(icon14)
 
         self.horizontalLayout_14.addWidget(self.checkTableBtn)
 
@@ -1613,9 +1641,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon14 = QIcon()
-        icon14.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.runAnalysisBtn.setIcon(icon14)
+        icon15 = QIcon()
+        icon15.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.runAnalysisBtn.setIcon(icon15)
 
         self.horizontalLayout_14.addWidget(self.runAnalysisBtn)
 
@@ -1703,9 +1731,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon15 = QIcon()
-        icon15.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.dbTableBtn.setIcon(icon15)
+        icon16 = QIcon()
+        icon16.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.dbTableBtn.setIcon(icon16)
 
         self.horizontalLayout_15.addWidget(self.dbTableBtn)
 
@@ -2102,9 +2130,6 @@ class Ui_MainWindow(object):
         self.gridLayout_3.setObjectName(u"gridLayout_3")
         self.boxDocBtn = QPushButton(self.frame_34)
         self.boxDocBtn.setObjectName(u"boxDocBtn")
-        sizePolicy6 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
-        sizePolicy6.setHorizontalStretch(0)
-        sizePolicy6.setVerticalStretch(0)
         sizePolicy6.setHeightForWidth(self.boxDocBtn.sizePolicy().hasHeightForWidth())
         self.boxDocBtn.setSizePolicy(sizePolicy6)
         self.boxDocBtn.setMinimumSize(QSize(100, 100))
@@ -2283,7 +2308,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.searchDevUplinkBtn.setIcon(icon15)
+        self.searchDevUplinkBtn.setIcon(icon16)
 
         self.horizontalLayout_20.addWidget(self.searchDevUplinkBtn)
 
@@ -2609,9 +2634,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon16 = QIcon()
-        icon16.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.searchLineBtn.setIcon(icon16)
+        icon17 = QIcon()
+        icon17.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.searchLineBtn.setIcon(icon17)
 
         self.horizontalLayout_26.addWidget(self.searchLineBtn)
 
@@ -3038,9 +3063,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon17 = QIcon()
-        icon17.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.delMustDevBtn.setIcon(icon17)
+        icon18 = QIcon()
+        icon18.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.delMustDevBtn.setIcon(icon18)
 
         self.verticalLayout_29.addWidget(self.delMustDevBtn)
 
@@ -3063,7 +3088,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.delNotDevBtn.setIcon(icon17)
+        self.delNotDevBtn.setIcon(icon18)
 
         self.verticalLayout_29.addWidget(self.delNotDevBtn)
 
@@ -3086,9 +3111,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon18 = QIcon()
-        icon18.addFile(u":/icons/assets/left.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.devToLeftBtn.setIcon(icon18)
+        icon19 = QIcon()
+        icon19.addFile(u":/icons/assets/left.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.devToLeftBtn.setIcon(icon19)
 
         self.verticalLayout_29.addWidget(self.devToLeftBtn)
 
@@ -3111,9 +3136,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon19 = QIcon()
-        icon19.addFile(u":/icons/assets/right.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.devToRightBtn.setIcon(icon19)
+        icon20 = QIcon()
+        icon20.addFile(u":/icons/assets/right.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.devToRightBtn.setIcon(icon20)
 
         self.verticalLayout_29.addWidget(self.devToRightBtn)
 
@@ -3179,9 +3204,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon20 = QIcon()
-        icon20.addFile(u":/icons/assets/file.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.importABsBtn.setIcon(icon20)
+        icon21 = QIcon()
+        icon21.addFile(u":/icons/assets/file.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.importABsBtn.setIcon(icon21)
 
         self.horizontalLayout_19.addWidget(self.importABsBtn)
 
@@ -3220,9 +3245,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon21 = QIcon()
-        icon21.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.dispatchBtn.setIcon(icon21)
+        self.dispatchBtn.setIcon(icon13)
 
         self.horizontalLayout_19.addWidget(self.dispatchBtn)
 
@@ -3367,7 +3390,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.searchOltBtn.setIcon(icon15)
+        self.searchOltBtn.setIcon(icon16)
 
         self.horizontalLayout_23.addWidget(self.searchOltBtn)
 
@@ -4116,7 +4139,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(4)
+        self.container.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(0)
 
@@ -4170,6 +4193,7 @@ class Ui_MainWindow(object):
         self.label_22.setText(QCoreApplication.translate("MainWindow", u"--", None))
         self.label_18.setText(QCoreApplication.translate("MainWindow", u"--", None))
         self.label_31.setText(QCoreApplication.translate("MainWindow", u"--", None))
+        self.updateOneKeyBtn.setText(QCoreApplication.translate("MainWindow", u"\u4e00\u952e\u66f4\u65b0", None))
         self.analysisLabel.setText(QCoreApplication.translate("MainWindow", u"\u3010\u6d4b\u8bd5\u3011", None))
         self.checkTableBtn.setText(QCoreApplication.translate("MainWindow", u"\u8868\u6821\u9a8c", None))
         self.runAnalysisBtn.setText(QCoreApplication.translate("MainWindow", u"\u6267\u884c\u5206\u6790", None))
