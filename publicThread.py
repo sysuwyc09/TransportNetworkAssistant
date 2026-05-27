@@ -2327,7 +2327,9 @@ class WriteBoxKmlThread(QThread):
         except Exception as e:
             self.error_signal.emit(f'处理失败: {str(e)}')
 
-
+'''
+更新一键数据线程
+'''
 class UpdateOneKeyQThread(QThread):
     state_signal = Signal(str)
     error_signal = Signal(str)
@@ -2387,17 +2389,17 @@ class UpdateOneKeyQThread(QThread):
                 if df.empty:
                     self.state_signal.emit(f'{table_name} 数据为空，跳过')
                     continue
-                
-                df = self.process_data(df, i)
-                
+                if table_name == '中继段':
+                    self.convertLine(df, cursor)
                 if table_name == 'OLT网元':
                     df = self.selectOLT(df)
-                
+                # 筛选数据    
+                df = self.process_data(df, i)
+
                 df.to_sql(table_name, conn, if_exists='replace', index=False)
                 self.update_table_time(cursor, table_name)
                 
-                if table_name == '中继段':
-                    self.convertLine(df, cursor)
+
                 
                 conn.commit()
                 self.state_signal.emit(f'{table_name} 导入完成，共 {len(df)} 条记录')
