@@ -29,7 +29,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.cardShadow(self.card5)
         # 数据库更新页面
         self.file_type_cols = [
-            'OLT网元', '主光路', 'PON端口', '中继段', '光缆段', '站点', '机房', '光交箱', '分纤箱', 'ODF', '集群管理', '华为PON单板','中兴PON单板','CRAN机房'
+            'OLT网元', '主光路', 'PON端口', '中继段', '光缆段', '站点', '机房', '光交箱', '分纤箱', 'ODF', '集群管理', '华为PON单板','中兴PON单板','CRAN机房','OLT上联链路'
         ]
         # 数据库更新页面 列名
         self.file_cols = [
@@ -46,7 +46,8 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
             (['设备名称','集群列表'],['str','str']),
             (['所属网元','槽位号','单板类型','单板状态'],['str','str','str','str']),
             (['网元名称','板卡槽位','板卡类型','板卡状态'],['str','str','str','str']),
-            (['机房名称', '机房类型'],['str','str'])
+            (['机房名称', '机房类型'],['str','str']),
+            (['传输电路名称','光纤光路名称','A端设备名称','A端端口名称','OLT设备','OLT端口','连接方式'],['str','str','str','str','str','str','str'])
         ]
         self.fileTypeCB.currentIndexChanged.connect(self.updateFileCols)
         self.fileTypeCB.addItems(self.file_type_cols)

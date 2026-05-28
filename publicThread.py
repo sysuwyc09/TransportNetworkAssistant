@@ -2035,27 +2035,72 @@ class OltKnowledgeThread(QThread):
             error_str =  '数据库不存在这些表格：' + '、'.join(self.tableNotRequired())
             self.error_signal.emit(f'OLT网元数据集表格{error_str}')
             return;
+        
         olt_df = readDataBase('OLT网元数据集')
+        pon_df = readDataBase('PON口数据集')
+        
+        port_info_df = self.process_port_info(pon_df)
+        
         detail_cols = ['用户数','PON口总数','PON口空闲数','XGPON口总数','XGPON口空闲数']
         for col in detail_cols:
             olt_df[col] = olt_df[col].astype(int).astype(str)
         olt_df['详细信息'] = '网元:' + olt_df['OLT网元'] + ' 设备型号:'+ olt_df['设备型号'] + ' '
         for col in detail_cols:
             olt_df['详细信息'] += col + ':' + olt_df[col] + ' '
+        
+        olt_df = olt_df.merge(port_info_df, on='OLT网元', how='left')
+        olt_df['端口情况'] = olt_df['端口情况'].fillna('')
+        olt_df['详细信息'] += olt_df['端口情况']
+        
         olt_df = olt_df[['所属站点','详细信息']]
-        # 只布放100个点的测试数据
-        # olt_df = olt_df.head(100)
+        
         result = dfToMarkdownKnowledge(olt_df,self.output_path)
         if result[0]:
             self.state_signal.emit(f'OLT网元知识库已生成，路径：{self.output_path}')
         else:
             self.error_signal.emit(result[1])
+    
+    def process_port_info(self, pon_df):
+        '''
+        处理PON口数据集，按OLT网元、PON口类型、槽位号、端口状态聚合
+        返回：OLT网元，端口情况
+        '''
+        pon_df['端口号'] = pon_df['端口号'].astype(str)
+        pon_df['槽位号'] = pon_df['槽位号'].astype(str)
+        
+        def format_port_group(group):
+            slots = sorted(group['槽位号'].unique(), key=lambda x: int(x))
+            result = []
+            for slot in slots:
+                slot_group = group[group['槽位号'] == slot]
+                occupied = sorted(slot_group[slot_group['端口状态'] == '占用']['端口号'].tolist(), key=lambda x: int(x))
+                idle = sorted(slot_group[slot_group['端口状态'] == '空闲']['端口号'].tolist(), key=lambda x: int(x))
+                if occupied:
+                    result.append(f"{slot}槽{','.join(occupied)}口 占用")
+                if idle:
+                    result.append(f"{slot}槽{','.join(idle)}口 空闲")
+            return '，'.join(result)
+        
+        port_info_df = pon_df.groupby(['OLT网元', 'PON口类型']).apply(format_port_group).reset_index()
+        port_info_df.columns = ['OLT网元', 'PON口类型', '端口明细']
+        
+        port_info_df = port_info_df.pivot(index='OLT网元', columns='PON口类型', values='端口明细').reset_index()
+        
+        port_info_df['端口情况'] = ''
+        if '千兆' in port_info_df.columns:
+            port_info_df['端口情况'] += '千兆口：' + port_info_df['千兆'].fillna('无') + '；'
+        if '普通' in port_info_df.columns:
+            port_info_df['端口情况'] += '普通口：' + port_info_df['普通'].fillna('无')
+        
+        port_info_df['端口情况'] = port_info_df['端口情况'].str.rstrip('；')
+        
+        return port_info_df[['OLT网元', '端口情况']]
 
     def tableNotRequired(self):
         '''
         校验数据库表格是否存在满足，一次返回不满足的表格清单
         '''
-        check_tales = ['OLT网元数据集']
+        check_tales = ['OLT网元数据集', 'PON口数据集']
         conn = sqlite3.connect('data/TransportNetwork.db')
         cursor = conn.cursor()
         tables = cursor.execute("SELECT name FROM sqlite_master WHERE type='table';").fetchall()
@@ -2338,7 +2383,7 @@ class UpdateOneKeyQThread(QThread):
         super().__init__()
         self.folder_path = folder_path
         self.file_type_cols = [
-            'OLT网元', '主光路', 'PON端口', '中继段', '光缆段', '站点', '机房', '光交箱', '分纤箱', 'ODF', '集群管理', '华为PON单板','中兴PON单板'
+            'OLT网元', '主光路', 'PON端口', '中继段', '光缆段', '站点', '机房', '光交箱', '分纤箱', 'ODF', '集群管理', '华为PON单板','中兴PON单板','OLT上联链路'
         ]
         self.file_cols = [
             (['网元名称', '所属机房', '设备型号', '设备IP','生命周期状态'],['str','str','str','str','str']),
@@ -2354,6 +2399,7 @@ class UpdateOneKeyQThread(QThread):
             (['设备名称','集群列表'],['str','str']),
             (['所属网元','槽位号','单板类型','单板状态'],['str','str','str','str']),
             (['网元名称','板卡槽位','板卡类型','板卡状态'],['str','str','str','str']),
+            (['传输电路名称','光纤光路名称','A端设备名称','A端端口名称','OLT设备','OLT端口','连接方式'],['str','str','str','str','str','str','str']),
         ]
         self.file_rules = [
             {'keyword': 'OLT设备', 'file_type': 'xlsx', 'single': True, 'header': 0, 'rename_cols': {'所属位置点/机房': '所属机房', '设备IP地址（省内系统：网管IP）': '设备IP'}},
@@ -2369,6 +2415,7 @@ class UpdateOneKeyQThread(QThread):
             {'keyword': '集群管理', 'file_type': 'xlsx', 'single': True, 'header': 0, 'rename_cols': {}},
             {'keyword': '单板报表', 'file_type': 'xlsx', 'single': True, 'header': 3, 'rename_cols': {}},
             {'keyword': 'card_query', 'file_type': 'xlsx', 'single': True, 'header': 0, 'rename_cols': {}},
+            {'keyword': 'OLT上联链路', 'file_type': 'xlsx', 'single': True, 'header': 0, 'rename_cols': {}},
         ]
     
     def run(self):
