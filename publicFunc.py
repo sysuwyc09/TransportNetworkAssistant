@@ -764,7 +764,7 @@ def findKeyPoint(currentPath,objPath,site_dict):
                 if use_nums:
                     min_num = min(int(use_num) for use_num in use_nums)
             return parts[i-1],path,min_num
-    return parts[-1],'-','300'
+    return parts[-1],'-',300
 
 def fixSrcPoNPort(port_name):
     regex = r'-(\d+)-[A-Z0-9]+-(\d+)-GPON'

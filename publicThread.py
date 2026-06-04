@@ -1082,7 +1082,7 @@ class PonPortReplaceThread(QThread):
         hw_port_file = ''
         zte_port_file = ''
         for file in os.listdir(self.folder_path):
-            if '7天内4天弱光清单' in file and '$' not in file and '.xlsx' in file:
+            if '弱光与边缘' in file and '$' not in file and '.xlsx' in file:
                 week_onu_file = self.folder_path + '/' + file
             elif '华为光模块' in file and '$' not in file and '.xlsx' in file:
                 hw_port_file = self.folder_path + '/' + file
@@ -1116,9 +1116,9 @@ class PonPortReplaceThread(QThread):
         self.state_signal.emit('正在分析弱光清单U的可优化主光路清单,分析结构主光路问题')
         opt_port_df,long_pon_up_link,adjust_port_df,dev_df = self.analyzeLongPonLine(week_port_table)
 
-        self.state_signal.emit('正在生成7天内4天弱光清单匹配光模块信息。')
+        self.state_signal.emit('正在生成弱光清单光模块信息。')
         dt = datetime.datetime.now().strftime('%Y%m%d%H%M')
-        with pd.ExcelWriter(f'结果/7天内4天弱光清单匹配光模块信息{dt}.xlsx') as writer:
+        with pd.ExcelWriter(f'结果/弱光清单光模块信息{dt}.xlsx') as writer:
             week_onu_df.to_excel(writer,sheet_name='弱光ONU清单',index=False)
             week_port_table.to_excel(writer,sheet_name='弱光PON口替换光模块分析过程',index=False)
             opt_port_df.to_excel(writer,sheet_name='可光模块替代的端口清单',index=False)
@@ -1140,7 +1140,7 @@ class PonPortReplaceThread(QThread):
 
         long_pon_up_link = readDataBase('超长主光路调优方案')
         long_pon_up_link = long_pon_up_link[long_pon_up_link['割接可用芯数']>0]
-        temp_df = long_pon_port[['区域','新网格','PON口类型','PON','PON口','弱光ONU数','预估替换光模块可整治数','PON口光模块子类型','PON口发送光功率 (dBm)','替换光模块类型']]
+        temp_df = long_pon_port[['区域','网格','PON口类型','PON','PON口','弱光ONU数','预估替换光模块可整治数','PON口光模块子类型','PON口发送光功率 (dBm)','替换光模块类型']]
 
         long_pon_up_link = long_pon_up_link.merge(temp_df,on='PON口')
         temp_df = long_pon_up_link[['PON']].copy()
@@ -1196,15 +1196,15 @@ class PonPortReplaceThread(QThread):
         '''
         isOnuGoodm_vec = np.vectorize(self.isOnuDBmGood)
         week_onu_df['PON口发送光功率 (dBm)'] = pd.to_numeric(week_onu_df['PON口发送光功率 (dBm)'],errors='coerce')
-        week_onu_df['RMS收光+软探针'] = pd.to_numeric(week_onu_df['RMS收光+软探针'],errors='coerce')
-        week_onu_df['预估替换光模块可整治'] = isOnuGoodm_vec(week_onu_df['RMS收光+软探针'],week_onu_df['PON口发送光功率 (dBm)'],week_onu_df['PON口类型'],week_onu_df['PON口光模块子类型'])
+        week_onu_df['接收光功率(dBm)'] = pd.to_numeric(week_onu_df['接收光功率(dBm)'],errors='coerce')
+        week_onu_df['预估替换光模块可整治'] = isOnuGoodm_vec(week_onu_df['接收光功率(dBm)'],week_onu_df['PON口发送光功率 (dBm)'],week_onu_df['PON口类型'],week_onu_df['PON口光模块子类型'])
         week_port_table = pd.pivot_table(week_onu_df,index=['PON'],columns=['预估替换光模块可整治'],aggfunc={'区域':'count'},fill_value=0)
         week_port_table.columns = week_port_table.columns.droplevel(0)
         week_port_table = week_port_table.reset_index()
         week_port_table['弱光ONU数'] = week_port_table['是'] + week_port_table['否']
         week_port_table.rename(columns={'是':'预估替换光模块可整治数'},inplace=True)
         week_port_table = week_port_table[['PON','弱光ONU数','预估替换光模块可整治数']]
-        temp_df = week_onu_df[['区域','新网格','PON','PON口类型','PON口光模块子类型','PON口发送光功率 (dBm)']].copy()
+        temp_df = week_onu_df[['区域','网格','PON','PON口类型','PON口光模块子类型','PON口发送光功率 (dBm)']].copy()
         temp_df = temp_df.drop_duplicates(subset=['PON'],keep='first')
         week_port_table = pd.merge(week_port_table,temp_df,on='PON',how='left')
         install_opt_model_vec = np.vectorize(self.installOptModel)
@@ -1267,6 +1267,7 @@ class WeekOnuPortAnalyzeThread(QThread):
         self.state_signal.emit('正在加载弱光ONU清单清单...')
         week_onu_df = pd.read_excel(self.file_path,engine='openpyxl')
         self.state_signal.emit('正在分析弱光清单U')
+
         week_onu_df,week_port_table = self.analyzeWeekPort(week_onu_df)
 
         self.state_signal.emit('正在分析弱光清单U的可优化主光路清单,分析结构主光路问题')
@@ -1310,7 +1311,6 @@ class WeekOnuPortAnalyzeThread(QThread):
         return company
 
     def analyzeLongPonLine(self,week_port_table):
-
         # 分析可调优清单
         long_pon_port = readDataBase('超长主光路清单')
         long_pon_port['PON'] = long_pon_port['PON口'].apply(self.fixLongPonPort)
@@ -1370,67 +1370,6 @@ class WeekOnuPortAnalyzeThread(QThread):
         df['光路文本路由'] = pon_path
         return df
 
-
-    def analyzePonModel(self,week_onu_df):
-        '''
-        分析更换光模块可解决的弱光PON口
-        '''
-        isOnuGoodm_vec = np.vectorize(self.isOnuDBmGood)
-        week_onu_df['PON口发送光功率 (dBm)'] = pd.to_numeric(week_onu_df['PON口发送光功率 (dBm)'],errors='coerce')
-        week_onu_df['RMS收光+软探针'] = pd.to_numeric(week_onu_df['RMS收光+软探针'],errors='coerce')
-        week_onu_df['预估替换光模块可整治'] = isOnuGoodm_vec(week_onu_df['RMS收光+软探针'],week_onu_df['PON口发送光功率 (dBm)'],week_onu_df['PON口类型'],week_onu_df['PON口光模块子类型'])
-        week_port_table = pd.pivot_table(week_onu_df,index=['PON'],columns=['预估替换光模块可整治'],aggfunc={'区域':'count'},fill_value=0)
-        week_port_table.columns = week_port_table.columns.droplevel(0)
-        week_port_table = week_port_table.reset_index()
-        week_port_table['弱光ONU数'] = week_port_table['是'] + week_port_table['否']
-        week_port_table.rename(columns={'是':'预估替换光模块可整治数'},inplace=True)
-        week_port_table = week_port_table[['PON','弱光ONU数','预估替换光模块可整治数']]
-        temp_df = week_onu_df[['区域','新网格','PON','PON口类型','PON口光模块子类型','PON口发送光功率 (dBm)']].copy()
-        temp_df = temp_df.drop_duplicates(subset=['PON'],keep='first')
-        week_port_table = pd.merge(week_port_table,temp_df,on='PON',how='left')
-        install_opt_model_vec = np.vectorize(self.installOptModel)
-        week_port_table['替换光模块类型'] = install_opt_model_vec(week_port_table['预估替换光模块可整治数'],week_port_table['PON口类型'])
-        
-        return week_onu_df,week_port_table
-
-    def installOptModel(self,onu_num,port_type):
-        '''
-        判断更换光模块的类型
-        '''
-        if onu_num > 0:
-            if port_type == 'GPON':
-                return 'Class C++'
-            else:
-                return 'Class D'
-        return '--'
-
-    def isOnuDBmGood(self,onu_dbm,port_dbm,port_type,opt_type):
-        '''
-        判断弱光ONU收光是否可以通过更换光模块解决
-        '''
-        if port_type == '10GGPON' or port_type == 'XGPON+GPON' or port_type == 'XGSPON':
-            if opt_type == 'CLASS C+' or opt_type == 'N2a' or opt_type == 'CLASS B+':
-                new_onu_dbm = onu_dbm + 7.8 - port_dbm
-                if new_onu_dbm > -27:
-                    return '是'
-        if port_type == 'GPON':
-            if opt_type == 'CLASS C+' or opt_type == 'CLASS B+':
-                new_onu_dbm = onu_dbm + 7 - port_dbm
-                if new_onu_dbm > -27:
-                    return '是'
-        return '否'
-
-
-    def fixHwPort(self,port_name):
-        regex = r'框:(\d+)/槽:(\d+)/端口:(\d+)'
-        match = re.match(regex,port_name)
-        if match:
-            box = match.group(1)
-            slot = match.group(2)
-            port = match.group(3)
-            return box,slot,port
-        else:
-            return '-','-','-'
 
 # 分析零利用率的光缆段
 class NotUseLineThread(QThread):
@@ -2403,7 +2342,7 @@ class UpdateOneKeyQThread(QThread):
         ]
         self.file_rules = [
             {'keyword': 'OLT设备', 'file_type': 'xlsx', 'single': True, 'header': 0, 'rename_cols': {'所属位置点/机房': '所属机房', '设备IP地址（省内系统：网管IP）': '设备IP'}},
-            {'keyword': '主光路', 'file_type': 'xlsx', 'single': True, 'header': 0, 'rename_cols': {}},
+            {'keyword': '主光路', 'file_type': 'xlsx', 'single': True, 'header': 0, 'rename_cols': {'PON口名称':'PON口'}},
             {'keyword': 'PON端口', 'file_type': 'xlsx', 'single': False, 'header': 0, 'rename_cols': {}},
             {'keyword': '中继段', 'file_type': 'CSV', 'single': True, 'header': 0, 'rename_cols': {}},
             {'keyword': '光缆段', 'file_type': 'CSV', 'single': False, 'header': 0, 'rename_cols': {}},
