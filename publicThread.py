@@ -223,34 +223,67 @@ class AnalysisOltPortThread(QThread):
         super().__init__()
     
     def run(self):
-        # try:
-        conn = sqlite3.connect('data/transportNetwork.db')
-        # 查询 OLT网元 表 匹配 机房 表，on 
-        sql = """
-        SELECT o.*,j.所属站点,j.业务级别 AS 机房类型,j.生命周期状态 AS 机房状态
-        FROM OLT网元 o
-        JOIN 机房 j ON o.所属机房 = j.机房名称
-        """
-        olt_df = pd.read_sql_query(sql, conn)
-        self.state_signal.emit(f"查询OLT网元清单完成",20,"")
-        pon_df = pd.read_sql_query("SELECT * FROM PON端口", conn)
-        hw_df = pd.read_sql_query("SELECT * FROM 华为PON单板", conn)
-        zte_df = pd.read_sql_query("SELECT * FROM 中兴PON单板", conn)
-        conn.close()
-        self.state_signal.emit(f"查询PON端口清单完成",40,"")
-        pon_df = self.analysisOltPort(pon_df,hw_df,zte_df)
-        self.state_signal.emit(f"分析PON端口清单完成",60,"")
-        writeDataBase('PON口数据集',pon_df)
-        pon_table = self.ponTable(pon_df)
-        self.state_signal.emit(f"统计PON端口清单完成",80,"")
-        olt_df = olt_df.rename(columns={'网元名称':'OLT网元'})
-        olt_df = olt_df.merge(pon_table,on='OLT网元',how='left')
-        olt_df = olt_df.fillna(0)
-        writeDataBase('OLT网元数据集',olt_df)
-        self.state_signal.emit(f"统计OLT网元及端口清单完成",100,"")
+        try:
+            conn = sqlite3.connect('data/transportNetwork.db')
+            sql = """
+            SELECT o.*,j.所属站点,j.业务级别 AS 机房类型,j.生命周期状态 AS 机房状态,j.产权单位 AS 产权单位
+            FROM OLT网元 o
+            JOIN 机房 j ON o.所属机房 = j.机房名称
+            """
+            olt_df = pd.read_sql_query(sql, conn)
+            self.state_signal.emit(f"查询OLT网元清单完成，共{len(olt_df)}条",20,"")
+            
+            pon_df = pd.read_sql_query("SELECT * FROM PON端口", conn)
+            self.state_signal.emit(f"查询PON端口清单完成，共{len(pon_df)}条",30,"")
+            
+            hw_df = pd.read_sql_query("SELECT * FROM 华为PON单板", conn)
+            self.state_signal.emit(f"查询华为PON单板完成，共{len(hw_df)}条",35,"")
+            
+            zte_df = pd.read_sql_query("SELECT * FROM 中兴PON单板", conn)
+            conn.close()
+            self.state_signal.emit(f"查询中兴PON单板完成，共{len(zte_df)}条",40,"")
+            
+            pon_df = self.analysisOltPort(pon_df,hw_df,zte_df)
+            self.state_signal.emit(f"分析PON端口清单完成，共{len(pon_df)}条",60,"")
+            
+            writeDataBase('PON口数据集',pon_df)
+            self.state_signal.emit(f"写入PON口数据集完成",65,"")
+            
+            pon_table = self.ponTable(pon_df)
+            self.state_signal.emit(f"统计PON端口清单完成，共{len(pon_table)}个OLT",80,"")
+            
+            # 生成PON板分析表
+            board_df = hw_df.copy()
+            board_df = board_df.rename(columns={'所属网元':'OLT网元','单板类型':'板卡类型','单板状态':'板卡状态'})
+            zte_df_copy = zte_df.copy()
+            zte_df_copy['槽位'] = zte_df_copy['板卡槽位'].apply(lambda x: int(str(x).split('-')[2]) if pd.notnull(x) else 0)
+            zte_df_copy['板卡名称'] = zte_df_copy.apply(lambda row: self.stardBoard(row['网元名称'], row['槽位']), axis=1)
+            zte_df_copy = zte_df_copy[['板卡名称','板卡状态','板卡类型']]
+            board_df['板卡名称'] = board_df.apply(lambda row: self.stardBoard(row['OLT网元'], row['槽位号']), axis=1)
+            board_df = board_df[['板卡名称','板卡状态','板卡类型']]
+            board_df = pd.concat([board_df, zte_df_copy])
+            board_df['板卡状态'] = board_df['板卡状态'].apply(self.fixState)
+            
+            pon_board_table = self.ponBoardTable(pon_df, board_df)
+            writeDataBase('PON板分析表', pon_board_table)
+            self.state_signal.emit(f"生成PON板分析表完成，共{len(pon_board_table)}条",85,"")
+            
+            olt_df = olt_df.rename(columns={'网元名称':'OLT网元'})
+            olt_df = olt_df.merge(pon_table,on='OLT网元',how='left')
+            olt_df = olt_df.fillna(0)
+            
+            olt_df['业务槽数量'] = olt_df['设备型号'].apply(self.srvBoardNum)
+            olt_df['空闲业务槽数量'] = olt_df['业务槽数量'] - olt_df['业务槽占用数']
+            
+            olt_df['是否千兆'] = olt_df['设备型号'].apply(lambda x: '是' if 'MA5800' in str(x) or 'C600' in str(x) else '否')
+            
+            olt_df['闲置OLT'] = self.isNotUseOlt(olt_df['PON口总数'], olt_df['PON口空闲数'])
+            
+            writeDataBase('OLT网元数据集',olt_df)
+            self.state_signal.emit(f"统计OLT网元及端口清单完成，共{len(olt_df)}条",100,"")
 
-        # except Exception as e:
-        #     self.state_signal.emit(f"查询失败: {str(e)}",0,"")
+        except Exception as e:
+            self.state_signal.emit(f"查询失败: {str(e)}",0,"")
 
     def ponTable(self,pon_df):
         pon_df = pon_df[pon_df['PON口类型'] != '非PON口']
@@ -275,17 +308,138 @@ class AnalysisOltPortThread(QThread):
         user_table = pd.pivot_table(pon_df,index=['OLT网元'],aggfunc={'PON口下挂用户数':'sum'},fill_value=0)
         user_table.rename(columns={'PON口下挂用户数':'用户数'},inplace=True)
 
-        # 合并三个表格
+        # 统计业务槽占用数
+        board_df = pon_df[['OLT网元','板卡名称']].copy()
+        board_df = board_df.drop_duplicates(subset=['板卡名称'])
+        board_df['是否业务板'] = board_df['板卡名称'].apply(self.isSrvBoard)
+        board_df = board_df[board_df['是否业务板'] == '是']
+        
+        if not board_df.empty:
+            board_table = pd.pivot_table(board_df,index=['OLT网元'],aggfunc={'板卡名称':'count'},fill_value=0)
+            board_table = board_table.reset_index()
+            board_table.rename(columns={'板卡名称':'业务槽占用数'},inplace=True)
+        else:
+            board_table = pd.DataFrame({'OLT网元': pon_df['OLT网元'].unique(), '业务槽占用数': 0})
+
+        # 合并表格
         pon_table = pon_table.merge(xg_pon_table,on='OLT网元',how='left')
         pon_table = pon_table.merge(user_table,on='OLT网元',how='left')
+        pon_table = pon_table.merge(board_table,on='OLT网元',how='left')
         pon_table['PON口总数'] = pon_table['PON口使用数'] + pon_table['PON口空闲数']
         pon_table['XGPON口总数'] = pon_table['XGPON口使用数'] + pon_table['XGPON口空闲数']
+        pon_table['业务槽占用数'] = pon_table['业务槽占用数'].fillna(0)
         pon_table = pon_table.fillna(0)
-        pon_table = pon_table[['OLT网元','PON口总数','PON口使用数','PON口空闲数','XGPON口总数','XGPON口使用数','XGPON口空闲数','用户数']]
+        pon_table = pon_table[['OLT网元','PON口总数','PON口使用数','PON口空闲数','XGPON口总数','XGPON口使用数','XGPON口空闲数','用户数','业务槽占用数']]
         return pon_table
-
-
     
+    def srvBoardNum(self, devType):
+        if 'MA5800-X17' in devType:
+            return 17
+        elif 'MA5680T' in devType:
+            return 16
+        elif 'MA5800-X7' in devType:
+            return 7
+        elif 'MA5683T' in devType:
+            return 6
+        elif 'C320' in devType:
+            return 4
+        elif 'C300' in devType:
+            return 16
+        elif 'C600' in devType:
+            return 16
+        else:
+            return 0
+    
+    def isSrvBoard(self, boardName):
+        if '5800-X17' in boardName:
+            board_ids = ['9', '10']
+        elif '5800-X7' in boardName:
+            board_ids = ['8', '9']
+        elif '5680' in boardName:
+            board_ids = ['9','10','19', '20']
+        elif '600' in boardName:
+            board_ids = ['10', '11']
+        elif '320' in boardName:
+            board_ids = ['3', '4']
+        elif '300' in boardName:
+            board_ids = ['10','11','19','20']
+        elif '5683' in boardName:
+            board_ids = ['6','7','8','9']
+        else:
+            return '否'
+        match = re.search(' (\d+)槽', boardName)
+        if match:
+            board_id = match.group(1)
+            if board_id in board_ids:
+                return '否'
+        return '是'
+    
+    def ponBoardTable(self, pon_df, board_df):
+        '''
+        分析PON板空闲情况占用情况
+        '''
+        pon_df = pon_df[pon_df['PON口类型'] != '非PON口']
+        
+        not_use_table = pd.pivot_table(pon_df, index=['OLT网元', '板卡名称'], 
+                                        columns=['端口状态'], 
+                                        aggfunc={'端口名称': 'count'}, 
+                                        fill_value=0)
+        not_use_table.columns = not_use_table.columns.droplevel()
+        not_use_table = not_use_table.reset_index()
+        not_use_table = not_use_table.merge(board_df, on='板卡名称', how='left')
+        
+        not_use_table['是否千兆'] = not_use_table['板卡类型'].apply(self.isXgPonPort2)
+        not_use_table['是否在用'] = not_use_table.apply(lambda row: self.isNotUse(row['占用'], row['预占']), axis=1)
+        
+        not_use_table['端口数量'] = not_use_table['占用'] + not_use_table['预占'] + not_use_table['空闲']
+        not_use_table['在用端口数'] = not_use_table['占用'] + not_use_table['预占']
+        not_use_table['设备系列'] = not_use_table['OLT网元'].apply(self.fixDevType)
+        
+        not_use_table.rename(columns={'OLT网元': '本地名称'}, inplace=True)
+        
+        return not_use_table
+    
+    def isXgPonPort2(self, boardType):
+        if pd.isnull(boardType):
+            return '否'
+        boardType = str(boardType)
+        if 'CG' in boardType:
+            return '是'
+        elif 'GFBT' in boardType or 'VSCP' in boardType:
+            return '是'
+        else:
+            return '否'
+    
+    def isNotUse(self, use, need):
+        if use == 0 and need == 0:
+            return '否'
+        else:
+            return '是'
+    
+    def isNotUseOlt(self, ponNum, useNum):
+        try:
+            if int(ponNum) == int(useNum):
+                return '是'
+            else:
+                return '否'
+        except Exception:
+            return '否'
+    
+    def fixDevType(self, devType):
+        if pd.isnull(devType):
+            return '-'
+        devType = str(devType)
+        if 'MA58' in devType:
+            return 'MA58系列'
+        elif 'MA56' in devType:
+            return 'MA56系列'
+        elif 'C600' in devType:
+            return 'C600系列'
+        elif 'C3' in devType:
+            return 'C300系列'
+        else:
+            return '-'
+
     # 清洗PON端口数据
     def analysisOltPort(self,pon_df,hw_df,zte_df):
         #所属传输网元(TEXT), 端口名称(TEXT), PONID(TEXT), 端口状态(TEXT), PON口下挂用户数(INTEGER), 端口子类型(TEXT)
@@ -2331,7 +2485,7 @@ class UpdateOneKeyQThread(QThread):
             (['名称', '长度', '空闲数量', '占用数量', '中继纤芯数量', '始端站点', '终端站点', '始端机房','终端机房', '始端设施', '终端设施'],['str','float','int','int','int','str','str','str','str','str','str']),
             (['名称','所属光缆','实际长度','纤芯占用率','光纤数目','业务级别','敷设方式','维护部门','红线范围','初验时间','资源状态'],['str','str','float','float','int','str','str','str','str','str','str']),
             (['站点名称', '所属区县', '乡镇街道'],['str','str','str']),
-            (['所属站点', '机房类型', '机房名称', '业务级别', '生命周期状态'],['str','str','str','str','str']),
+            (['所属站点', '机房类型', '机房名称', '业务级别', '生命周期状态','产权单位'],['str','str','str','str','str','str']),
             (['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
             (['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
             (['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
@@ -2476,3 +2630,156 @@ class UpdateOneKeyQThread(QThread):
         df = df.drop_duplicates()
         
         return df
+
+
+# 更新OLT管理一张表
+class UpdateOltOneTableThread(QThread):
+    state_signal = Signal(str)
+    error_signal = Signal(str)
+    result_signal = Signal(str)
+
+    def __init__(self, old_file_path):
+        super().__init__()
+        self.old_file_path = old_file_path
+
+    def run(self):
+        # try:
+        self.state_signal.emit('正在读取OLT网元数据集...')
+        olt_df = readDataBase('OLT网元数据集')
+        if olt_df.empty:
+            self.error_signal.emit('OLT网元数据集为空，请先分析OLT端口')
+            return
+
+        self.state_signal.emit('正在读取OLT上联链路表...')
+        link_df = readDataBase('OLT上联链路')
+        if not link_df.empty:
+            link_df = self.process_link_data(link_df)
+            self.state_signal.emit('正在匹配上联链路数据...')
+            olt_df = olt_df.merge(link_df, on='OLT网元', how='left')
+
+        self.state_signal.emit('正在读取旧的OLT管理一张表...')
+        old_df = pd.read_excel(self.old_file_path)
+
+        # 需要从旧表匹配的列
+        match_cols = ['分公司', '区域归属', '网格',
+                        '是否同路由', '同路由长度', '>300或者>800m', '是否整改',
+                        '（跳纤整改）现有资源满足', '问题', '汇聚机房比例提升策略',
+                        '附近汇聚距离', '目标搬迁机房']
+
+        # 检查旧表是否包含设备IP列
+        if '设备IP' not in old_df.columns:
+            self.error_signal.emit('旧的OLT管理一张表缺少"设备IP"列')
+            return
+
+        # 提取旧表的匹配列（只保留存在的列）
+        existing_cols = [col for col in match_cols if col in old_df.columns]
+        old_match_df = old_df[['设备IP'] + existing_cols].copy()
+
+        self.state_signal.emit('正在匹配数据...')
+        # 根据设备IP列进行匹配
+        olt_df = olt_df.merge(old_match_df, on='设备IP', how='left')
+
+        # 计算站点总用户数
+        if '所属站点' in olt_df.columns and '用户数' in olt_df.columns:
+            site_user_df = olt_df.groupby('所属站点')['用户数'].sum().reset_index()
+            site_user_df.rename(columns={'用户数': '站点总用户数'}, inplace=True)
+            olt_df = olt_df.merge(site_user_df, on='所属站点', how='left')
+            
+            # 按站点总用户数、所属站点、用户数倒序排序
+            olt_df = olt_df.sort_values(by=['站点总用户数', '所属站点', '用户数'], ascending=[False, False, False])
+
+        # 按指定列顺序输出
+        output_cols = ['分公司', '区域归属', '网格', '设备IP', 'OLT网元', '生命周期状态',
+                        '所属站点', '所属机房', '机房类型', '产权单位', '机房状态', '设备型号',
+                        '是否千兆', '站点总用户数', '用户数', '闲置OLT', 'PON口总数', 'PON口空闲数',
+                        'XGPON口总数', 'XGPON口空闲数', '空闲业务槽数量', '上联链路数',
+                        '综资关联链路', '关联BNG数', '是否同路由',
+                        '同路由长度', '>300或者>800m', '是否整改', '（跳纤整改）现有资源满足',
+                        '问题', '汇聚机房比例提升策略', '附近汇聚距离', '目标搬迁机房']
+
+        # 只保留存在的列
+        final_cols = [col for col in output_cols if col in olt_df.columns]
+        result_df = olt_df[final_cols].copy()
+
+        self.state_signal.emit('正在获取更新时间...')
+        # 获取OLT网元数据集的更新时间
+        conn = sqlite3.connect('data/transportNetwork.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT 更新时间 FROM 表格更新时间 WHERE 表名='OLT网元数据集'")
+        update_time = cursor.fetchone()
+        conn.close()
+
+        if update_time:
+            time_suffix = update_time[0].replace(':', '-').replace(' ', '_')
+        else:
+            time_suffix = datetime.datetime.now().strftime('%Y-%m-%d_%H-%M')
+
+        # 生成输出文件名
+        output_path = os.path.join(os.path.dirname(self.old_file_path), f'【OLT管理一张表】_{time_suffix}.xlsx')
+
+        self.state_signal.emit('正在写入文件...')
+        result_df.to_excel(output_path, index=False)
+
+        self.state_signal.emit(f'OLT管理一张表已更新完成，共{len(result_df)}条记录')
+
+        # except Exception as e:
+        #     self.error_signal.emit(f'更新OLT管理一张表失败: {str(e)}')
+    
+    def process_link_data(self, link_df):
+        '''
+        处理OLT上联链路数据，生成上联链路数、综资关联链路、关联BNG数
+        '''
+        # 重命名列
+        link_df.rename(columns={'OLT设备': 'OLT网元'}, inplace=True)
+        
+        # 生成电路名称 - 使用 apply 逐行处理
+        link_df['电路名称'] = link_df.apply(lambda row: self.fixPonPath(row['连接方式'], row['传输电路名称'], row['光纤光路名称']), axis=1)
+        link_df['OLTPort'] = link_df['OLT端口'].apply(self.fixOltPort)
+        link_df['电路名称'] = link_df['电路名称'] + '{' + link_df['A端设备名称'] + ':' + link_df['A端端口名称'] + '<=>' + link_df['OLTPort'] + '}'
+        
+        # 统计上联链路数
+        link_count_df = link_df.groupby('OLT网元').size().reset_index(name='上联链路数')
+        
+        # 统计关联BNG数（去重）
+        bng_count_df = link_df.groupby('OLT网元')['A端设备名称'].nunique().reset_index(name='关联BNG数')
+        
+        # 生成综资关联链路字符串
+        link_df = link_df.astype(str)
+        link_str_df = link_df.groupby('OLT网元')['电路名称'].apply(lambda x: '//'.join(x)).reset_index()
+        link_str_df.rename(columns={'电路名称': '综资关联链路'}, inplace=True)
+        
+        # 合并结果
+        result_df = link_count_df.merge(bng_count_df, on='OLT网元', how='left')
+        result_df = result_df.merge(link_str_df, on='OLT网元', how='left')
+        
+        return result_df
+    
+    def fixPonPath(self, ptype, eName, oName):
+        '''
+        根据连接方式、传输电路名称、光纤光路名称生成电路名称前缀
+        '''
+        if pd.isnull(eName) and pd.isnull(oName):
+            if ptype == '尾纤直连':
+                return '尾纤直连'
+            else:
+                return '录入缺失'
+        else:
+            if pd.isnull(eName):
+                return str(oName) + '(光路)'
+            elif pd.isnull(oName):
+                return str(eName) + '(电路)'
+            else:
+                return '录入缺失'
+    
+    def fixOltPort(self, portName):
+        '''
+        处理OLT端口名称，提取最后4个部分的前3个
+        '''
+        if pd.isnull(portName):
+            return "OLT端口缺失"
+        else:
+            parts = str(portName).split("-")
+            if len(parts) >= 4:
+                return "-".join(parts[-4:-1])
+            else:
+                return "OLT端口缺失"

@@ -39,7 +39,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
             (['名称', '长度', '空闲数量', '占用数量', '中继纤芯数量', '始端站点', '终端站点', '始端机房','终端机房', '始端设施', '终端设施'],['str','float','int','int','int','str','str','str','str','str','str']),
             (['名称','所属光缆','实际长度','纤芯占用率','光纤数目','业务级别','敷设方式','维护部门','红线范围','初验时间','资源状态'],['str','str','float','float','int','str','str','str','str','str','str']),
             (['站点名称', '所属区县', '乡镇街道'],['str','str','str']),
-            (['所属站点', '机房类型', '机房名称', '业务级别', '生命周期状态'],['str','str','str','str','str']),
+            (['所属站点', '机房类型', '机房名称', '业务级别', '生命周期状态','产权单位'],['str','str','str','str','str','str']),
             (['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
             (['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
             (['设施名称', '机房名称', '所属综合业务区','所属区县', '所属镇街','分纤点级别', '容量','经度','纬度'],['str','str','str','str','str','str','int','float','float']),
@@ -67,6 +67,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.dbmsBtn.clicked.connect(self.selectPage)
         self.dbTableBtn.clicked.connect(self.searchDBTableInfo)
         self.updateOneKeyBtn.clicked.connect(self.updateOneKey)
+        self.oltOneTableBtn.clicked.connect(self.updateOltOneTable)
 
         # 设置页面按钮事件
         self.kpiBtn.clicked.connect(self.selectPage)
@@ -946,7 +947,16 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         # 切换到日志页面logPage
         page_widget = self.container.findChild(QWidget, "logPage")
         self.container.setCurrentWidget(page_widget)
-        
+    
+    def updateOltOneTable(self):
+        file_path, _ = QFileDialog.getOpenFileName(self, "选择旧的OLT管理一张表", "", "Excel 文件 (*.xlsx)")
+        if not file_path:
+            return
+        self.update_olt_one_table_thread = UpdateOltOneTableThread(file_path)
+        self.update_olt_one_table_thread.state_signal.connect(self.showStatus)
+        self.update_olt_one_table_thread.error_signal.connect(self.showError)
+        self.update_olt_one_table_thread.start()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
