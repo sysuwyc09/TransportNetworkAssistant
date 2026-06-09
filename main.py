@@ -6,8 +6,8 @@ from PySide6.QtWidgets import (QMainWindow, QApplication, QGraphicsDropShadowEff
                                QTableWidgetItem,QHBoxLayout,QPushButton,QHeaderView)
 from PySide6.QtUiTools import loadUiType
 from main_ui import Ui_MainWindow
-from publicFunc import *
-from publicThread import *
+from thread.publicFunc import *
+from thread import *
 from customnWidget import *
 
 class TNAIWindow(QMainWindow, Ui_MainWindow):

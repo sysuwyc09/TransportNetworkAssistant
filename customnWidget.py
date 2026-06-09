@@ -14,8 +14,8 @@ from modules.site_ui import Ui_SiteAreaForm
 from modules.FuzzyMatch_ui import Ui_FuzzyMatchForm
 from modules.convertXY import convertXY
 from modules.modThread import *
-from publicFunc import *
-from publicThread import *
+from thread.publicFunc import *
+from thread import *
 
 class CircularProgress(QWidget):
     def __init__(self, parent=None):
