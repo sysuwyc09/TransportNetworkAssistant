@@ -650,7 +650,8 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
                     background-color: rgba(20, 25, 36, 255);
                 }
             """)
-            download_btn.clicked.connect((lambda checked=None, r=i: self.download_table(df.iloc[r, 0])))
+            download_btn.clicked.connect((lambda checked=None, r=i: self.download_table(df.iloc[r, 0],df.iloc[r, 3])))
+            
             clear_btn = QPushButton('清空')
             clear_btn.setStyleSheet("""
                 QPushButton {
@@ -671,10 +672,11 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
             btn_widget.setLayout(btn_layout)
             self.dbTableTw.setCellWidget(i, 4, btn_widget)
 
-    def download_table(self, table_name):
+    def download_table(self, table_name, update_time):
         # 下载表格数据实现
         data_df = readDataBase(table_name)
-        file_path = QFileDialog.getSaveFileName(self, "保存文件", f"{table_name}.xlsx", "Excel 文件 (*.xlsx)")[0]
+        out_file_name = table_name + '_' + str(update_time).split(' ')[0]
+        file_path = QFileDialog.getSaveFileName(self, "保存文件", f"{out_file_name}.xlsx", "Excel 文件 (*.xlsx)")[0]
         self.download_file_thread = downloadThread([table_name], [data_df],file_path)
         self.download_file_thread.state_signal.connect(self.showStatus)
         self.download_file_thread.start()

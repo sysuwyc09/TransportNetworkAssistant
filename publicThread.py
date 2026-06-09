@@ -491,7 +491,7 @@ class AnalysisOltPortThread(QThread):
     def isPonPort(self,sub_type):
         if sub_type == 'GPON':
             return '普通'
-        elif sub_type == 'GPON_XGPON' or sub_type == 'GPON_XGSPON':
+        elif sub_type == 'GPON_XGPON' or sub_type == 'GPON_XGSPON' or sub_type == 'XGPON':
             return '千兆'
         return '非PON口'
     

@@ -2116,6 +2116,29 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.oltOneTableBtn, 2, 2, 1, 1)
 
+        self.twoXGBtn = QPushButton(self.frame_18)
+        self.twoXGBtn.setObjectName(u"twoXGBtn")
+        sizePolicy2.setHeightForWidth(self.twoXGBtn.sizePolicy().hasHeightForWidth())
+        self.twoXGBtn.setSizePolicy(sizePolicy2)
+        self.twoXGBtn.setMinimumSize(QSize(100, 100))
+        self.twoXGBtn.setMaximumSize(QSize(100, 100))
+        self.twoXGBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout.addWidget(self.twoXGBtn, 2, 3, 1, 1)
+
 
         self.verticalLayout_20.addWidget(self.frame_18)
 
@@ -4249,6 +4272,8 @@ class Ui_MainWindow(object):
 "\u56fe\u5c42", None))
         self.oltOneTableBtn.setText(QCoreApplication.translate("MainWindow", u"OLT\u7ba1\u7406\n"
 "\u4e00\u5f20\u8868", None))
+        self.twoXGBtn.setText(QCoreApplication.translate("MainWindow", u"2000M\n"
+"\u5272\u63a5\u8bc4\u4f30", None))
         self.label_47.setText(QCoreApplication.translate("MainWindow", u"\u3010AI \u667a\u80fd\u4f53\u3011", None))
         self.boxDocBtn.setText(QCoreApplication.translate("MainWindow", u"\u63a5\u5165\u7bb1\u4f53\n"
 "\u77e5\u8bc6\u5e93", None))
