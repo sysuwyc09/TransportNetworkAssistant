@@ -122,6 +122,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.boxLevelBtn.clicked.connect(self.findBoxLevel)
         self.weekPortBtn.clicked.connect(self.findWeekPort)
         self.boxKmlBtn.clicked.connect(self.writeBoxKml)
+        self.twoXGBtn.clicked.connect(self.twoXGAnalysis)
 
         # tool工具页面按钮事件
         self.convert_coord_btn.clicked.connect(self.showToolForm)
@@ -155,6 +156,16 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.box_kml_thread.state_signal.connect(self.showStatus)
         self.box_kml_thread.error_signal.connect(self.showError)
         self.box_kml_thread.start()
+
+    def twoXGAnalysis(self):
+        # 2000M用户割接分析
+        file_path = QFileDialog.getOpenFileName(self, "选择2000M用户清单文件", "", "Excel 文件 (*.xlsx)")[0]
+        if not file_path:
+            return;
+        self.two_xg_thread = TwoXGAnalysisThread(file_path=file_path)
+        self.two_xg_thread.state_signal.connect(self.showStatus)
+        self.two_xg_thread.error_signal.connect(self.showError)
+        self.two_xg_thread.start()
 
     def findWeekPort(self):
         # 弱光+临界弱光ONU清单
