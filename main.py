@@ -80,6 +80,14 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.oltKeywordLE.returnPressed.connect(self.searchOltSite)
         self.searchOltBtn.clicked.connect(self.searchOltNe)
         self.oltNeTw.cellClicked.connect(self.onOltNeTwCellClicked)
+        
+        # PON分流分析页面按钮事件
+        self.oltKeywordLE_2.returnPressed.connect(self.searchOltSite_2)
+        self.searchOltBtn_2.clicked.connect(self.searchOltNe_2)
+        self.addOLTBtn.clicked.connect(self.addOltToObj)
+        self.delOltBtn.clicked.connect(self.delOltFromObj)
+        self.beginOltBtn.clicked.connect(self.beginPonDiversion)
+
         self.writeAggrHouseBtn.clicked.connect(self.writeAggrHouseKml)
         self.odevNameKeysLe.returnPressed.connect(self.searchoDevs)
         self.searchDevUplinkBtn.clicked.connect(self.searchDevUplink)
@@ -621,7 +629,93 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.oltSiteNamesCB.clear()
         self.oltSiteNamesCB.addItems(sites)
         self.oltSiteNamesCB.setCurrentIndex(0)
+    
+    def searchOltSite_2(self):
+        keyword = self.oltKeywordLE_2.text().strip()
+        if keyword == '':
+            QMessageBox.warning(self, '警告', '请输入搜索关键词')
+            self.oltSiteNamesCB_2.clear()
+            return
+        sites, msg = searchOltSiteFunc(keyword)
+        if msg != '搜索成功':
+            QMessageBox.warning(self, '警告', msg)
+            return
+        self.oltSiteNamesCB_2.clear()
+        self.oltSiteNamesCB_2.addItems(sites)
+        self.oltSiteNamesCB_2.setCurrentIndex(0)
+    
+    def searchOltNe_2(self):
+        olt_name = self.oltSiteNamesCB_2.currentText()
+        if olt_name == '':
+            QMessageBox.warning(self, '警告', '请选择OLT站点')
+            return
+        df, _, _ = searchOltNeFunc(olt_name)
+        self.oltNeTw_2.setRowCount(df.shape[0])
+        self.oltNeTw_2.setColumnCount(df.shape[1])
+        self.oltNeTw_2.setHorizontalHeaderLabels(df.columns)
+        self.oltNeTw_2.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
+        for i in range(df.shape[0]):
+            for j in range(df.shape[1]):
+                self.oltNeTw_2.setItem(i, j, QTableWidgetItem(str(df.iloc[i, j])))
+    
+    def addOltToObj(self):
+        selected_indexes = self.oltNeTw_2.selectedIndexes()
+        selected_row_indices = list(set([index.row() for index in selected_indexes]))
         
+        if len(selected_row_indices) == 0:
+            QMessageBox.warning(self, '警告', '请选择OLT网元')
+            return
+        
+        source_col_count = self.oltNeTw_2.columnCount()
+        if self.oltObjNeTw.columnCount() == 0:
+            self.oltObjNeTw.setColumnCount(source_col_count)
+            headers = [self.oltNeTw_2.horizontalHeaderItem(i).text() for i in range(source_col_count)]
+            self.oltObjNeTw.setHorizontalHeaderLabels(headers)
+            self.oltObjNeTw.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
+        
+        for row in selected_row_indices:
+            olt_name = self.oltNeTw_2.item(row, 0).text()
+            exists = False
+            for i in range(self.oltObjNeTw.rowCount()):
+                item = self.oltObjNeTw.item(i, 0)
+                if item and item.text() == olt_name:
+                    exists = True
+                    break
+            if not exists:
+                new_row = self.oltObjNeTw.rowCount()
+                self.oltObjNeTw.insertRow(new_row)
+                for col in range(source_col_count):
+                    item = self.oltNeTw_2.item(row, col)
+                    if item:
+                        self.oltObjNeTw.setItem(new_row, col, QTableWidgetItem(item.text()))
+    
+    def delOltFromObj(self):
+        selected_indexes = self.oltObjNeTw.selectedIndexes()
+        selected_row_indices = list(set([index.row() for index in selected_indexes]))
+        
+        if len(selected_row_indices) == 0:
+            QMessageBox.warning(self, '警告', '请选择要删除的OLT网元')
+            return
+        
+        for row in sorted(selected_row_indices, reverse=True):
+            self.oltObjNeTw.removeRow(row)
+    
+    def beginPonDiversion(self):
+        olt_names = []
+        for i in range(self.oltObjNeTw.rowCount()):
+            olt_names.append(self.oltObjNeTw.item(i, 0).text())
+        if not olt_names:
+            QMessageBox.warning(self, '警告', '请选择OLT网元')
+            return
+        reply = QMessageBox.question(self, '确认', f'即将分析{len(olt_names)}个OLT网元，是否继续？', 
+                                     QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply != QMessageBox.Yes:
+            return
+        self.pon_diversion_thread = PonDiversionThread(olt_names)
+        self.pon_diversion_thread.state_signal.connect(self.showStatus)
+        self.pon_diversion_thread.start()
+        page_widget = self.container.findChild(QWidget, "logPage")
+        self.container.setCurrentWidget(page_widget)
             
     
     def searchDBTableInfo(self):

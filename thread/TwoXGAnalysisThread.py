@@ -69,6 +69,24 @@ class TwoXGAnalysisThread(QThread):
             )
             pon_port_table = pon_port_table.drop(columns=['OLT网元'])
             
+            self.state_signal.emit('正在读取主光路表...')
+            # 读取主光路表
+            main_path_df = readDataBase('主光路')
+            # 只保留需要的列
+            main_path_df = main_path_df[['PON口', '光路名称', '光路文本路由']]
+            # 去重，保留第一个
+            main_path_df = main_path_df.drop_duplicates(subset=['PON口'], keep='first')
+            
+            self.state_signal.emit('正在匹配光路信息...')
+            # 匹配光路名称、光路文本路由
+            pon_port_table = pon_port_table.merge(
+                main_path_df,
+                left_on='PORT_NAME',
+                right_on='PON口',
+                how='left'
+            )
+            pon_port_table = pon_port_table.drop(columns=['PON口'])
+            
             self.state_signal.emit('正在判断千兆设备...')
             # 8、判断是否为千兆设备
             olt_df['是否千兆设备'] = olt_df['设备型号'].apply(
@@ -100,9 +118,18 @@ class TwoXGAnalysisThread(QThread):
             # 11、制定PON口割接策略
             pon_port_table = self.makeCutoverStrategy(pon_port_table)
             
+            self.state_signal.emit('正在匹配割接目标OLT...')
+            # 匹配割接目标OLT
+            pon_port_table = self.matchTargetOLT(pon_port_table, olt_df)
+            
+            self.state_signal.emit('正在判断区域...')
+            # 根据OLT_NAME使用正则表达式判断区域
+            pon_port_table['区域'] = pon_port_table['OLT_NAME'].apply(self.getAreaFromOLTName)
+            
             self.state_signal.emit('正在统计重点小区维度信息...')
             # 12、按是否重点小区维度分组统计
             key_area_table = self.analyzeByKeyArea(zhanjiang_df, pon_port_table)
+            
             
             self.state_signal.emit('正在生成分析结果...')
             # 13、输出结果前，先筛选出两个额外的sheet
@@ -218,3 +245,81 @@ class TwoXGAnalysisThread(QThread):
             key_area_table = pd.concat([key_area_table, pd.DataFrame([total_row])], ignore_index=True)
         
         return key_area_table
+
+    def matchTargetOLT(self, pon_port_table, olt_df):
+        '''
+        匹配割接目标OLT
+        '''
+        # 先筛选出千兆OLT
+        giga_olt_df = olt_df[
+            (olt_df['设备型号'].apply(lambda x: 'C600' in str(x) or '5800' in str(x)))
+        ].copy()
+        
+        # 初始化目标OLT列为空
+        pon_port_table['目标OLT'] = ''
+        
+        # 按所属站点分组处理
+        for site_name in pon_port_table['所属站点'].unique():
+            # 获取当前站点的PON口
+            site_pon_ports = pon_port_table[pon_port_table['所属站点'] == site_name]
+            
+            # 获取当前站点的千兆OLT
+            site_giga_olts = giga_olt_df[giga_olt_df['所属站点'] == site_name]
+            
+            if len(site_giga_olts) == 0:
+                continue
+            
+            # 处理两种情况：可割接 和 暂不割接需扩容
+            for cutover_type in ['可割接', '暂不割接，需扩容PON板']:
+                # 计算当前类型的PON口数量
+                pon_count = len(site_pon_ports[site_pon_ports['割接策略'] == cutover_type])
+                
+                if pon_count == 0:
+                    continue
+                
+                # 寻找满足要求的千兆OLT
+                # 优先选择空闲口最多的OLT
+                suitable_olt = None
+                max_free_ports = 0
+                
+                for _, olt_row in site_giga_olts.iterrows():
+                    # 对于"可割接"类型，要求空闲口 >= 需要的数量
+                    # 对于"暂不割接，需扩容PON板"类型，即使空闲口不够，也选择空闲口最多的
+                    if cutover_type == '可割接':
+                        if olt_row['XGPON口空闲数'] >= pon_count:
+                            if olt_row['XGPON口空闲数'] > max_free_ports:
+                                max_free_ports = olt_row['XGPON口空闲数']
+                                suitable_olt = olt_row['OLT网元']
+                    else:
+                        # 对于"暂不割接，需扩容PON板"，直接选择空闲口最多的OLT
+                        if olt_row['XGPON口空闲数'] >= max_free_ports:
+                            max_free_ports = olt_row['XGPON口空闲数']
+                            suitable_olt = olt_row['OLT网元']
+                
+                # 如果找到了合适的OLT，将其设置为目标OLT
+                if suitable_olt is not None:
+                    pon_port_table.loc[
+                        (pon_port_table['所属站点'] == site_name) & 
+                        (pon_port_table['割接策略'] == cutover_type), 
+                        '目标OLT'
+                    ] = suitable_olt
+        
+        return pon_port_table
+
+    def getAreaFromOLTName(self, olt_name):
+        '''
+        根据OLT_NAME使用正则表达式判断区域
+        '''
+        if pd.isna(olt_name):
+            return '其他'
+        
+        olt_name_str = str(olt_name)
+        
+        # 使用正则表达式匹配区域
+        area_pattern = r'(赤坎|麻章|霞山|坡头|开发区|雷州|廉江|吴川|遂溪|徐闻)'
+        match = re.search(area_pattern, olt_name_str)
+        
+        if match:
+            return match.group(1)
+        else:
+            return '其他'

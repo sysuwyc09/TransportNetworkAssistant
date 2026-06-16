@@ -3610,6 +3610,294 @@ class Ui_MainWindow(object):
         self.verticalLayout_26.addWidget(self.frame_26)
 
         self.tabWidget_2.addTab(self.ponPage, "")
+        self.ponDiversionPage = QWidget()
+        self.ponDiversionPage.setObjectName(u"ponDiversionPage")
+        self.verticalLayout_37 = QVBoxLayout(self.ponDiversionPage)
+        self.verticalLayout_37.setObjectName(u"verticalLayout_37")
+        self.frame_36 = QFrame(self.ponDiversionPage)
+        self.frame_36.setObjectName(u"frame_36")
+        self.frame_36.setFrameShape(QFrame.StyledPanel)
+        self.frame_36.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_32 = QHBoxLayout(self.frame_36)
+        self.horizontalLayout_32.setObjectName(u"horizontalLayout_32")
+        self.label_48 = QLabel(self.frame_36)
+        self.label_48.setObjectName(u"label_48")
+        self.label_48.setMinimumSize(QSize(100, 30))
+        self.label_48.setMaximumSize(QSize(100, 30))
+        self.label_48.setStyleSheet(u"QLabel {\n"
+"    background-color: #44cc88;  /* \u7eff\u8272\u80cc\u666f */\n"
+"    color: white;  /* \u767d\u8272\u6587\u5b57 */\n"
+"    padding: 5px;\n"
+"    font-size: 14px;\n"
+"    font-weight: bold;\n"
+"    border: 1px solid white;\n"
+"    border-radius: 10px;\n"
+"}")
+        self.label_48.setAlignment(Qt.AlignCenter)
+
+        self.horizontalLayout_32.addWidget(self.label_48)
+
+        self.oltKeywordLE_2 = QLineEdit(self.frame_36)
+        self.oltKeywordLE_2.setObjectName(u"oltKeywordLE_2")
+        sizePolicy7.setHeightForWidth(self.oltKeywordLE_2.sizePolicy().hasHeightForWidth())
+        self.oltKeywordLE_2.setSizePolicy(sizePolicy7)
+        self.oltKeywordLE_2.setMinimumSize(QSize(300, 30))
+        self.oltKeywordLE_2.setMaximumSize(QSize(300, 30))
+        self.oltKeywordLE_2.setStyleSheet(u"QLineEdit {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 5px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QLineEdit:hover {\n"
+"    border: 1px solid #55dd99;\n"
+"}\n"
+"\n"
+"QLineEdit:focus {\n"
+"    border: 1px solid #66eeaa;\n"
+"}\n"
+"")
+
+        self.horizontalLayout_32.addWidget(self.oltKeywordLE_2)
+
+        self.oltSiteNamesCB_2 = QComboBox(self.frame_36)
+        self.oltSiteNamesCB_2.setObjectName(u"oltSiteNamesCB_2")
+        sizePolicy.setHeightForWidth(self.oltSiteNamesCB_2.sizePolicy().hasHeightForWidth())
+        self.oltSiteNamesCB_2.setSizePolicy(sizePolicy)
+        self.oltSiteNamesCB_2.setMinimumSize(QSize(150, 30))
+        self.oltSiteNamesCB_2.setMaximumSize(QSize(16777215, 30))
+        self.oltSiteNamesCB_2.setStyleSheet(u"QComboBox {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 5px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QComboBox:hover {\n"
+"    border: 1px solid #55dd99;\n"
+"}\n"
+"\n"
+"\n"
+"QComboBox QAbstractItemView {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    selection-background-color: rgba(68, 204, 136, 0.3);\n"
+"}")
+
+        self.horizontalLayout_32.addWidget(self.oltSiteNamesCB_2)
+
+        self.searchOltBtn_2 = QPushButton(self.frame_36)
+        self.searchOltBtn_2.setObjectName(u"searchOltBtn_2")
+        sizePolicy10.setHeightForWidth(self.searchOltBtn_2.sizePolicy().hasHeightForWidth())
+        self.searchOltBtn_2.setSizePolicy(sizePolicy10)
+        self.searchOltBtn_2.setMinimumSize(QSize(100, 30))
+        self.searchOltBtn_2.setMaximumSize(QSize(100, 30))
+        self.searchOltBtn_2.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        self.searchOltBtn_2.setIcon(icon16)
+
+        self.horizontalLayout_32.addWidget(self.searchOltBtn_2)
+
+
+        self.verticalLayout_37.addWidget(self.frame_36)
+
+        self.frame_37 = QFrame(self.ponDiversionPage)
+        self.frame_37.setObjectName(u"frame_37")
+        self.frame_37.setFrameShape(QFrame.StyledPanel)
+        self.frame_37.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_33 = QHBoxLayout(self.frame_37)
+        self.horizontalLayout_33.setObjectName(u"horizontalLayout_33")
+        self.oltNeTw_2 = QTableWidget(self.frame_37)
+        self.oltNeTw_2.setObjectName(u"oltNeTw_2")
+        sizePolicy7.setHeightForWidth(self.oltNeTw_2.sizePolicy().hasHeightForWidth())
+        self.oltNeTw_2.setSizePolicy(sizePolicy7)
+        self.oltNeTw_2.setMinimumSize(QSize(0, 0))
+        self.oltNeTw_2.setMaximumSize(QSize(16777215, 16777215))
+        self.oltNeTw_2.setStyleSheet(u"QTableWidget {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"        color: #44cc88;\n"
+"        gridline-color: #44cc88;\n"
+"        border: 1px solid #44cc88;\n"
+"    }\n"
+"    \n"
+"    QTableWidget::item {\n"
+"        border: none;\n"
+"        padding: 5px;\n"
+"    }\n"
+"    \n"
+"    QTableWidget::item:selected {\n"
+"        background-color: #44cc88;\n"
+"        color: rgba(28, 33, 44, 255);\n"
+"    }\n"
+"    \n"
+"    QHeaderView::section {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"        color: #44cc88;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"    }\n"
+"    \n"
+"    QTableCornerButton::section {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"        border: 1px solid #44cc88;\n"
+"    }")
+
+        self.horizontalLayout_33.addWidget(self.oltNeTw_2)
+
+        self.addOLTBtn = QPushButton(self.frame_37)
+        self.addOLTBtn.setObjectName(u"addOLTBtn")
+        sizePolicy10.setHeightForWidth(self.addOLTBtn.sizePolicy().hasHeightForWidth())
+        self.addOLTBtn.setSizePolicy(sizePolicy10)
+        self.addOLTBtn.setMinimumSize(QSize(100, 30))
+        self.addOLTBtn.setMaximumSize(QSize(100, 30))
+        self.addOLTBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        icon22 = QIcon()
+        icon22.addFile(u":/icons/assets/checkmark.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.addOLTBtn.setIcon(icon22)
+
+        self.horizontalLayout_33.addWidget(self.addOLTBtn)
+
+
+        self.verticalLayout_37.addWidget(self.frame_37)
+
+        self.frame_38 = QFrame(self.ponDiversionPage)
+        self.frame_38.setObjectName(u"frame_38")
+        self.frame_38.setFrameShape(QFrame.StyledPanel)
+        self.frame_38.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_34 = QHBoxLayout(self.frame_38)
+        self.horizontalLayout_34.setObjectName(u"horizontalLayout_34")
+        self.oltObjNeTw = QTableWidget(self.frame_38)
+        self.oltObjNeTw.setObjectName(u"oltObjNeTw")
+        sizePolicy7.setHeightForWidth(self.oltObjNeTw.sizePolicy().hasHeightForWidth())
+        self.oltObjNeTw.setSizePolicy(sizePolicy7)
+        self.oltObjNeTw.setMinimumSize(QSize(0, 0))
+        self.oltObjNeTw.setMaximumSize(QSize(16777215, 16777215))
+        self.oltObjNeTw.setStyleSheet(u"QTableWidget {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"        color: #44cc88;\n"
+"        gridline-color: #44cc88;\n"
+"        border: 1px solid #44cc88;\n"
+"    }\n"
+"    \n"
+"    QTableWidget::item {\n"
+"        border: none;\n"
+"        padding: 5px;\n"
+"    }\n"
+"    \n"
+"    QTableWidget::item:selected {\n"
+"        background-color: #44cc88;\n"
+"        color: rgba(28, 33, 44, 255);\n"
+"    }\n"
+"    \n"
+"    QHeaderView::section {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"        color: #44cc88;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"    }\n"
+"    \n"
+"    QTableCornerButton::section {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"        border: 1px solid #44cc88;\n"
+"    }")
+
+        self.horizontalLayout_34.addWidget(self.oltObjNeTw)
+
+        self.verticalLayout_36 = QVBoxLayout()
+        self.verticalLayout_36.setObjectName(u"verticalLayout_36")
+        self.delOltBtn = QPushButton(self.frame_38)
+        self.delOltBtn.setObjectName(u"delOltBtn")
+        sizePolicy10.setHeightForWidth(self.delOltBtn.sizePolicy().hasHeightForWidth())
+        self.delOltBtn.setSizePolicy(sizePolicy10)
+        self.delOltBtn.setMinimumSize(QSize(100, 30))
+        self.delOltBtn.setMaximumSize(QSize(100, 30))
+        self.delOltBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        icon23 = QIcon()
+        icon23.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.delOltBtn.setIcon(icon23)
+
+        self.verticalLayout_36.addWidget(self.delOltBtn)
+
+        self.beginOltBtn = QPushButton(self.frame_38)
+        self.beginOltBtn.setObjectName(u"beginOltBtn")
+        sizePolicy10.setHeightForWidth(self.beginOltBtn.sizePolicy().hasHeightForWidth())
+        self.beginOltBtn.setSizePolicy(sizePolicy10)
+        self.beginOltBtn.setMinimumSize(QSize(100, 30))
+        self.beginOltBtn.setMaximumSize(QSize(100, 30))
+        self.beginOltBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        self.beginOltBtn.setIcon(icon15)
+
+        self.verticalLayout_36.addWidget(self.beginOltBtn)
+
+
+        self.horizontalLayout_34.addLayout(self.verticalLayout_36)
+
+
+        self.verticalLayout_37.addWidget(self.frame_38)
+
+        self.verticalLayout_37.setStretch(0, 1)
+        self.verticalLayout_37.setStretch(1, 3)
+        self.verticalLayout_37.setStretch(2, 6)
+        self.tabWidget_2.addTab(self.ponDiversionPage, "")
 
         self.verticalLayout_33.addWidget(self.tabWidget_2)
 
@@ -3977,9 +4265,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(64, 71, 90);\n"
 "}")
-        icon22 = QIcon()
-        icon22.addFile(u":/icons/assets/close.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.sideClose.setIcon(icon22)
+        icon24 = QIcon()
+        icon24.addFile(u":/icons/assets/close.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.sideClose.setIcon(icon24)
 
         self.horizontalLayout_10.addWidget(self.sideClose)
 
@@ -4031,9 +4319,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon23 = QIcon()
-        icon23.addFile(u":/icons/assets/settings.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.settingBtn.setIcon(icon23)
+        icon25 = QIcon()
+        icon25.addFile(u":/icons/assets/settings.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.settingBtn.setIcon(icon25)
         self.settingBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.settingBtn)
@@ -4059,9 +4347,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon24 = QIcon()
-        icon24.addFile(u":/icons/assets/document.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.updateBtn.setIcon(icon24)
+        icon26 = QIcon()
+        icon26.addFile(u":/icons/assets/document.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.updateBtn.setIcon(icon26)
         self.updateBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.updateBtn)
@@ -4087,9 +4375,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon25 = QIcon()
-        icon25.addFile(u":/icons/assets/graph.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.kpiBtn.setIcon(icon25)
+        icon27 = QIcon()
+        icon27.addFile(u":/icons/assets/graph.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.kpiBtn.setIcon(icon27)
         self.kpiBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.kpiBtn)
@@ -4115,9 +4403,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon26 = QIcon()
-        icon26.addFile(u":/icons/assets/help.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.logBtn.setIcon(icon26)
+        icon28 = QIcon()
+        icon28.addFile(u":/icons/assets/help.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.logBtn.setIcon(icon28)
         self.logBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.logBtn)
@@ -4143,7 +4431,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        self.agentBtn.setIcon(icon24)
+        self.agentBtn.setIcon(icon26)
         self.agentBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.agentBtn)
@@ -4185,9 +4473,9 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(4)
+        self.container.setCurrentIndex(7)
         self.tabWidget.setCurrentIndex(1)
-        self.tabWidget_2.setCurrentIndex(0)
+        self.tabWidget_2.setCurrentIndex(1)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -4316,6 +4604,12 @@ class Ui_MainWindow(object):
 "\n"
 "\u6e05\u5355", None))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.ponPage), QCoreApplication.translate("MainWindow", u"PON\u53e3", None))
+        self.label_48.setText(QCoreApplication.translate("MainWindow", u"OLT\u7ad9\u70b9", None))
+        self.searchOltBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u67e5\u627e", None))
+        self.addOLTBtn.setText(QCoreApplication.translate("MainWindow", u"\u6dfb\u52a0", None))
+        self.delOltBtn.setText(QCoreApplication.translate("MainWindow", u"\u5220\u9664", None))
+        self.beginOltBtn.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u59cb", None))
+        self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.ponDiversionPage), QCoreApplication.translate("MainWindow", u"PON\u5206\u6d41", None))
         self.label_43.setText(QCoreApplication.translate("MainWindow", u"\u8fd0\u884c\u65e5\u5fd7", None))
         self.label_44.setText(QCoreApplication.translate("MainWindow", u"\u5de5\u5177\u7bb1", None))
         self.convert_coord_btn.setText(QCoreApplication.translate("MainWindow", u"\u5750\u6807\u7cfb\n"

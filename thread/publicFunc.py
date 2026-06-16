@@ -731,7 +731,7 @@ def findJumpNum(route):
 def findKeyPoint(currentPath,objPath,site_dict):
     if pd.isnull(objPath):
         return "None","None",0
-    sites = re.findall('>(.*?)\([AB正反/面ODM0-9]+-\d+-\d+',currentPath)
+    sites = re.findall('>(.*?)\([ABCD正反/面ODM0-9]+-\d+-\d+',currentPath)
     if len(sites)==0:
         return "0","0",0
     if '-POS' in sites[-1]:
@@ -745,26 +745,24 @@ def findKeyPoint(currentPath,objPath,site_dict):
                 items.append(site)
         if item not in items:
             items.append(item)
-
     items = items[::-1]
     objPath = '=>' + objPath + '<='
     parts = re.findall('=>(.*?)<=',objPath)
+    match_index = 0
     for i in range(len(parts)):
-        flag = False
-        if i < len(items)-1:
-            if parts[i] != items[i]:
-                flag = True
-        if flag or i > len(items)-1:
-            index = objPath.index('=>' + parts[i-1])
-            path = objPath[index+2:-2]
-            min_num = 300
-            if '=>' in path:
-
-                use_nums = re.findall('\((\d+)/\d+\)',path)
-                if use_nums:
-                    min_num = min(int(use_num) for use_num in use_nums)
-            return parts[i-1],path,min_num
-    return parts[-1],'-',300
+        if parts[i] not in items:
+            break
+        match_index = i
+    if match_index < len(parts) - 1:
+        index = objPath.index('=>' + parts[match_index])
+        path = objPath[index+2:-2]
+        min_num = 300
+        use_nums = re.findall('\((\d+)/\d+\)',path)
+        if use_nums:
+            min_num = min(int(use_num) for use_num in use_nums)
+        return parts[match_index],path,min_num
+    else:
+        return parts[-1],'-',300
 
 def fixSrcPoNPort(port_name):
     regex = r'-(\d+)-[A-Z0-9]+-(\d+)-GPON'

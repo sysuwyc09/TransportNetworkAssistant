@@ -1,54 +1,14 @@
+from thread.publicFunc import *
 
-import re
-import sqlite3
-import pandas as pd
-from publicFunc import *
-
-
-def analyze_fiber_cable_segments():
-    """
-    分析光缆段与中继段的关联关系，输出包含以下列的结果表：
-    - 光缆段
-    - 包含中继段明细
-    - 中继纤芯数量总数
-    """
-    try:
-        # 读取中继段至光缆段表
-        relay_to_fiber_df = readDataBase('中继段至光缆段')
-        if relay_to_fiber_df.empty:
-            print('中继段至光缆段表为空')
-            return pd.DataFrame()
-        
-        # 读取中继段表
-        relay_df = readDataBase('中继段')
-        if relay_df.empty:
-            print('中继段表为空')
-            return pd.DataFrame()
-        
-        # 合并两个表，中继段至光缆段的"中继段"对应中继段表的"名称"
-        merged_df = relay_to_fiber_df.merge(relay_df, left_on='中继段', right_on='名称', how='left')
-        
-        # 按光缆段分组，汇总中继段明细和中继纤芯数量
-        result_df = merged_df.groupby('光缆段').agg(
-            包含中继段明细=('中继段', lambda x: ','.join(x.dropna().unique())),
-            中继纤芯数量总数=('中继纤芯数量', 'sum')
-        ).reset_index()
-        
-        # 重命名列
-        result_df = result_df[['光缆段', '包含中继段明细', '中继纤芯数量总数']]
-        
-        print('分析完成，共 {} 个光缆段'.format(len(result_df)))
-        return result_df
-    
-    except Exception as e:
-        print(f'分析失败: {str(e)}')
-        return pd.DataFrame()
-
-
-if __name__ == '__main__':
-    result = analyze_fiber_cable_segments()
-    if not result.empty:
-        # print(result)
-        # 可选：保存到文件
-        result.to_excel('光缆段分析结果.xlsx', index=False)
-        print('结果已保存到 光缆段分析结果.xlsx')
+box_df = readDataBase('光交箱')[['设施名称', '机房名称']]
+oBox_df = readDataBase('分纤箱')[['设施名称', '机房名称']]
+odf_df = readDataBase('ODF')[['设施名称', '机房名称']]
+all_site_df = pd.concat([box_df, oBox_df, odf_df], axis=0)
+all_site_df = all_site_df.ffill(axis=1)
+site_dict = all_site_df.set_index('设施名称')['机房名称'].to_dict()
+print(site_dict['麻章蓝天花园负一层新国标ODF04'])
+# text = '湛江赤坎区农机总一楼机房无线1-OLT001-HW-MA5680T(湛江赤坎区农机总一楼机房无线1-OLT001-HW-MA5680T-0-6-H805GPBD-3-GPON)<==>湛江赤坎农机总ODF01(01-05-11)<瑞云北路与金康东路交界处576芯/GJ-湛江赤坎农机总ODF01(FX0011)>瑞云北路与金康东路交界处576芯/GJ(01-17-11)<==>瑞云北路与金康东路交界处576芯/GJ(01-09-09)<瑞云北路与金康东路交界处576芯/GJ-麻章工业品综合市场576芯/GJ01(FX0033)>麻章工业品综合市场576芯/GJ01(01-07-09)'
+# obj_text = '育才路与金康东路交界处光交箱<={湛江麻章区坑排上村北ODF-ABB09-育才路与金康东路交界处光交箱/A}(7/24)=>湛江麻章区坑排上村北一楼机房传输1'
+text = '湛江赤坎区农机总一楼机房无线1-OLT002-HW-MA5680T(湛江赤坎区农机总一楼机房无线1-OLT002-HW-MA5680T-0-4-H805GPFD-3-GPON)<==>湛江赤坎农机总ODF01(03-02-01)<湛江赤坎农机总ODF01-湛江麻章瑞云中ODF01(A03)(FX0085)>湛江麻章瑞云中ODF01(A03)(05-02-01)<==>湛江麻章瑞云中综合柜02(ODM03-01-4)<麻赤路与瑞云北路交界处一级光交箱-湛江麻章瑞云中综合柜02(FX0004)>麻赤路与瑞云北路交界处一级光交箱(C面-01-4)<==>麻赤路与瑞云北路交界处一级光交箱(B面-48-7)<麻赤路与瑞云北路交界处一级光交箱-麻章蓝天花园负一层新国标ODF04(FX0006)>麻章蓝天花园负一层新国标ODF04(01-03-07)<==>湛江麻章蓝天花园负一层新国标ODF04-POS001-1:4(湛江麻章蓝天花园负一层新国标ODF04-POS001-1:4-IN-01)'
+obj_text = '湛江麻章区蓝天花园营销中心二楼机房用户1<={麻赤路与瑞云北路交界处一级光交箱-麻章蓝天花园负一层新国标ODF04}(13/23)=>麻赤路与瑞云北路交界处一级光交箱<={麻赤路与瑞云北路交界处一级光交箱-湛江麻章瑞云中综合柜02}(6/84)=>湛江麻章瑞云中八楼机房无线1'
+print(findKeyPoint(text, obj_text, site_dict))

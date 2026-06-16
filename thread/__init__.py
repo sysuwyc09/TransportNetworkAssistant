@@ -26,3 +26,4 @@ from .WriteBoxKmlThread import WriteBoxKmlThread
 from .UpdateOneKeyQThread import UpdateOneKeyQThread
 from .UpdateOltOneTableThread import UpdateOltOneTableThread
 from .TwoXGAnalysisThread import TwoXGAnalysisThread
+from .PonDiversionThread import PonDiversionThread
