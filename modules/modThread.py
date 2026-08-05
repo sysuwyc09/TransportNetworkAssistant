@@ -83,7 +83,12 @@ class readKmlThread(QThread):  # 步骤1.创建一个线程实例
         lineRegex = re.compile('<coordinates>(.*)</coordinates>',re.DOTALL)
         for j in range(len(folders)): 
             lines = folders[j].split('<Placemark>')
-            folderName = re.search('<name>(.*)</name>',lines[0]).group(1)
+            match = re.search('<name>(.*)</name>',lines[0])
+            if match:
+                folderName = match.group(1)
+            else:
+                folderName = '未命名'
+            self.stateSignal.emit(f'正在读取{folderName}...')
             linePlaces.setdefault(folderName,[])
             pointPlaces.setdefault(folderName,[])
             polygonPlace.setdefault(folderName,[])
@@ -209,13 +214,17 @@ class WriteKmlThread(QThread):
             tempDf['描述'] = ''
             for col in tempDf.columns:
                 if col != '描述':
+                    tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('<',''))
+                    tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('>',''))
+                    tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('&',''))
+
                     tempDf['描述'] = tempDf['描述'] + col + ": " + tempDf[col] + '\n'
             names = list(tempDf['名称'])
             longitudes = list(tempDf['经度'])
             latitudes = list(tempDf['纬度'])
             descriptions = list(tempDf['描述'])
             for i in range(len(names)):
-                places.append(self.writePoint(names[i],longitudes[i],latitudes[i],names[i],self.colors[colorIndex]))
+                places.append(self.writePoint(names[i],longitudes[i],latitudes[i],descriptions[i],self.colors[colorIndex]))
             folders.append(self.writeFolder(fstGrp[0],places))
             colorIndex = colorIndex + 1
             if colorIndex == len(self.colors):

@@ -23,7 +23,7 @@ class TwoXGAnalysisThread(QThread):
     def run(self):
         try:
             self.state_signal.emit('正在加载2000M用户清单...')
-            user_df = pd.read_excel(self.file_path, sheet_name='Sheet1', engine='openpyxl')
+            user_df = pd.read_excel(self.file_path, sheet_name='全量2000M清单', engine='openpyxl')
             
             self.state_signal.emit('正在筛选湛江用户...')
             # 2、筛选CITY列为"湛江"的用户
@@ -46,11 +46,13 @@ class TwoXGAnalysisThread(QThread):
             
             pon_port_table = need_cutover_df.groupby(['OLT_NAME', 'PORT_NAME']).agg({
                 '是否需割接': 'size',
-                '是否重点小区': lambda x: (x == '是').sum()
+                '是否重点小区': lambda x: (x == '是').sum(),
+                'CODE': lambda x: ','.join(x.astype(str))
             }).reset_index()
             pon_port_table = pon_port_table.rename(columns={
                 '是否需割接': '需要割接用户数',
-                '是否重点小区': '重点小区需割接用户数'
+                '是否重点小区': '重点小区需割接用户数',
+                'CODE': '2000M用户明细'
             })
             pon_port_table['非重点小区需割接用户数'] = pon_port_table['需要割接用户数'] - pon_port_table['重点小区需割接用户数']
             

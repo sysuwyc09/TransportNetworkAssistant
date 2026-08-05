@@ -247,8 +247,3 @@ class BoxLevelThreadV2(QThread):
         return dev_df,house_box_df
 
 
-
-# 知识库相关进程
-'''
-OLT 站点知识库的进程，读取OLT表格，然后获取OLT的markdown格式文档
-'''

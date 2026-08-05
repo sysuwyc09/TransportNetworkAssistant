@@ -20,13 +20,14 @@ class FindLongPonLineThread(QThread):
             self.state_signal.emit('正在分析超长主光路清单...',0,'')
             pon_df = readDataBase('主光路')
             pon_num = pon_df.shape[0]
-            self.state_signal.emit(f'存量共有{pon_num}条主光路，按1跳1dB、1公里0.35dB估算超长主光路（超6dB）',0,'')
+            self.state_signal.emit(f'存量共有{pon_num}条主光路，按1跳1dB、1公里0.35dB估算超长主光路（超7dB，C++ 7dBm预算）',0,'')
             pon_df['光路文本路由'] = pon_df['光路文本路由'].astype(str)
             pon_df['跳数'] = pon_df['光路文本路由'].apply(findJumpNum)
             pon_df['光路长度'] = pon_df['光路长度'].astype(float)
             pon_df['光衰'] = pon_df['跳数'] * 1 + pon_df['光路长度'] / 1000 * 0.35
-            lon_pon_df = pon_df[pon_df['光衰'] >= 6]
-            self.state_signal.emit(f'按1跳1dB、1公里0.35dB估算，共有{lon_pon_df.shape[0]}条主光路超6dB',10,'')
+            # C++ 发光7dBm,主光路光衰大于等于7dB为超长主光路
+            lon_pon_df = pon_df[pon_df['光衰'] >= 7]
+            self.state_signal.emit(f'按1跳1dB、1公里0.35dB估算，共有{lon_pon_df.shape[0]}条主光路超7dB，C++ 7dBm预算',10,'')
             lon_pon_df.sort_values(by=['光衰'],ascending=False,inplace=True)
             writeDataBase('超长主光路清单',lon_pon_df)
             

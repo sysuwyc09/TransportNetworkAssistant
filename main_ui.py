@@ -1787,6 +1787,7 @@ class Ui_MainWindow(object):
         self.kpiPage.setObjectName(u"kpiPage")
         self.verticalLayout_20 = QVBoxLayout(self.kpiPage)
         self.verticalLayout_20.setObjectName(u"verticalLayout_20")
+        self.verticalLayout_20.setContentsMargins(-1, -1, 20, -1)
         self.frame_19 = QFrame(self.kpiPage)
         self.frame_19.setObjectName(u"frame_19")
         sizePolicy5.setHeightForWidth(self.frame_19.sizePolicy().hasHeightForWidth())
@@ -1811,19 +1812,43 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_20.addWidget(self.frame_19)
 
-        self.frame_18 = QFrame(self.kpiPage)
-        self.frame_18.setObjectName(u"frame_18")
-        self.frame_18.setFrameShape(QFrame.StyledPanel)
-        self.frame_18.setFrameShadow(QFrame.Raised)
-        self.gridLayout = QGridLayout(self.frame_18)
+        self.tabWidget_18 = QTabWidget(self.kpiPage)
+        self.tabWidget_18.setObjectName(u"tabWidget_18")
+        self.tabWidget_18.setStyleSheet(u"QTabWidget {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"    }\n"
+"QTabWidget::pane {\n"
+"        border: 1px solid #44cc88;\n"
+"        border-radius: 5px;\n"
+"    }\n"
+"QTabBar::tab {\n"
+"        background-color: rgba(28, 33, 44, 255);\n"
+"        color: #44cc88;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 8px;\n"
+"        border-top-left-radius: 8px;\n"
+"        border-top-right-radius: 8px;\n"
+"    }\n"
+"QTabBar::tab:selected {\n"
+"    background-color: #44cc88;  /* \u7eff\u8272\u80cc\u666f */\n"
+"    color: white;  /* \u767d\u8272\u6587\u5b57 */\n"
+"    border: 1px solid #44cc88;\n"
+"	font: 700 10pt;\n"
+"}\n"
+"QTabBar::tab:hover {\n"
+"        background-color: rgba(50, 55, 66, 255);\n"
+"    }")
+        self.tabWidget_18Page1 = QWidget()
+        self.tabWidget_18Page1.setObjectName(u"tabWidget_18Page1")
+        self.gridLayout = QGridLayout(self.tabWidget_18Page1)
         self.gridLayout.setObjectName(u"gridLayout")
-        self.writeAggrHouseBtn = QPushButton(self.frame_18)
-        self.writeAggrHouseBtn.setObjectName(u"writeAggrHouseBtn")
-        sizePolicy2.setHeightForWidth(self.writeAggrHouseBtn.sizePolicy().hasHeightForWidth())
-        self.writeAggrHouseBtn.setSizePolicy(sizePolicy2)
-        self.writeAggrHouseBtn.setMinimumSize(QSize(100, 100))
-        self.writeAggrHouseBtn.setMaximumSize(QSize(100, 100))
-        self.writeAggrHouseBtn.setStyleSheet(u"QPushButton {\n"
+        self.oltOneTableBtn = QPushButton(self.tabWidget_18Page1)
+        self.oltOneTableBtn.setObjectName(u"oltOneTableBtn")
+        sizePolicy2.setHeightForWidth(self.oltOneTableBtn.sizePolicy().hasHeightForWidth())
+        self.oltOneTableBtn.setSizePolicy(sizePolicy2)
+        self.oltOneTableBtn.setMinimumSize(QSize(100, 100))
+        self.oltOneTableBtn.setMaximumSize(QSize(100, 100))
+        self.oltOneTableBtn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -1838,15 +1863,15 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout.addWidget(self.writeAggrHouseBtn, 0, 0, 1, 1)
+        self.gridLayout.addWidget(self.oltOneTableBtn, 0, 0, 1, 1)
 
-        self.redOltPortSiteBtn = QPushButton(self.frame_18)
-        self.redOltPortSiteBtn.setObjectName(u"redOltPortSiteBtn")
-        sizePolicy2.setHeightForWidth(self.redOltPortSiteBtn.sizePolicy().hasHeightForWidth())
-        self.redOltPortSiteBtn.setSizePolicy(sizePolicy2)
-        self.redOltPortSiteBtn.setMinimumSize(QSize(100, 100))
-        self.redOltPortSiteBtn.setMaximumSize(QSize(100, 100))
-        self.redOltPortSiteBtn.setStyleSheet(u"QPushButton {\n"
+        self.onuBtn = QPushButton(self.tabWidget_18Page1)
+        self.onuBtn.setObjectName(u"onuBtn")
+        sizePolicy2.setHeightForWidth(self.onuBtn.sizePolicy().hasHeightForWidth())
+        self.onuBtn.setSizePolicy(sizePolicy2)
+        self.onuBtn.setMinimumSize(QSize(100, 100))
+        self.onuBtn.setMaximumSize(QSize(100, 100))
+        self.onuBtn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -1861,15 +1886,15 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout.addWidget(self.redOltPortSiteBtn, 0, 1, 1, 1)
+        self.gridLayout.addWidget(self.onuBtn, 0, 1, 1, 1)
 
-        self.notOltAggrSiteBtn = QPushButton(self.frame_18)
-        self.notOltAggrSiteBtn.setObjectName(u"notOltAggrSiteBtn")
-        sizePolicy2.setHeightForWidth(self.notOltAggrSiteBtn.sizePolicy().hasHeightForWidth())
-        self.notOltAggrSiteBtn.setSizePolicy(sizePolicy2)
-        self.notOltAggrSiteBtn.setMinimumSize(QSize(100, 100))
-        self.notOltAggrSiteBtn.setMaximumSize(QSize(100, 100))
-        self.notOltAggrSiteBtn.setStyleSheet(u"QPushButton {\n"
+        self.ponPortBtn = QPushButton(self.tabWidget_18Page1)
+        self.ponPortBtn.setObjectName(u"ponPortBtn")
+        sizePolicy2.setHeightForWidth(self.ponPortBtn.sizePolicy().hasHeightForWidth())
+        self.ponPortBtn.setSizePolicy(sizePolicy2)
+        self.ponPortBtn.setMinimumSize(QSize(100, 100))
+        self.ponPortBtn.setMaximumSize(QSize(100, 100))
+        self.ponPortBtn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -1884,15 +1909,15 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout.addWidget(self.notOltAggrSiteBtn, 0, 2, 1, 1)
+        self.gridLayout.addWidget(self.ponPortBtn, 0, 2, 1, 1)
 
-        self.notXgOltBtn = QPushButton(self.frame_18)
-        self.notXgOltBtn.setObjectName(u"notXgOltBtn")
-        sizePolicy2.setHeightForWidth(self.notXgOltBtn.sizePolicy().hasHeightForWidth())
-        self.notXgOltBtn.setSizePolicy(sizePolicy2)
-        self.notXgOltBtn.setMinimumSize(QSize(100, 100))
-        self.notXgOltBtn.setMaximumSize(QSize(100, 100))
-        self.notXgOltBtn.setStyleSheet(u"QPushButton {\n"
+        self.weekPortBtn = QPushButton(self.tabWidget_18Page1)
+        self.weekPortBtn.setObjectName(u"weekPortBtn")
+        sizePolicy2.setHeightForWidth(self.weekPortBtn.sizePolicy().hasHeightForWidth())
+        self.weekPortBtn.setSizePolicy(sizePolicy2)
+        self.weekPortBtn.setMinimumSize(QSize(100, 100))
+        self.weekPortBtn.setMaximumSize(QSize(100, 100))
+        self.weekPortBtn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -1907,9 +1932,9 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout.addWidget(self.notXgOltBtn, 0, 3, 1, 1)
+        self.gridLayout.addWidget(self.weekPortBtn, 0, 3, 1, 1)
 
-        self.blueAggrSiteBtn = QPushButton(self.frame_18)
+        self.blueAggrSiteBtn = QPushButton(self.tabWidget_18Page1)
         self.blueAggrSiteBtn.setObjectName(u"blueAggrSiteBtn")
         sizePolicy2.setHeightForWidth(self.blueAggrSiteBtn.sizePolicy().hasHeightForWidth())
         self.blueAggrSiteBtn.setSizePolicy(sizePolicy2)
@@ -1932,191 +1957,7 @@ class Ui_MainWindow(object):
 
         self.gridLayout.addWidget(self.blueAggrSiteBtn, 0, 4, 1, 1)
 
-        self.boxUplinkBusyBtn = QPushButton(self.frame_18)
-        self.boxUplinkBusyBtn.setObjectName(u"boxUplinkBusyBtn")
-        sizePolicy2.setHeightForWidth(self.boxUplinkBusyBtn.sizePolicy().hasHeightForWidth())
-        self.boxUplinkBusyBtn.setSizePolicy(sizePolicy2)
-        self.boxUplinkBusyBtn.setMinimumSize(QSize(100, 100))
-        self.boxUplinkBusyBtn.setMaximumSize(QSize(100, 100))
-        self.boxUplinkBusyBtn.setStyleSheet(u"QPushButton {\n"
-"        background-color: rgb(58, 65, 82);\n"
-"        color: #44cc88;\n"
-"        border-radius: 15px;\n"
-"        border: 1px solid #44cc88;\n"
-"        padding: 5px;\n"
-"        font: 700 11pt;\n"
-"    }\n"
-"    QPushButton:hover {\n"
-"        background-color: rgb(70, 77, 94);\n"
-"    }\n"
-"    QPushButton:pressed {\n"
-"        background-color: rgb(46, 53, 70);\n"
-"    }")
-
-        self.gridLayout.addWidget(self.boxUplinkBusyBtn, 1, 0, 1, 1)
-
-        self.onuBtn = QPushButton(self.frame_18)
-        self.onuBtn.setObjectName(u"onuBtn")
-        sizePolicy2.setHeightForWidth(self.onuBtn.sizePolicy().hasHeightForWidth())
-        self.onuBtn.setSizePolicy(sizePolicy2)
-        self.onuBtn.setMinimumSize(QSize(100, 100))
-        self.onuBtn.setMaximumSize(QSize(100, 100))
-        self.onuBtn.setStyleSheet(u"QPushButton {\n"
-"        background-color: rgb(58, 65, 82);\n"
-"        color: #44cc88;\n"
-"        border-radius: 15px;\n"
-"        border: 1px solid #44cc88;\n"
-"        padding: 5px;\n"
-"        font: 700 11pt;\n"
-"    }\n"
-"    QPushButton:hover {\n"
-"        background-color: rgb(70, 77, 94);\n"
-"    }\n"
-"    QPushButton:pressed {\n"
-"        background-color: rgb(46, 53, 70);\n"
-"    }")
-
-        self.gridLayout.addWidget(self.onuBtn, 1, 1, 1, 1)
-
-        self.ponPortBtn = QPushButton(self.frame_18)
-        self.ponPortBtn.setObjectName(u"ponPortBtn")
-        sizePolicy2.setHeightForWidth(self.ponPortBtn.sizePolicy().hasHeightForWidth())
-        self.ponPortBtn.setSizePolicy(sizePolicy2)
-        self.ponPortBtn.setMinimumSize(QSize(100, 100))
-        self.ponPortBtn.setMaximumSize(QSize(100, 100))
-        self.ponPortBtn.setStyleSheet(u"QPushButton {\n"
-"        background-color: rgb(58, 65, 82);\n"
-"        color: #44cc88;\n"
-"        border-radius: 15px;\n"
-"        border: 1px solid #44cc88;\n"
-"        padding: 5px;\n"
-"        font: 700 11pt;\n"
-"    }\n"
-"    QPushButton:hover {\n"
-"        background-color: rgb(70, 77, 94);\n"
-"    }\n"
-"    QPushButton:pressed {\n"
-"        background-color: rgb(46, 53, 70);\n"
-"    }")
-
-        self.gridLayout.addWidget(self.ponPortBtn, 1, 2, 1, 1)
-
-        self.notUseLineBtn = QPushButton(self.frame_18)
-        self.notUseLineBtn.setObjectName(u"notUseLineBtn")
-        sizePolicy2.setHeightForWidth(self.notUseLineBtn.sizePolicy().hasHeightForWidth())
-        self.notUseLineBtn.setSizePolicy(sizePolicy2)
-        self.notUseLineBtn.setMinimumSize(QSize(100, 100))
-        self.notUseLineBtn.setMaximumSize(QSize(100, 100))
-        self.notUseLineBtn.setStyleSheet(u"QPushButton {\n"
-"        background-color: rgb(58, 65, 82);\n"
-"        color: #44cc88;\n"
-"        border-radius: 15px;\n"
-"        border: 1px solid #44cc88;\n"
-"        padding: 5px;\n"
-"        font: 700 11pt;\n"
-"    }\n"
-"    QPushButton:hover {\n"
-"        background-color: rgb(70, 77, 94);\n"
-"    }\n"
-"    QPushButton:pressed {\n"
-"        background-color: rgb(46, 53, 70);\n"
-"    }")
-
-        self.gridLayout.addWidget(self.notUseLineBtn, 1, 3, 1, 1)
-
-        self.boxLevelBtn = QPushButton(self.frame_18)
-        self.boxLevelBtn.setObjectName(u"boxLevelBtn")
-        sizePolicy2.setHeightForWidth(self.boxLevelBtn.sizePolicy().hasHeightForWidth())
-        self.boxLevelBtn.setSizePolicy(sizePolicy2)
-        self.boxLevelBtn.setMinimumSize(QSize(100, 100))
-        self.boxLevelBtn.setMaximumSize(QSize(100, 100))
-        self.boxLevelBtn.setStyleSheet(u"QPushButton {\n"
-"        background-color: rgb(58, 65, 82);\n"
-"        color: #44cc88;\n"
-"        border-radius: 15px;\n"
-"        border: 1px solid #44cc88;\n"
-"        padding: 5px;\n"
-"        font: 700 11pt;\n"
-"    }\n"
-"    QPushButton:hover {\n"
-"        background-color: rgb(70, 77, 94);\n"
-"    }\n"
-"    QPushButton:pressed {\n"
-"        background-color: rgb(46, 53, 70);\n"
-"    }")
-
-        self.gridLayout.addWidget(self.boxLevelBtn, 1, 4, 1, 1)
-
-        self.weekPortBtn = QPushButton(self.frame_18)
-        self.weekPortBtn.setObjectName(u"weekPortBtn")
-        sizePolicy2.setHeightForWidth(self.weekPortBtn.sizePolicy().hasHeightForWidth())
-        self.weekPortBtn.setSizePolicy(sizePolicy2)
-        self.weekPortBtn.setMinimumSize(QSize(100, 100))
-        self.weekPortBtn.setMaximumSize(QSize(100, 100))
-        self.weekPortBtn.setStyleSheet(u"QPushButton {\n"
-"        background-color: rgb(58, 65, 82);\n"
-"        color: #44cc88;\n"
-"        border-radius: 15px;\n"
-"        border: 1px solid #44cc88;\n"
-"        padding: 5px;\n"
-"        font: 700 11pt;\n"
-"    }\n"
-"    QPushButton:hover {\n"
-"        background-color: rgb(70, 77, 94);\n"
-"    }\n"
-"    QPushButton:pressed {\n"
-"        background-color: rgb(46, 53, 70);\n"
-"    }")
-
-        self.gridLayout.addWidget(self.weekPortBtn, 2, 0, 1, 1)
-
-        self.boxKmlBtn = QPushButton(self.frame_18)
-        self.boxKmlBtn.setObjectName(u"boxKmlBtn")
-        sizePolicy2.setHeightForWidth(self.boxKmlBtn.sizePolicy().hasHeightForWidth())
-        self.boxKmlBtn.setSizePolicy(sizePolicy2)
-        self.boxKmlBtn.setMinimumSize(QSize(100, 100))
-        self.boxKmlBtn.setMaximumSize(QSize(100, 100))
-        self.boxKmlBtn.setStyleSheet(u"QPushButton {\n"
-"        background-color: rgb(58, 65, 82);\n"
-"        color: #44cc88;\n"
-"        border-radius: 15px;\n"
-"        border: 1px solid #44cc88;\n"
-"        padding: 5px;\n"
-"        font: 700 11pt;\n"
-"    }\n"
-"    QPushButton:hover {\n"
-"        background-color: rgb(70, 77, 94);\n"
-"    }\n"
-"    QPushButton:pressed {\n"
-"        background-color: rgb(46, 53, 70);\n"
-"    }")
-
-        self.gridLayout.addWidget(self.boxKmlBtn, 2, 1, 1, 1)
-
-        self.oltOneTableBtn = QPushButton(self.frame_18)
-        self.oltOneTableBtn.setObjectName(u"oltOneTableBtn")
-        sizePolicy2.setHeightForWidth(self.oltOneTableBtn.sizePolicy().hasHeightForWidth())
-        self.oltOneTableBtn.setSizePolicy(sizePolicy2)
-        self.oltOneTableBtn.setMinimumSize(QSize(100, 100))
-        self.oltOneTableBtn.setMaximumSize(QSize(100, 100))
-        self.oltOneTableBtn.setStyleSheet(u"QPushButton {\n"
-"        background-color: rgb(58, 65, 82);\n"
-"        color: #44cc88;\n"
-"        border-radius: 15px;\n"
-"        border: 1px solid #44cc88;\n"
-"        padding: 5px;\n"
-"        font: 700 11pt;\n"
-"    }\n"
-"    QPushButton:hover {\n"
-"        background-color: rgb(70, 77, 94);\n"
-"    }\n"
-"    QPushButton:pressed {\n"
-"        background-color: rgb(46, 53, 70);\n"
-"    }")
-
-        self.gridLayout.addWidget(self.oltOneTableBtn, 2, 2, 1, 1)
-
-        self.twoXGBtn = QPushButton(self.frame_18)
+        self.twoXGBtn = QPushButton(self.tabWidget_18Page1)
         self.twoXGBtn.setObjectName(u"twoXGBtn")
         sizePolicy2.setHeightForWidth(self.twoXGBtn.sizePolicy().hasHeightForWidth())
         self.twoXGBtn.setSizePolicy(sizePolicy2)
@@ -2137,10 +1978,251 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout.addWidget(self.twoXGBtn, 2, 3, 1, 1)
+        self.gridLayout.addWidget(self.twoXGBtn, 0, 5, 1, 1)
 
+        self.oltBoardAnalysisBtn = QPushButton(self.tabWidget_18Page1)
+        self.oltBoardAnalysisBtn.setObjectName(u"oltBoardAnalysisBtn")
+        sizePolicy2.setHeightForWidth(self.oltBoardAnalysisBtn.sizePolicy().hasHeightForWidth())
+        self.oltBoardAnalysisBtn.setSizePolicy(sizePolicy2)
+        self.oltBoardAnalysisBtn.setMinimumSize(QSize(100, 100))
+        self.oltBoardAnalysisBtn.setMaximumSize(QSize(100, 100))
+        self.oltBoardAnalysisBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
 
-        self.verticalLayout_20.addWidget(self.frame_18)
+        self.gridLayout.addWidget(self.oltBoardAnalysisBtn, 1, 0, 1, 1)
+
+        self.tabWidget_18.addTab(self.tabWidget_18Page1, "")
+        self.tab_2 = QWidget()
+        self.tab_2.setObjectName(u"tab_2")
+        self.gridLayout_4 = QGridLayout(self.tab_2)
+        self.gridLayout_4.setObjectName(u"gridLayout_4")
+        self.writeAggrHouseBtn = QPushButton(self.tab_2)
+        self.writeAggrHouseBtn.setObjectName(u"writeAggrHouseBtn")
+        sizePolicy2.setHeightForWidth(self.writeAggrHouseBtn.sizePolicy().hasHeightForWidth())
+        self.writeAggrHouseBtn.setSizePolicy(sizePolicy2)
+        self.writeAggrHouseBtn.setMinimumSize(QSize(100, 100))
+        self.writeAggrHouseBtn.setMaximumSize(QSize(100, 100))
+        self.writeAggrHouseBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_4.addWidget(self.writeAggrHouseBtn, 0, 0, 1, 1)
+
+        self.redOltPortSiteBtn = QPushButton(self.tab_2)
+        self.redOltPortSiteBtn.setObjectName(u"redOltPortSiteBtn")
+        sizePolicy2.setHeightForWidth(self.redOltPortSiteBtn.sizePolicy().hasHeightForWidth())
+        self.redOltPortSiteBtn.setSizePolicy(sizePolicy2)
+        self.redOltPortSiteBtn.setMinimumSize(QSize(100, 100))
+        self.redOltPortSiteBtn.setMaximumSize(QSize(100, 100))
+        self.redOltPortSiteBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_4.addWidget(self.redOltPortSiteBtn, 0, 1, 1, 1)
+
+        self.notOltAggrSiteBtn = QPushButton(self.tab_2)
+        self.notOltAggrSiteBtn.setObjectName(u"notOltAggrSiteBtn")
+        sizePolicy2.setHeightForWidth(self.notOltAggrSiteBtn.sizePolicy().hasHeightForWidth())
+        self.notOltAggrSiteBtn.setSizePolicy(sizePolicy2)
+        self.notOltAggrSiteBtn.setMinimumSize(QSize(100, 100))
+        self.notOltAggrSiteBtn.setMaximumSize(QSize(100, 100))
+        self.notOltAggrSiteBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_4.addWidget(self.notOltAggrSiteBtn, 0, 2, 1, 1)
+
+        self.notXgOltBtn = QPushButton(self.tab_2)
+        self.notXgOltBtn.setObjectName(u"notXgOltBtn")
+        sizePolicy2.setHeightForWidth(self.notXgOltBtn.sizePolicy().hasHeightForWidth())
+        self.notXgOltBtn.setSizePolicy(sizePolicy2)
+        self.notXgOltBtn.setMinimumSize(QSize(100, 100))
+        self.notXgOltBtn.setMaximumSize(QSize(100, 100))
+        self.notXgOltBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_4.addWidget(self.notXgOltBtn, 0, 3, 1, 1)
+
+        self.tabWidget_18.addTab(self.tab_2, "")
+        self.tab = QWidget()
+        self.tab.setObjectName(u"tab")
+        self.gridLayout_5 = QGridLayout(self.tab)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.boxUplinkBusyBtn = QPushButton(self.tab)
+        self.boxUplinkBusyBtn.setObjectName(u"boxUplinkBusyBtn")
+        sizePolicy2.setHeightForWidth(self.boxUplinkBusyBtn.sizePolicy().hasHeightForWidth())
+        self.boxUplinkBusyBtn.setSizePolicy(sizePolicy2)
+        self.boxUplinkBusyBtn.setMinimumSize(QSize(100, 100))
+        self.boxUplinkBusyBtn.setMaximumSize(QSize(100, 100))
+        self.boxUplinkBusyBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_5.addWidget(self.boxUplinkBusyBtn, 0, 0, 1, 1)
+
+        self.boxLevelBtn = QPushButton(self.tab)
+        self.boxLevelBtn.setObjectName(u"boxLevelBtn")
+        sizePolicy2.setHeightForWidth(self.boxLevelBtn.sizePolicy().hasHeightForWidth())
+        self.boxLevelBtn.setSizePolicy(sizePolicy2)
+        self.boxLevelBtn.setMinimumSize(QSize(100, 100))
+        self.boxLevelBtn.setMaximumSize(QSize(100, 100))
+        self.boxLevelBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_5.addWidget(self.boxLevelBtn, 0, 1, 1, 1)
+
+        self.boxKmlBtn = QPushButton(self.tab)
+        self.boxKmlBtn.setObjectName(u"boxKmlBtn")
+        sizePolicy2.setHeightForWidth(self.boxKmlBtn.sizePolicy().hasHeightForWidth())
+        self.boxKmlBtn.setSizePolicy(sizePolicy2)
+        self.boxKmlBtn.setMinimumSize(QSize(100, 100))
+        self.boxKmlBtn.setMaximumSize(QSize(100, 100))
+        self.boxKmlBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_5.addWidget(self.boxKmlBtn, 0, 2, 1, 1)
+
+        self.notUseLineBtn = QPushButton(self.tab)
+        self.notUseLineBtn.setObjectName(u"notUseLineBtn")
+        sizePolicy2.setHeightForWidth(self.notUseLineBtn.sizePolicy().hasHeightForWidth())
+        self.notUseLineBtn.setSizePolicy(sizePolicy2)
+        self.notUseLineBtn.setMinimumSize(QSize(100, 100))
+        self.notUseLineBtn.setMaximumSize(QSize(100, 100))
+        self.notUseLineBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_5.addWidget(self.notUseLineBtn, 0, 3, 1, 1)
+
+        self.largeSrvPoleBtn = QPushButton(self.tab)
+        self.largeSrvPoleBtn.setObjectName(u"largeSrvPoleBtn")
+        sizePolicy2.setHeightForWidth(self.largeSrvPoleBtn.sizePolicy().hasHeightForWidth())
+        self.largeSrvPoleBtn.setSizePolicy(sizePolicy2)
+        self.largeSrvPoleBtn.setMinimumSize(QSize(100, 100))
+        self.largeSrvPoleBtn.setMaximumSize(QSize(100, 100))
+        self.largeSrvPoleBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_5.addWidget(self.largeSrvPoleBtn, 0, 4, 1, 1)
+
+        self.tabWidget_18.addTab(self.tab, "")
+
+        self.verticalLayout_20.addWidget(self.tabWidget_18)
 
         self.container.addWidget(self.kpiPage)
         self.agentDocPage = QWidget()
@@ -4473,7 +4555,8 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(7)
+        self.container.setCurrentIndex(4)
+        self.tabWidget_18.setCurrentIndex(2)
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(1)
 
@@ -4534,6 +4617,21 @@ class Ui_MainWindow(object):
         self.needTime.setText(QCoreApplication.translate("MainWindow", u"\u5269\u4f59\u65f6\u95f4\uff1a", None))
         self.dbTableBtn.setText(QCoreApplication.translate("MainWindow", u"\u8868\u67e5\u8be2", None))
         self.label_34.setText(QCoreApplication.translate("MainWindow", u"\u3010\u5feb\u901f\u62a5\u8868\u3011", None))
+        self.oltOneTableBtn.setText(QCoreApplication.translate("MainWindow", u"OLT\u7ba1\u7406\n"
+"\u4e00\u5f20\u8868", None))
+        self.onuBtn.setText(QCoreApplication.translate("MainWindow", u"ONU\u5f31\u5149\n"
+"\u8c03\u4f18\u5206\u6790", None))
+        self.ponPortBtn.setText(QCoreApplication.translate("MainWindow", u"\u901a\u62a5\u5f31\u5149\n"
+"\u89e3\u51b3\u5206\u6790", None))
+        self.weekPortBtn.setText(QCoreApplication.translate("MainWindow", u"\u5f31\u5149&\u4e34\u754c\n"
+"\u8c03\u4f18\u5206\u6790", None))
+        self.blueAggrSiteBtn.setText(QCoreApplication.translate("MainWindow", u"\u4f4e\u7528\u6237\n"
+"\u6c47\u805a\u7ad9\u70b9", None))
+        self.twoXGBtn.setText(QCoreApplication.translate("MainWindow", u"2000M\n"
+"\u5272\u63a5\u8bc4\u4f30", None))
+        self.oltBoardAnalysisBtn.setText(QCoreApplication.translate("MainWindow", u"PON\u677f\u5361\n"
+"\u5206\u6790", None))
+        self.tabWidget_18.setTabText(self.tabWidget_18.indexOf(self.tabWidget_18Page1), QCoreApplication.translate("MainWindow", u"PON", None))
         self.writeAggrHouseBtn.setText(QCoreApplication.translate("MainWindow", u"\u6c47\u805a\u673a\u623f\n"
 "\u8986\u76d6\u8bc4\u4f30", None))
         self.redOltPortSiteBtn.setText(QCoreApplication.translate("MainWindow", u"\u7aef\u53e3\u9884\u8b66\n"
@@ -4542,26 +4640,18 @@ class Ui_MainWindow(object):
 "\u6c47\u805a\u7ad9\u70b9", None))
         self.notXgOltBtn.setText(QCoreApplication.translate("MainWindow", u"\u65e0\u8986\u76d6\u5343\u5146\n"
 "\u8d85\u5343\u6237\u7ad9\u70b9", None))
-        self.blueAggrSiteBtn.setText(QCoreApplication.translate("MainWindow", u"\u4f4e\u7528\u6237\n"
-"\u6c47\u805a\u7ad9\u70b9", None))
+        self.tabWidget_18.setTabText(self.tabWidget_18.indexOf(self.tab_2), QCoreApplication.translate("MainWindow", u"\u673a\u623f", None))
         self.boxUplinkBusyBtn.setText(QCoreApplication.translate("MainWindow", u"\u4e0a\u8054\u7ea4\u82af\n"
 "\u7d27\u5f20\u7bb1\u4f53", None))
-        self.onuBtn.setText(QCoreApplication.translate("MainWindow", u"ONU\u5f31\u5149\n"
-"\u8c03\u4f18\u5206\u6790", None))
-        self.ponPortBtn.setText(QCoreApplication.translate("MainWindow", u"\u901a\u62a5\u5f31\u5149\n"
-"\u89e3\u51b3\u5206\u6790", None))
-        self.notUseLineBtn.setText(QCoreApplication.translate("MainWindow", u"\u96f6\u5229\u7528\u7387\n"
-"\u5149\u7f06\u6bb5\u5206\u6790", None))
         self.boxLevelBtn.setText(QCoreApplication.translate("MainWindow", u"\u673a\u623f\u7bb1\u4f53\n"
 "\u5206\u7ea4\u7ea7\u522b", None))
-        self.weekPortBtn.setText(QCoreApplication.translate("MainWindow", u"\u5f31\u5149&\u4e34\u754c\n"
-"\u8c03\u4f18\u5206\u6790", None))
         self.boxKmlBtn.setText(QCoreApplication.translate("MainWindow", u"\u673a\u623f\u7bb1\u4f53\n"
 "\u56fe\u5c42", None))
-        self.oltOneTableBtn.setText(QCoreApplication.translate("MainWindow", u"OLT\u7ba1\u7406\n"
-"\u4e00\u5f20\u8868", None))
-        self.twoXGBtn.setText(QCoreApplication.translate("MainWindow", u"2000M\n"
-"\u5272\u63a5\u8bc4\u4f30", None))
+        self.notUseLineBtn.setText(QCoreApplication.translate("MainWindow", u"\u96f6\u5229\u7528\u7387\n"
+"\u5149\u7f06\u6bb5\u5206\u6790", None))
+        self.largeSrvPoleBtn.setText(QCoreApplication.translate("MainWindow", u"\u5927\u4e1a\u52a1\u6746\u8def\n"
+"\u7ba1\u7ebf\u56fe\u5c42", None))
+        self.tabWidget_18.setTabText(self.tabWidget_18.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"\u5149\u7f06", None))
         self.label_47.setText(QCoreApplication.translate("MainWindow", u"\u3010AI \u667a\u80fd\u4f53\u3011", None))
         self.boxDocBtn.setText(QCoreApplication.translate("MainWindow", u"\u63a5\u5165\u7bb1\u4f53\n"
 "\u77e5\u8bc6\u5e93", None))

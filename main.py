@@ -131,6 +131,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.weekPortBtn.clicked.connect(self.findWeekPort)
         self.boxKmlBtn.clicked.connect(self.writeBoxKml)
         self.twoXGBtn.clicked.connect(self.twoXGAnalysis)
+        self.largeSrvPoleBtn.clicked.connect(self.largePoleAnalysis)
 
         # tool工具页面按钮事件
         self.convert_coord_btn.clicked.connect(self.showToolForm)
@@ -154,6 +155,17 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         # Ai智能体知识库按钮事件
         self.oltDocBtn.clicked.connect(self.generateOltKnowledge)
         self.boxDocBtn.clicked.connect(self.generateBoxKnowledge)
+
+        # OLT PON板分析按钮事件
+        self.oltBoardAnalysisBtn.clicked.connect(self.oltBoardAnalysis)
+
+    def largePoleAnalysis(self):
+        # 超千户杆路分析
+        self.large_pole_thread = LargePoleThread()
+        self.large_pole_thread.state_signal.connect(self.showStatus)
+        self.large_pole_thread.start()
+
+
 
     def writeBoxKml(self):
         # 生成箱体KML文件
@@ -208,6 +220,16 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.olt_knowledge_thread.error_signal.connect(self.showError)
         self.olt_knowledge_thread.start()
 
+    def oltBoardAnalysis(self):
+        # OLT PON板分析
+        dir_path = QFileDialog.getExistingDirectory(self, "选择分析结果输出目录")
+        if not dir_path:
+            return
+        self.olt_board_analysis_thread = OltBoardAnalysisThread(output_dir=dir_path)
+        self.olt_board_analysis_thread.state_signal.connect(self.showStatus)
+        self.olt_board_analysis_thread.error_signal.connect(self.showError)
+        self.olt_board_analysis_thread.start()
+
     def copyDevName(self):
         text = self.devCB.currentText()
         # 4. 获取剪贴板对象
@@ -240,7 +262,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
     def searchPonPort(self):
         # C+光模块替换分析
         # 选择弱光ONU清单和光模块清单
-        folder_path = QFileDialog.getExistingDirectory(self, "选择弱光ONU清单和光模块清单文件夹")
+        folder_path = QFileDialog.getExistingDirectory(self, "选择弱光ONU清单和光模块清单文件夹[包含边缘与弱光\华为光模块\中兴光模块]")
         if not folder_path:
             return;
         self.pon_port_replace_thread = PonPortReplaceThread(folder_path=folder_path)

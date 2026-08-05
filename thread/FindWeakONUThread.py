@@ -1,5 +1,9 @@
 # 分析ONU弱光的线程
-
+'''
+临界弱光+弱光，主光路调优分析
+1、分析弱光+临界弱光ONU的清单，分析主光路可调优数量
+2、根据分析结果，生成主光路调优建议
+'''
 from PySide6.QtCore import QThread, Signal
 import sqlite3
 import pandas as pd

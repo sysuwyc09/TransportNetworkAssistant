@@ -769,7 +769,7 @@ class WriteKmlForm(QWidget, Ui_writeKmlForm):
 
     #获取导入文件标题栏
     def readFileCols(self,result):
-        print(result)
+        # print(result)
         self.currentCols = result.columns.tolist()
         self.currentLis = result.values.tolist()
         cols = self.fileCols[self.fileTypeCBox.currentIndex()]
@@ -803,6 +803,7 @@ class WriteKmlForm(QWidget, Ui_writeKmlForm):
         tempDf = tempDf.astype('str')
         tempDf = tempDf.fillna('None')
         outFileName = self.filePathLEdit.text().split('/')[-1].split('.')[0]
+
         self.writeKmlTD = WriteKmlThread(outFileName,tempDf,tempFileType)
         self.writeKmlTD.stateSignal.connect(self.showStatus)
         self.writeKmlTD.start()

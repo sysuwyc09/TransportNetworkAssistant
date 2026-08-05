@@ -96,7 +96,7 @@ class UpdateOltOneTableThread(QThread):
         self.state_signal.emit('正在写入文件...')
         result_df.to_excel(output_path, index=False)
 
-        self.state_signal.emit(f'OLT管理一张表已更新完成，共{len(result_df)}条记录')
+        self.state_signal.emit(f'OLT管理一张表已更新完成，共{len(result_df)}条记录，已写入文件：{output_path}')
 
         # except Exception as e:
         #     self.error_signal.emit(f'更新OLT管理一张表失败: {str(e)}')

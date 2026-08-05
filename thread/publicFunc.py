@@ -15,8 +15,26 @@ dispatchOneToManyCols = ['A端','B端','最小空闲芯数','跳纤距离','跳�
 dispatchOneToOneCols = ['A端','B端','最小空闲芯数','跳纤距离','跳数','光衰预算','跳纤路径']
 
 
+def CalcDistance(lat1, lon1, lat2, lon2):
+    """
+    Haversine 球面距离
+    :return: 距离，单位 米(m)
+    """
+    lat1, lon1, lat2, lon2 = map(np.radians, [lat1, lon1, lat2, lon2])
+    dlat = lat1 - lat2
+    dlon = lon1 - lon2
+
+    a = np.sin(dlat / 2) ** 2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2) ** 2
+    c = 2 * np.arcsin(np.sqrt(a))
+    r = 6378137  # 赤道半径 m
+    dist = r * c
+    return np.round(dist, 2)
+
+
 def fixCompany(text):
     '''判断归属的区域'''
+    if "开发区机楼" in text or "开发区新一中" in text:
+        return '城区二'
     match = re.search('(赤坎|霞山|坡头|麻章|开发区|雷州|廉江|吴川|遂溪|徐闻)',text)
     if match:
         if match.group(0) == '麻章' or match.group(0) == '赤坎':

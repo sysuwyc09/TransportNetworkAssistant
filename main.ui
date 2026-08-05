@@ -491,7 +491,7 @@ QPushButton:pressed {
           <enum>QFrame::Raised</enum>
          </property>
          <property name="currentIndex">
-          <number>7</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="homePage">
           <property name="maximumSize">
@@ -3392,6 +3392,9 @@ QPushButton:pressed {
          </widget>
          <widget class="QWidget" name="kpiPage">
           <layout class="QVBoxLayout" name="verticalLayout_20">
+           <property name="rightMargin">
+            <number>20</number>
+           </property>
            <item>
             <widget class="QFrame" name="frame_19">
              <property name="sizePolicy">
@@ -3433,36 +3436,63 @@ QPushButton:pressed {
             </widget>
            </item>
            <item>
-            <widget class="QFrame" name="frame_18">
-             <property name="frameShape">
-              <enum>QFrame::StyledPanel</enum>
+            <widget class="QTabWidget" name="tabWidget_18">
+             <property name="styleSheet">
+              <string notr="true">QTabWidget {
+        background-color: rgba(28, 33, 44, 255);
+    }
+QTabWidget::pane {
+        border: 1px solid #44cc88;
+        border-radius: 5px;
+    }
+QTabBar::tab {
+        background-color: rgba(28, 33, 44, 255);
+        color: #44cc88;
+        border: 1px solid #44cc88;
+        padding: 8px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+    }
+QTabBar::tab:selected {
+    background-color: #44cc88;  /* 绿色背景 */
+    color: white;  /* 白色文字 */
+    border: 1px solid #44cc88;
+	font: 700 10pt;
+}
+QTabBar::tab:hover {
+        background-color: rgba(50, 55, 66, 255);
+    }</string>
              </property>
-             <property name="frameShadow">
-              <enum>QFrame::Raised</enum>
+             <property name="currentIndex">
+              <number>2</number>
              </property>
-             <layout class="QGridLayout" name="gridLayout">
-              <item row="0" column="0">
-               <widget class="QPushButton" name="writeAggrHouseBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
+             <widget class="QWidget" name="tabWidget_18Page1">
+              <attribute name="title">
+               <string>PON</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout">
+               <item row="0" column="0">
+                <widget class="QPushButton" name="oltOneTableBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
         background-color: rgb(58, 65, 82);
         color: #44cc88;
         border-radius: 15px;
@@ -3476,539 +3506,35 @@ QPushButton:pressed {
     QPushButton:pressed {
         background-color: rgb(46, 53, 70);
     }</string>
-                </property>
-                <property name="text">
-                 <string>汇聚机房
-覆盖评估</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="1">
-               <widget class="QPushButton" name="redOltPortSiteBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>端口预警
-OLT站点</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="2">
-               <widget class="QPushButton" name="notOltAggrSiteBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>未部署OLT
-汇聚站点</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="3">
-               <widget class="QPushButton" name="notXgOltBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>无覆盖千兆
-超千户站点</string>
-                </property>
-               </widget>
-              </item>
-              <item row="0" column="4">
-               <widget class="QPushButton" name="blueAggrSiteBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>低用户
-汇聚站点</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="0">
-               <widget class="QPushButton" name="boxUplinkBusyBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>上联纤芯
-紧张箱体</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="1">
-               <widget class="QPushButton" name="onuBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>ONU弱光
-调优分析</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="2">
-               <widget class="QPushButton" name="ponPortBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>通报弱光
-解决分析</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="3">
-               <widget class="QPushButton" name="notUseLineBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>零利用率
-光缆段分析</string>
-                </property>
-               </widget>
-              </item>
-              <item row="1" column="4">
-               <widget class="QPushButton" name="boxLevelBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>机房箱体
-分纤级别</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="0">
-               <widget class="QPushButton" name="weekPortBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>弱光&amp;临界
-调优分析</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="1">
-               <widget class="QPushButton" name="boxKmlBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>机房箱体
-图层</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="2">
-               <widget class="QPushButton" name="oltOneTableBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
-        background-color: rgb(58, 65, 82);
-        color: #44cc88;
-        border-radius: 15px;
-        border: 1px solid #44cc88;
-        padding: 5px;
-        font: 700 11pt;
-    }
-    QPushButton:hover {
-        background-color: rgb(70, 77, 94);
-    }
-    QPushButton:pressed {
-        background-color: rgb(46, 53, 70);
-    }</string>
-                </property>
-                <property name="text">
-                 <string>OLT管理
+                 </property>
+                 <property name="text">
+                  <string>OLT管理
 一张表</string>
-                </property>
-               </widget>
-              </item>
-              <item row="2" column="3">
-               <widget class="QPushButton" name="twoXGBtn">
-                <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
-                  <horstretch>0</horstretch>
-                  <verstretch>0</verstretch>
-                 </sizepolicy>
-                </property>
-                <property name="minimumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="maximumSize">
-                 <size>
-                  <width>100</width>
-                  <height>100</height>
-                 </size>
-                </property>
-                <property name="styleSheet">
-                 <string notr="true">QPushButton {
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QPushButton" name="onuBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
         background-color: rgb(58, 65, 82);
         color: #44cc88;
         border-radius: 15px;
@@ -4022,14 +3548,617 @@ OLT站点</string>
     QPushButton:pressed {
         background-color: rgb(46, 53, 70);
     }</string>
-                </property>
-                <property name="text">
-                 <string>2000M
+                 </property>
+                 <property name="text">
+                  <string>ONU弱光
+调优分析</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QPushButton" name="ponPortBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>通报弱光
+解决分析</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QPushButton" name="weekPortBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>弱光&amp;临界
+调优分析</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QPushButton" name="blueAggrSiteBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>低用户
+汇聚站点</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="5">
+                <widget class="QPushButton" name="twoXGBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>2000M
 割接评估</string>
-                </property>
-               </widget>
-              </item>
-             </layout>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="oltBoardAnalysisBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>PON板卡
+分析</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab_2">
+              <attribute name="title">
+               <string>机房</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_4">
+               <item row="0" column="0">
+                <widget class="QPushButton" name="writeAggrHouseBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>汇聚机房
+覆盖评估</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QPushButton" name="redOltPortSiteBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>端口预警
+OLT站点</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QPushButton" name="notOltAggrSiteBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>未部署OLT
+汇聚站点</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QPushButton" name="notXgOltBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>无覆盖千兆
+超千户站点</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
+             <widget class="QWidget" name="tab">
+              <attribute name="title">
+               <string>光缆</string>
+              </attribute>
+              <layout class="QGridLayout" name="gridLayout_5">
+               <item row="0" column="0">
+                <widget class="QPushButton" name="boxUplinkBusyBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>上联纤芯
+紧张箱体</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="1">
+                <widget class="QPushButton" name="boxLevelBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>机房箱体
+分纤级别</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="2">
+                <widget class="QPushButton" name="boxKmlBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>机房箱体
+图层</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="3">
+                <widget class="QPushButton" name="notUseLineBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>零利用率
+光缆段分析</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="0" column="4">
+                <widget class="QPushButton" name="largeSrvPoleBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>大业务杆路
+管线图层</string>
+                 </property>
+                </widget>
+               </item>
+              </layout>
+             </widget>
             </widget>
            </item>
           </layout>
