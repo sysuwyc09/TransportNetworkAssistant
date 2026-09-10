@@ -783,7 +783,7 @@ def findKeyPoint(currentPath,objPath,site_dict):
         return parts[-1],'-',300
 
 def fixSrcPoNPort(port_name):
-    regex = r'-(\d+)-[A-Z0-9]+-(\d+)-GPON'
+    regex = r'-(\d+)-[A-Z0-9]+-(\d+)-[X]?GPON'
     match = re.search(regex,port_name)
     if match:
         slot = match.group(1)

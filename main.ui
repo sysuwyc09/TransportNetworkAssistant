@@ -491,7 +491,7 @@ QPushButton:pressed {
           <enum>QFrame::Raised</enum>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="homePage">
           <property name="maximumSize">
@@ -1503,6 +1503,52 @@ QPushButton:pressed{
                 <property name="icon">
                  <iconset>
                   <normalon>:/icons/assets/database.svg</normalon>
+                 </iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="predictBtn">
+                <property name="minimumSize">
+                 <size>
+                  <width>150</width>
+                  <height>46</height>
+                 </size>
+                </property>
+                <property name="maximumSize">
+                 <size>
+                  <width>150</width>
+                  <height>46</height>
+                 </size>
+                </property>
+                <property name="font">
+                 <font>
+                  <pointsize>12</pointsize>
+                  <bold>true</bold>
+                 </font>
+                </property>
+                <property name="styleSheet">
+                 <string notr="true">QPushButton {
+	background-color: rgb(68, 204, 136);
+	border: none;
+	border-radius: 23;
+	color: rgb(255, 255, 255);
+}
+
+QPushButton:hover {
+	background-color: rgb(59, 173, 116);
+}
+
+QPushButton:pressed{
+	background-color: rgb(51, 150, 101);
+}</string>
+                </property>
+                <property name="text">
+                 <string>端口预测</string>
+                </property>
+                <property name="icon">
+                 <iconset>
+                  <normalon>:/icons/assets/prediction.svg</normalon>
                  </iconset>
                 </property>
                </widget>

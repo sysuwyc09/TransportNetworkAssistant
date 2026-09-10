@@ -628,6 +628,31 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_8.addWidget(self.dbmsBtn)
 
+        self.predictBtn = QPushButton(self.action_frame)
+        self.predictBtn.setObjectName(u"predictBtn")
+        self.predictBtn.setMinimumSize(QSize(150, 46))
+        self.predictBtn.setMaximumSize(QSize(150, 46))
+        self.predictBtn.setFont(font2)
+        self.predictBtn.setStyleSheet(u"QPushButton {\n"
+"	background-color: rgb(68, 204, 136);\n"
+"	border: none;\n"
+"	border-radius: 23;\n"
+"	color: rgb(255, 255, 255);\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"	background-color: rgb(59, 173, 116);\n"
+"}\n"
+"\n"
+"QPushButton:pressed{\n"
+"	background-color: rgb(51, 150, 101);\n"
+"}")
+        icon11 = QIcon()
+        icon11.addFile(u":/icons/assets/prediction.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.predictBtn.setIcon(icon11)
+
+        self.horizontalLayout_8.addWidget(self.predictBtn)
+
         self.horizontalSpacer_9 = QSpacerItem(170, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.horizontalLayout_8.addItem(self.horizontalSpacer_9)
@@ -731,9 +756,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon11 = QIcon()
-        icon11.addFile(u":/icons/assets/file.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.choseFileBtn.setIcon(icon11)
+        icon12 = QIcon()
+        icon12.addFile(u":/icons/assets/file.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.choseFileBtn.setIcon(icon12)
 
         self.horizontalLayout_11.addWidget(self.choseFileBtn)
 
@@ -758,9 +783,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon12 = QIcon()
-        icon12.addFile(u":/icons/assets/update.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.updateDataBaseBtn.setIcon(icon12)
+        icon13 = QIcon()
+        icon13.addFile(u":/icons/assets/update.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.updateDataBaseBtn.setIcon(icon13)
 
         self.horizontalLayout_11.addWidget(self.updateDataBaseBtn)
 
@@ -1519,9 +1544,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon13 = QIcon()
-        icon13.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.updateOneKeyBtn.setIcon(icon13)
+        icon14 = QIcon()
+        icon14.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.updateOneKeyBtn.setIcon(icon14)
 
         self.horizontalLayout_31.addWidget(self.updateOneKeyBtn)
 
@@ -1616,9 +1641,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon14 = QIcon()
-        icon14.addFile(u":/icons/assets/check.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.checkTableBtn.setIcon(icon14)
+        icon15 = QIcon()
+        icon15.addFile(u":/icons/assets/check.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.checkTableBtn.setIcon(icon15)
 
         self.horizontalLayout_14.addWidget(self.checkTableBtn)
 
@@ -1641,9 +1666,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon15 = QIcon()
-        icon15.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.runAnalysisBtn.setIcon(icon15)
+        icon16 = QIcon()
+        icon16.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.runAnalysisBtn.setIcon(icon16)
 
         self.horizontalLayout_14.addWidget(self.runAnalysisBtn)
 
@@ -1731,9 +1756,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon16 = QIcon()
-        icon16.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.dbTableBtn.setIcon(icon16)
+        icon17 = QIcon()
+        icon17.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.dbTableBtn.setIcon(icon17)
 
         self.horizontalLayout_15.addWidget(self.dbTableBtn)
 
@@ -2436,7 +2461,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.searchDevUplinkBtn.setIcon(icon16)
+        self.searchDevUplinkBtn.setIcon(icon17)
 
         self.horizontalLayout_20.addWidget(self.searchDevUplinkBtn)
 
@@ -2762,9 +2787,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon17 = QIcon()
-        icon17.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.searchLineBtn.setIcon(icon17)
+        icon18 = QIcon()
+        icon18.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.searchLineBtn.setIcon(icon18)
 
         self.horizontalLayout_26.addWidget(self.searchLineBtn)
 
@@ -3191,9 +3216,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon18 = QIcon()
-        icon18.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.delMustDevBtn.setIcon(icon18)
+        icon19 = QIcon()
+        icon19.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.delMustDevBtn.setIcon(icon19)
 
         self.verticalLayout_29.addWidget(self.delMustDevBtn)
 
@@ -3216,7 +3241,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.delNotDevBtn.setIcon(icon18)
+        self.delNotDevBtn.setIcon(icon19)
 
         self.verticalLayout_29.addWidget(self.delNotDevBtn)
 
@@ -3239,9 +3264,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon19 = QIcon()
-        icon19.addFile(u":/icons/assets/left.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.devToLeftBtn.setIcon(icon19)
+        icon20 = QIcon()
+        icon20.addFile(u":/icons/assets/left.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.devToLeftBtn.setIcon(icon20)
 
         self.verticalLayout_29.addWidget(self.devToLeftBtn)
 
@@ -3264,9 +3289,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon20 = QIcon()
-        icon20.addFile(u":/icons/assets/right.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.devToRightBtn.setIcon(icon20)
+        icon21 = QIcon()
+        icon21.addFile(u":/icons/assets/right.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.devToRightBtn.setIcon(icon21)
 
         self.verticalLayout_29.addWidget(self.devToRightBtn)
 
@@ -3332,9 +3357,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon21 = QIcon()
-        icon21.addFile(u":/icons/assets/file.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.importABsBtn.setIcon(icon21)
+        icon22 = QIcon()
+        icon22.addFile(u":/icons/assets/file.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.importABsBtn.setIcon(icon22)
 
         self.horizontalLayout_19.addWidget(self.importABsBtn)
 
@@ -3373,7 +3398,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.dispatchBtn.setIcon(icon13)
+        self.dispatchBtn.setIcon(icon14)
 
         self.horizontalLayout_19.addWidget(self.dispatchBtn)
 
@@ -3518,7 +3543,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.searchOltBtn.setIcon(icon16)
+        self.searchOltBtn.setIcon(icon17)
 
         self.horizontalLayout_23.addWidget(self.searchOltBtn)
 
@@ -3793,7 +3818,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.searchOltBtn_2.setIcon(icon16)
+        self.searchOltBtn_2.setIcon(icon17)
 
         self.horizontalLayout_32.addWidget(self.searchOltBtn_2)
 
@@ -3864,9 +3889,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon22 = QIcon()
-        icon22.addFile(u":/icons/assets/checkmark.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.addOLTBtn.setIcon(icon22)
+        icon23 = QIcon()
+        icon23.addFile(u":/icons/assets/checkmark.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.addOLTBtn.setIcon(icon23)
 
         self.horizontalLayout_33.addWidget(self.addOLTBtn)
 
@@ -3939,9 +3964,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon23 = QIcon()
-        icon23.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.delOltBtn.setIcon(icon23)
+        icon24 = QIcon()
+        icon24.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.delOltBtn.setIcon(icon24)
 
         self.verticalLayout_36.addWidget(self.delOltBtn)
 
@@ -3966,7 +3991,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.beginOltBtn.setIcon(icon15)
+        self.beginOltBtn.setIcon(icon16)
 
         self.verticalLayout_36.addWidget(self.beginOltBtn)
 
@@ -4347,9 +4372,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(64, 71, 90);\n"
 "}")
-        icon24 = QIcon()
-        icon24.addFile(u":/icons/assets/close.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.sideClose.setIcon(icon24)
+        icon25 = QIcon()
+        icon25.addFile(u":/icons/assets/close.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.sideClose.setIcon(icon25)
 
         self.horizontalLayout_10.addWidget(self.sideClose)
 
@@ -4401,9 +4426,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon25 = QIcon()
-        icon25.addFile(u":/icons/assets/settings.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.settingBtn.setIcon(icon25)
+        icon26 = QIcon()
+        icon26.addFile(u":/icons/assets/settings.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.settingBtn.setIcon(icon26)
         self.settingBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.settingBtn)
@@ -4429,9 +4454,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon26 = QIcon()
-        icon26.addFile(u":/icons/assets/document.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.updateBtn.setIcon(icon26)
+        icon27 = QIcon()
+        icon27.addFile(u":/icons/assets/document.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.updateBtn.setIcon(icon27)
         self.updateBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.updateBtn)
@@ -4457,9 +4482,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon27 = QIcon()
-        icon27.addFile(u":/icons/assets/graph.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.kpiBtn.setIcon(icon27)
+        icon28 = QIcon()
+        icon28.addFile(u":/icons/assets/graph.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.kpiBtn.setIcon(icon28)
         self.kpiBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.kpiBtn)
@@ -4485,9 +4510,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon28 = QIcon()
-        icon28.addFile(u":/icons/assets/help.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.logBtn.setIcon(icon28)
+        icon29 = QIcon()
+        icon29.addFile(u":/icons/assets/help.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.logBtn.setIcon(icon29)
         self.logBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.logBtn)
@@ -4513,7 +4538,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        self.agentBtn.setIcon(icon26)
+        self.agentBtn.setIcon(icon27)
         self.agentBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.agentBtn)
@@ -4555,7 +4580,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(4)
+        self.container.setCurrentIndex(0)
         self.tabWidget_18.setCurrentIndex(2)
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(1)
@@ -4591,6 +4616,7 @@ class Ui_MainWindow(object):
         self.label_9.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:12pt; color:#cacaca;\">\u4e3b\u5149\u8def</span></p></body></html>", None))
         self.label_10.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p><span style=\" font-size:9pt; color:#c3c3c3;\">\u8d85\u957f \u8de8\u533a</span></p></body></html>", None))
         self.dbmsBtn.setText(QCoreApplication.translate("MainWindow", u"\u6570\u636e\u5e93\u7ba1\u7406", None))
+        self.predictBtn.setText(QCoreApplication.translate("MainWindow", u"\u7aef\u53e3\u9884\u6d4b", None))
         self.choseFileBtn.setText(QCoreApplication.translate("MainWindow", u"\u9009\u62e9\u6587\u4ef6", None))
         self.updateDataBaseBtn.setText(QCoreApplication.translate("MainWindow", u"\u66f4\u65b0\u6570\u636e", None))
         self.muti_file_cb.setText(QCoreApplication.translate("MainWindow", u"\u591a\u4e2a\u6587\u4ef6", None))

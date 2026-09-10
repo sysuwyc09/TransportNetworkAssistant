@@ -1,11 +1,27 @@
-pandas==2.0.3
+# GUI界面
+PySide6==6.6.1
+
+# 数据分析 & 机器学习
 numpy==1.26.4
-openpyxl==3.1.5
-xlsxwriter==3.2.5
-pyside6==6.6.1
-pyinstaller==5.13.2
-chardet==5.2.0
-fiona==1.10.1
+pandas==2.0.3
+scipy==1.15.3
+scikit-learn==1.7.2
+joblib==1.6.0
+
+# 绘图
+matplotlib==3.10.9
+
+# 地理空间
 geopandas==1.1.2
+fiona==1.10.1
 shapely==2.1.2
+pyproj==3.7.1
+pyogrio==0.12.1
+
+# Excel读写
+openpyxl==3.1.5
 xlrd==2.0.2
+xlsxwriter==3.2.5
+
+# 图像处理
+pillow==12.3.0
