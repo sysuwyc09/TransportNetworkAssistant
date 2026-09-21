@@ -2245,6 +2245,29 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.largeSrvPoleBtn, 0, 4, 1, 1)
 
+        self.aggrBusyLineBtn = QPushButton(self.tab)
+        self.aggrBusyLineBtn.setObjectName(u"aggrBusyLineBtn")
+        sizePolicy2.setHeightForWidth(self.aggrBusyLineBtn.sizePolicy().hasHeightForWidth())
+        self.aggrBusyLineBtn.setSizePolicy(sizePolicy2)
+        self.aggrBusyLineBtn.setMinimumSize(QSize(100, 100))
+        self.aggrBusyLineBtn.setMaximumSize(QSize(100, 100))
+        self.aggrBusyLineBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_5.addWidget(self.aggrBusyLineBtn, 0, 5, 1, 1)
+
         self.tabWidget_18.addTab(self.tab, "")
 
         self.verticalLayout_20.addWidget(self.tabWidget_18)
@@ -4580,7 +4603,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(0)
+        self.container.setCurrentIndex(4)
         self.tabWidget_18.setCurrentIndex(2)
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(1)
@@ -4677,6 +4700,8 @@ class Ui_MainWindow(object):
 "\u5149\u7f06\u6bb5\u5206\u6790", None))
         self.largeSrvPoleBtn.setText(QCoreApplication.translate("MainWindow", u"\u5927\u4e1a\u52a1\u6746\u8def\n"
 "\u7ba1\u7ebf\u56fe\u5c42", None))
+        self.aggrBusyLineBtn.setText(QCoreApplication.translate("MainWindow", u"\u6c47\u805a\u5c42\n"
+"\u7d27\u5f20\u6bb5\u843d", None))
         self.tabWidget_18.setTabText(self.tabWidget_18.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"\u5149\u7f06", None))
         self.label_47.setText(QCoreApplication.translate("MainWindow", u"\u3010AI \u667a\u80fd\u4f53\u3011", None))
         self.boxDocBtn.setText(QCoreApplication.translate("MainWindow", u"\u63a5\u5165\u7bb1\u4f53\n"

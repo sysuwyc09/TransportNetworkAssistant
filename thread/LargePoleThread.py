@@ -42,13 +42,23 @@ class LargePoleThread(QThread):
         large_df = large_df[['资源类型','资源名称','家宽用户数','集客用户数','AAA集客业务数','逻辑基站数']].rename(columns={'资源名称':'名称'})
         large_df = large_df.astype({'家宽用户数':'int'})
         '''筛选超1000户的支撑段'''
-        large_df_1 = large_df[large_df['家宽用户数']>=500].copy()
+        large_df_1 = large_df[large_df['家宽用户数']>=1000].copy()
         large_pole_df = large_df_1[large_df_1['资源类型']=='杆路段'].copy().drop(columns=['资源类型'])
         large_pipe_df = large_df_1[large_df_1['资源类型']=='管道段'].copy().drop(columns=['资源类型'])
         large_pole_df = pd.merge(large_pole_df,pole_line_df,on=['名称'])
         large_pipe_df = pd.merge(large_pipe_df,pipe_line_df,on=['名称'])
         pole_line_df = pd.merge(pole_line_df,large_df,on=['名称'],how='left')
+        pole_line_df = pole_line_df.drop(columns=['资源类型'])
+        pole_line_df['家宽用户数'].fillna('小于200',inplace=True)
+        pole_line_df['集客用户数'].fillna('小于20',inplace=True)
+        pole_line_df['逻辑基站数'].fillna('小于10',inplace=True)
+        pole_line_df['AAA集客业务数'].fillna('小于10',inplace=True)
         pipe_line_df = pd.merge(pipe_line_df,large_df,on=['名称'],how='left')
+        pipe_line_df = pipe_line_df.drop(columns=['资源类型'])
+        pipe_line_df['家宽用户数'].fillna('小于200',inplace=True)
+        pipe_line_df['集客用户数'].fillna('小于20',inplace=True)
+        pipe_line_df['逻辑基站数'].fillna('小于10',inplace=True)
+        pipe_line_df['AAA集客业务数'].fillna('小于10',inplace=True)
         dt = datetime.datetime.now().strftime('%Y-%m-%d')
         self.writeKml(large_pole_df,f'超千户杆路-{dt}')
         self.writeKml(large_pipe_df,f'超千户管道-{dt}')
@@ -186,9 +196,7 @@ class LargePoleThread(QThread):
             tempDf['描述'] = ''
             for col in tempDf.columns:
                 if col != '描述':
-                    tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('<',''))
-                    tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('>',''))
-                    tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('&',''))
+                    tempDf[col] = tempDf[col].apply(lambda x: self.clean_kml_remove_bad_char(x))
                     tempDf['描述'] = tempDf['描述'] + col + ": " + tempDf[col] + '\n'
             names = list(tempDf['名称'])
             longitudes = list(tempDf['经度'])
@@ -202,6 +210,15 @@ class LargePoleThread(QThread):
                 colorIndex = 0
         return folders
 
+    def clean_kml_remove_bad_char(self,val):
+        _KML_INVALID_CHAR_RE = re.compile(r'[^\x09\x0A\x0D\x20-\uD7FF\uE000-\uFFFD\U00010000-\U0010FFFF]')
+        if val is None:
+            return ""
+        s = str(val)
+        s = _KML_INVALID_CHAR_RE.sub("", s)
+        s = s.replace("&","").replace("<","").replace(">","")
+        return s
+
     def lineTwoPointKml(self,dataDf):
         '''写入线kml文件'''
         fstGrped = dataDf.groupby('所属区县')
@@ -214,9 +231,7 @@ class LargePoleThread(QThread):
             for col in tempDf.columns:
                 if col != '描述':
                     '''剔除会引起kml文件异常字符<、>、&'''
-                    tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('<',''))
-                    tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('>',''))
-                    tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('&',''))
+                    tempDf[col] = tempDf[col].apply(lambda x: self.clean_kml_remove_bad_char(x))
                     tempDf['描述'] = tempDf['描述'] + col + ": " + tempDf[col] + '\n'
             tempDf = tempDf.astype('str')
             tempDf['坐标'] = tempDf['A端经度'] + ',' + tempDf['A端纬度'] + ',0 ' + tempDf['Z端经度'] + \
@@ -242,9 +257,7 @@ class LargePoleThread(QThread):
         for col in tempDf.columns:
             if col != '描述':
                 '''剔除会引起kml文件异常字符<、>、&'''
-                tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('<',''))
-                tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('>',''))
-                tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('&',''))
+                tempDf[col] = tempDf[col].apply(lambda x: self.clean_kml_remove_bad_char(x))
                 tempDf['描述'] = tempDf['描述'] + col + ": " + tempDf[col] + '\n'
         tempDf = tempDf.astype('str')
         tempDf['坐标'] = tempDf['A端经度'] + ',' + tempDf['A端纬度'] + ',0 ' + tempDf['Z端经度'] + \
@@ -268,9 +281,7 @@ class LargePoleThread(QThread):
         for col in tempDf.columns:
             if col != '描述':
                 '''剔除会引起kml文件异常字符<、>、&'''
-                tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('<',''))
-                tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('>',''))
-                tempDf[col] = tempDf[col].apply(lambda x: str(x).replace('&',''))
+                tempDf[col] = tempDf[col].apply(lambda x: self.clean_kml_remove_bad_char(x))
                 tempDf['描述'] = tempDf['描述'] + col + ": " + tempDf[col] + '\n'
         tempDf = tempDf.astype('str')
         tempDf['坐标'] = tempDf['A端经度'] + ',' + tempDf['A端纬度'] + ',0 ' + tempDf['Z端经度'] + \

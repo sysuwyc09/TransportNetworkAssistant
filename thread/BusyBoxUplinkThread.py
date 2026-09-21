@@ -19,6 +19,7 @@ class BusyBoxUplinkThread(QThread):
         # try:
         self.state_signal.emit('正在加载全量箱体上联OLT机房...')
         box_uplink_df = readDataBase('箱体上联OLT跳纤路径表')
+        all_line_df = readDataBase('中继段')[[]]
         if box_uplink_df.shape[0] == 0:
             self.state_signal.emit('查询不到箱体上联方案,请先运行箱体上联方案分析...')
             return
@@ -35,8 +36,9 @@ class BusyBoxUplinkThread(QThread):
         all_red_uplink_df = best_box_uplink_df[best_box_uplink_df['最小空闲芯数'] <=4]
         box_df = readDataBase('光交箱')[['设施名称','容量']]
         box_red_uplink_df = all_red_uplink_df.merge(box_df,on='设施名称')
-        box_red_uplink_df = box_red_uplink_df[box_red_uplink_df['容量'] >=96]
-        self.state_signal.emit(f'已查询到{box_red_uplink_df.shape[0]}个96及以上光交箱上联纤芯紧张状态...')
+        # box_red_uplink_df = box_red_uplink_df[box_red_uplink_df['容量'] >=96]
+        box_red_uplink_df = box_red_uplink_df[box_red_uplink_df['容量'] >=288]
+        self.state_signal.emit(f'已查询到{box_red_uplink_df.shape[0]}个288及以上光交箱上联纤芯紧张状态...')
         dfs = []
         for i in range(len(box_red_uplink_df)):
             row = box_red_uplink_df.iloc[i]
@@ -94,7 +96,7 @@ class BusyBoxUplinkThread(QThread):
         result_df = result_df.merge(temp_grp,on='中继段',how='left')
         self.state_signal.emit('分析完成，正在生成表格，请稍后...')
         dt = datetime.datetime.now().strftime('%Y%m%d%H%M')
-        with pd.ExcelWriter(f'{self.dir_path}/箱体上联纤芯紧张分析{dt}.xlsx') as writer:
+        with pd.ExcelWriter(f'{self.dir_path}/箱体上联纤芯紧张分析288及以上{dt}.xlsx') as writer:
             best_box_uplink_df.to_excel(writer,sheet_name='所有箱体上联最优方案',index=False)
             box_red_uplink_df.to_excel(writer,sheet_name='光交箱上联纤芯紧张状态',index=False)
             result_df.to_excel(writer,sheet_name='光交箱紧张中继段详细',index=False)

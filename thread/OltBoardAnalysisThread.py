@@ -13,6 +13,14 @@ def stardBoard(oltName, boardId):
     else:
         return oltName + ' ' + str(boardId) + '槽'
 
+def boardType(board_type,port_name):
+    if pd.isna(board_type):
+        parts = port_name.split('-')
+        if len(parts) >= 3:
+            board_type = parts[-3]
+        else:
+            return '-'
+    return board_type
 
 def fixState(state):
     if state == '正常':
@@ -134,7 +142,9 @@ class OltBoardAnalysisThread(QThread):
         self.state_signal.emit('匹配PON端口与板卡状态...')
         pon_port_df = pon_port_df.merge(board_df, on='板卡名称', how='left')
         pon_port_df['板卡状态'] = pon_port_df['板卡状态'].fillna('网管不存在')
-        pon_port_df['板卡类型'] = pon_port_df['板卡类型'].fillna('网管不存在')
+        # pon_port_df['板卡类型'] = pon_port_df['板卡类型'].fillna('网管不存在')
+        pon_port_df['板卡类型'] = pon_port_df.apply(lambda row: boardType(row['板卡类型'], row['端口名称']), axis=1)
+
         all_pon_table = pd.pivot_table(pon_port_df,index=['OLT', '板卡名称', '板卡状态', '板卡类型','槽位'], columns=['端口状态'], aggfunc={'端口名称': 'count'}, fill_value=0)
         all_pon_table.columns = all_pon_table.columns.droplevel()
         all_pon_table = all_pon_table.reset_index()

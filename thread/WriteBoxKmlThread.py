@@ -52,7 +52,7 @@ class WriteBoxKmlThread(QThread):
             
             self.state_signal.emit('读取分纤箱表格...')
             fqx_df = pd.read_sql('SELECT 设施名称, 所属区县, 经度, 纬度, 容量 FROM 分纤箱', conn)
-            fqx_df = fqx_df[fqx_df['容量'] >= 72].drop_duplicates()
+            fqx_df = fqx_df[fqx_df['容量'] >= 96].drop_duplicates()
             fqx_df['类型'] = '分纤箱'
             fqx_df['名称'] = fqx_df['设施名称']
             fqx_df = fqx_df[['名称', '所属区县', '经度', '纬度', '类型']]

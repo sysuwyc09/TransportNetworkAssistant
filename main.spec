@@ -3,8 +3,8 @@
 block_cipher = None
  
  
-a = Analysis(['main.py','resources_rc.py','customnWidget.py','main_ui.py','publicFunc.py','publicThread.py'],
-             pathex=['modules'],
+a = Analysis(['main.py','resources_rc.py','customnWidget.py','main_ui.py'],
+             pathex=['modules','predict','thread'],
              binaries=[],
              datas=[],
              hiddenimports=[],
@@ -36,9 +36,9 @@ def extra_datas(mydir):
     return extra_datas
 # append the 'Resources' dir
 a.datas += extra_datas('assets')  ###这里是自己的资源文件夹   
-a.datas += extra_datas('文件范例')  ###这里是自己的资源文件夹 
-a.datas += extra_datas('data')  ###这里是自己的资源文件夹
-a.datas += extra_datas('结果')  ###这里是自己的资源文件夹
+# a.datas += extra_datas('文件范例')  ###这里是自己的资源文件夹 
+# a.datas += extra_datas('data')  ###这里是自己的资源文件夹
+# a.datas += extra_datas('结果')  ###这里是自己的资源文件夹
 
 
 ################################################

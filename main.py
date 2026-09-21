@@ -134,6 +134,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.boxKmlBtn.clicked.connect(self.writeBoxKml)
         self.twoXGBtn.clicked.connect(self.twoXGAnalysis)
         self.largeSrvPoleBtn.clicked.connect(self.largePoleAnalysis)
+        self.aggrBusyLineBtn.clicked.connect(self.aggrBusyLineAnalysis)
 
         # tool工具页面按钮事件
         self.convert_coord_btn.clicked.connect(self.showToolForm)
@@ -181,6 +182,13 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.large_pole_thread = LargePoleThread(file_dir=file_dir)
         self.large_pole_thread.state_signal.connect(self.showStatus)
         self.large_pole_thread.start()
+
+    def aggrBusyLineAnalysis(self):
+        # 汇聚层紧张段落分析
+        self.aggr_busy_line_thread = AggrBusyLineThread()
+        self.aggr_busy_line_thread.state_signal.connect(self.showStatus)
+        self.aggr_busy_line_thread.error_signal.connect(self.showError)
+        self.aggr_busy_line_thread.start()
 
 
 
