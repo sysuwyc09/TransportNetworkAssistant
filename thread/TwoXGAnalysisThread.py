@@ -55,7 +55,7 @@ class TwoXGAnalysisThread(QThread):
                 'CODE': '2000M用户明细'
             })
             pon_port_table['非重点小区需割接用户数'] = pon_port_table['需要割接用户数'] - pon_port_table['重点小区需割接用户数']
-            
+            pon_port_table = pon_port_table.sort_values(by=['重点小区需割接用户数', '需要割接用户数'], ascending=[False, False])
             self.state_signal.emit('正在读取OLT网元数据集...')
             # 6、读取数据库《OLT网元数据集》
             olt_df = readDataBase('OLT网元数据集')

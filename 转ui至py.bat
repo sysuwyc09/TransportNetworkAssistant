@@ -1,0 +1,1 @@
+.venv\Scripts\pyside6-uic.exe main.ui -o main_ui.py

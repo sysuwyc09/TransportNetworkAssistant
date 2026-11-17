@@ -2268,6 +2268,29 @@ class Ui_MainWindow(object):
 
         self.gridLayout_5.addWidget(self.aggrBusyLineBtn, 0, 5, 1, 1)
 
+        self.pipeBusyLineBtn = QPushButton(self.tab)
+        self.pipeBusyLineBtn.setObjectName(u"pipeBusyLineBtn")
+        sizePolicy2.setHeightForWidth(self.pipeBusyLineBtn.sizePolicy().hasHeightForWidth())
+        self.pipeBusyLineBtn.setSizePolicy(sizePolicy2)
+        self.pipeBusyLineBtn.setMinimumSize(QSize(100, 100))
+        self.pipeBusyLineBtn.setMaximumSize(QSize(100, 100))
+        self.pipeBusyLineBtn.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_5.addWidget(self.pipeBusyLineBtn, 1, 0, 1, 1)
+
         self.tabWidget_18.addTab(self.tab, "")
 
         self.verticalLayout_20.addWidget(self.tabWidget_18)
@@ -3891,7 +3914,12 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_33.addWidget(self.oltNeTw_2)
 
-        self.addOLTBtn = QPushButton(self.frame_37)
+        self.btnFrame = QFrame(self.frame_37)
+        self.btnFrame.setObjectName(u"btnFrame")
+        self.verticalLayout_38 = QVBoxLayout(self.btnFrame)
+        self.verticalLayout_38.setObjectName(u"verticalLayout_38")
+        self.verticalLayout_38.setContentsMargins(0, 0, 0, 0)
+        self.addOLTBtn = QPushButton(self.btnFrame)
         self.addOLTBtn.setObjectName(u"addOLTBtn")
         sizePolicy10.setHeightForWidth(self.addOLTBtn.sizePolicy().hasHeightForWidth())
         self.addOLTBtn.setSizePolicy(sizePolicy10)
@@ -3916,7 +3944,35 @@ class Ui_MainWindow(object):
         icon23.addFile(u":/icons/assets/checkmark.svg", QSize(), QIcon.Normal, QIcon.On)
         self.addOLTBtn.setIcon(icon23)
 
-        self.horizontalLayout_33.addWidget(self.addOLTBtn)
+        self.verticalLayout_38.addWidget(self.addOLTBtn)
+
+        self.importOLTBtn = QPushButton(self.btnFrame)
+        self.importOLTBtn.setObjectName(u"importOLTBtn")
+        sizePolicy10.setHeightForWidth(self.importOLTBtn.sizePolicy().hasHeightForWidth())
+        self.importOLTBtn.setSizePolicy(sizePolicy10)
+        self.importOLTBtn.setMinimumSize(QSize(100, 30))
+        self.importOLTBtn.setMaximumSize(QSize(100, 30))
+        self.importOLTBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        self.importOLTBtn.setIcon(icon22)
+
+        self.verticalLayout_38.addWidget(self.importOLTBtn)
+
+
+        self.horizontalLayout_33.addWidget(self.btnFrame)
 
 
         self.verticalLayout_37.addWidget(self.frame_37)
@@ -3964,9 +4020,13 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_34.addWidget(self.oltObjNeTw)
 
-        self.verticalLayout_36 = QVBoxLayout()
+        self.btnFrame2 = QFrame(self.frame_38)
+        self.btnFrame2.setObjectName(u"btnFrame2")
+        self.verticalLayout_36 = QVBoxLayout(self.btnFrame2)
+        self.verticalLayout_36.setSpacing(6)
         self.verticalLayout_36.setObjectName(u"verticalLayout_36")
-        self.delOltBtn = QPushButton(self.frame_38)
+        self.verticalLayout_36.setContentsMargins(0, 0, 0, 0)
+        self.delOltBtn = QPushButton(self.btnFrame2)
         self.delOltBtn.setObjectName(u"delOltBtn")
         sizePolicy10.setHeightForWidth(self.delOltBtn.sizePolicy().hasHeightForWidth())
         self.delOltBtn.setSizePolicy(sizePolicy10)
@@ -3993,7 +4053,7 @@ class Ui_MainWindow(object):
 
         self.verticalLayout_36.addWidget(self.delOltBtn)
 
-        self.beginOltBtn = QPushButton(self.frame_38)
+        self.beginOltBtn = QPushButton(self.btnFrame2)
         self.beginOltBtn.setObjectName(u"beginOltBtn")
         sizePolicy10.setHeightForWidth(self.beginOltBtn.sizePolicy().hasHeightForWidth())
         self.beginOltBtn.setSizePolicy(sizePolicy10)
@@ -4014,12 +4074,41 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.beginOltBtn.setIcon(icon16)
+        icon25 = QIcon()
+        icon25.addFile(u":/icons/assets/right.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.beginOltBtn.setIcon(icon25)
 
         self.verticalLayout_36.addWidget(self.beginOltBtn)
 
+        self.splitOltBtn = QPushButton(self.btnFrame2)
+        self.splitOltBtn.setObjectName(u"splitOltBtn")
+        sizePolicy10.setHeightForWidth(self.splitOltBtn.sizePolicy().hasHeightForWidth())
+        self.splitOltBtn.setSizePolicy(sizePolicy10)
+        self.splitOltBtn.setMinimumSize(QSize(100, 30))
+        self.splitOltBtn.setMaximumSize(QSize(100, 30))
+        self.splitOltBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        icon26 = QIcon()
+        icon26.addFile(u":/icons/assets/left.svg", QSize(), QIcon.Normal, QIcon.On)
+        self.splitOltBtn.setIcon(icon26)
 
-        self.horizontalLayout_34.addLayout(self.verticalLayout_36)
+        self.verticalLayout_36.addWidget(self.splitOltBtn)
+
+
+        self.horizontalLayout_34.addWidget(self.btnFrame2)
 
 
         self.verticalLayout_37.addWidget(self.frame_38)
@@ -4395,9 +4484,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(64, 71, 90);\n"
 "}")
-        icon25 = QIcon()
-        icon25.addFile(u":/icons/assets/close.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.sideClose.setIcon(icon25)
+        icon27 = QIcon()
+        icon27.addFile(u":/icons/assets/close.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.sideClose.setIcon(icon27)
 
         self.horizontalLayout_10.addWidget(self.sideClose)
 
@@ -4449,9 +4538,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon26 = QIcon()
-        icon26.addFile(u":/icons/assets/settings.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.settingBtn.setIcon(icon26)
+        icon28 = QIcon()
+        icon28.addFile(u":/icons/assets/settings.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.settingBtn.setIcon(icon28)
         self.settingBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.settingBtn)
@@ -4477,9 +4566,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon27 = QIcon()
-        icon27.addFile(u":/icons/assets/document.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.updateBtn.setIcon(icon27)
+        icon29 = QIcon()
+        icon29.addFile(u":/icons/assets/document.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.updateBtn.setIcon(icon29)
         self.updateBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.updateBtn)
@@ -4505,9 +4594,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon28 = QIcon()
-        icon28.addFile(u":/icons/assets/graph.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.kpiBtn.setIcon(icon28)
+        icon30 = QIcon()
+        icon30.addFile(u":/icons/assets/graph.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.kpiBtn.setIcon(icon30)
         self.kpiBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.kpiBtn)
@@ -4533,9 +4622,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon29 = QIcon()
-        icon29.addFile(u":/icons/assets/help.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.logBtn.setIcon(icon29)
+        icon31 = QIcon()
+        icon31.addFile(u":/icons/assets/help.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.logBtn.setIcon(icon31)
         self.logBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.logBtn)
@@ -4561,7 +4650,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        self.agentBtn.setIcon(icon27)
+        self.agentBtn.setIcon(icon29)
         self.agentBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.agentBtn)
@@ -4603,7 +4692,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(4)
+        self.container.setCurrentIndex(7)
         self.tabWidget_18.setCurrentIndex(2)
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(1)
@@ -4702,7 +4791,9 @@ class Ui_MainWindow(object):
 "\u7ba1\u7ebf\u56fe\u5c42", None))
         self.aggrBusyLineBtn.setText(QCoreApplication.translate("MainWindow", u"\u6c47\u805a\u5c42\n"
 "\u7d27\u5f20\u6bb5\u843d", None))
-        self.tabWidget_18.setTabText(self.tabWidget_18.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"\u5149\u7f06", None))
+        self.pipeBusyLineBtn.setText(QCoreApplication.translate("MainWindow", u"\u7ba1\u9053\n"
+"\u7d27\u5f20\u6bb5\u843d", None))
+        self.tabWidget_18.setTabText(self.tabWidget_18.indexOf(self.tab), QCoreApplication.translate("MainWindow", u"\u7ba1\u7ebf", None))
         self.label_47.setText(QCoreApplication.translate("MainWindow", u"\u3010AI \u667a\u80fd\u4f53\u3011", None))
         self.boxDocBtn.setText(QCoreApplication.translate("MainWindow", u"\u63a5\u5165\u7bb1\u4f53\n"
 "\u77e5\u8bc6\u5e93", None))
@@ -4748,8 +4839,10 @@ class Ui_MainWindow(object):
         self.label_48.setText(QCoreApplication.translate("MainWindow", u"OLT\u7ad9\u70b9", None))
         self.searchOltBtn_2.setText(QCoreApplication.translate("MainWindow", u"\u67e5\u627e", None))
         self.addOLTBtn.setText(QCoreApplication.translate("MainWindow", u"\u6dfb\u52a0", None))
+        self.importOLTBtn.setText(QCoreApplication.translate("MainWindow", u"\u5bfc\u5165", None))
         self.delOltBtn.setText(QCoreApplication.translate("MainWindow", u"\u5220\u9664", None))
-        self.beginOltBtn.setText(QCoreApplication.translate("MainWindow", u"\u5f00\u59cb", None))
+        self.beginOltBtn.setText(QCoreApplication.translate("MainWindow", u"\u5206\u6d41\u5206\u6790", None))
+        self.splitOltBtn.setText(QCoreApplication.translate("MainWindow", u"\u627f\u8f7d\u5206\u6790", None))
         self.tabWidget_2.setTabText(self.tabWidget_2.indexOf(self.ponDiversionPage), QCoreApplication.translate("MainWindow", u"PON\u5206\u6d41", None))
         self.label_43.setText(QCoreApplication.translate("MainWindow", u"\u8fd0\u884c\u65e5\u5fd7", None))
         self.label_44.setText(QCoreApplication.translate("MainWindow", u"\u5de5\u5177\u7bb1", None))

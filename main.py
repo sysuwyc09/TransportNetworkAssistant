@@ -88,6 +88,8 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.searchOltBtn_2.clicked.connect(self.searchOltNe_2)
         self.addOLTBtn.clicked.connect(self.addOltToObj)
         self.delOltBtn.clicked.connect(self.delOltFromObj)
+        self.importOLTBtn.clicked.connect(self.importOltList)
+        self.splitOltBtn.clicked.connect(self.splitOltAnalysis)
         self.beginOltBtn.clicked.connect(self.beginPonDiversion)
 
         self.writeAggrHouseBtn.clicked.connect(self.writeAggrHouseKml)
@@ -135,6 +137,7 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.twoXGBtn.clicked.connect(self.twoXGAnalysis)
         self.largeSrvPoleBtn.clicked.connect(self.largePoleAnalysis)
         self.aggrBusyLineBtn.clicked.connect(self.aggrBusyLineAnalysis)
+        self.pipeBusyLineBtn.clicked.connect(self.pipeBusyLineAnalysis)
 
         # tool工具页面按钮事件
         self.convert_coord_btn.clicked.connect(self.showToolForm)
@@ -189,6 +192,16 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.aggr_busy_line_thread.state_signal.connect(self.showStatus)
         self.aggr_busy_line_thread.error_signal.connect(self.showError)
         self.aggr_busy_line_thread.start()
+
+    def pipeBusyLineAnalysis(self):
+        # 管道段紧张段落分析
+        file_dir = QFileDialog.getExistingDirectory(self, "选择管道段资源文件夹")
+        if not file_dir:
+            return;
+        self.pipe_busy_line_thread = PipeBusyLineThread(file_dir=file_dir)
+        self.pipe_busy_line_thread.state_signal.connect(self.showStatus)
+        self.pipe_busy_line_thread.error_signal.connect(self.showError)
+        self.pipe_busy_line_thread.start()
 
 
 
@@ -764,8 +777,88 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.pon_diversion_thread.start()
         page_widget = self.container.findChild(QWidget, "logPage")
         self.container.setCurrentWidget(page_widget)
-            
-    
+
+    def importOltList(self):
+        # 导入OLT清单文件（xlsx、csv），比对数据库后添加到oltObjNeTw
+        file_path, _ = QFileDialog.getOpenFileName(self, "选择OLT清单文件", "", "Excel 文件 (*.xlsx);;CSV 文件 (*.csv)")
+        if not file_path:
+            return
+        self.import_olt_thread = ImportFileThread([file_path], '', 1)
+        self.import_olt_thread.state_signal.connect(self.showStatus)
+        self.import_olt_thread.result_signal.connect(self.addImportedOlt)
+        self.import_olt_thread.start()
+
+    def addImportedOlt(self, df):
+        if not isinstance(df, pd.DataFrame) or df.empty:
+            QMessageBox.warning(self, '警告', '导入文件失败或内容为空')
+            return
+        if 'OLT名称' not in df.columns:
+            QMessageBox.warning(self, '警告', '导入文件缺少“OLT名称”列，请选择包含“OLT名称”列的文件')
+            return
+        olt_names = df['OLT名称'].dropna().astype(str).str.strip()
+        olt_names = [n for n in olt_names if n != '']
+        if not olt_names:
+            QMessageBox.warning(self, '警告', 'OLT名称列为空')
+            return
+        olt_data_df = readDataBase('OLT网元数据集')
+        if olt_data_df.empty or 'OLT网元' not in olt_data_df.columns:
+            QMessageBox.warning(self, '警告', '数据库缺少OLT网元数据集')
+            return
+        db_olts = set(olt_data_df['OLT网元'].dropna().astype(str))
+        matched = [n for n in olt_names if n in db_olts]
+        matched = list(dict.fromkeys(matched))
+        if not matched:
+            QMessageBox.warning(self, '警告', '导入的OLT名称均不存在于数据库OLT网元数据集')
+            return
+        info_map = olt_data_df[['OLT网元', '所属机房', '设备型号']].drop_duplicates(subset=['OLT网元'])
+        self.addOltNamesToObj(matched, info_map)
+        dropped = len(dict.fromkeys(olt_names)) - len(matched)
+        msg = f'成功导入{len(matched)}个OLT网元'
+        if dropped > 0:
+            msg += f'，跳过{dropped}个数据库中不存在的OLT名称'
+        QMessageBox.information(self, '提示', msg)
+
+    def addOltNamesToObj(self, olt_names, info_map):
+        headers = ['OLT网元', '所属机房', '设备型号']
+        if self.oltObjNeTw.columnCount() == 0:
+            self.oltObjNeTw.setColumnCount(len(headers))
+            self.oltObjNeTw.setHorizontalHeaderLabels(headers)
+            self.oltObjNeTw.horizontalHeader().setSectionResizeMode(0, QHeaderView.Stretch)
+        existing = set()
+        for i in range(self.oltObjNeTw.rowCount()):
+            item = self.oltObjNeTw.item(i, 0)
+            if item:
+                existing.add(item.text())
+        for name in olt_names:
+            if name in existing:
+                continue
+            rows = info_map[info_map['OLT网元'] == name]
+            room = str(rows.iloc[0]['所属机房']) if len(rows) else ''
+            model = str(rows.iloc[0]['设备型号']) if len(rows) else ''
+            row = self.oltObjNeTw.rowCount()
+            self.oltObjNeTw.insertRow(row)
+            self.oltObjNeTw.setItem(row, 0, QTableWidgetItem(name))
+            self.oltObjNeTw.setItem(row, 1, QTableWidgetItem(room))
+            self.oltObjNeTw.setItem(row, 2, QTableWidgetItem(model))
+            existing.add(name)
+
+    def splitOltAnalysis(self):
+        # 承载分流分析：分析哪些PON口可割接至所选OLT网元所属机房
+        olt_names = []
+        for i in range(self.oltObjNeTw.rowCount()):
+            item = self.oltObjNeTw.item(i, 0)
+            if item and item.text().strip():
+                olt_names.append(item.text().strip())
+        if not olt_names:
+            QMessageBox.warning(self, '警告', '请先导入或选择OLT网元')
+            return
+        self.split_olt_srv_thread = SplitOltSrvThread(olt_names)
+        self.split_olt_srv_thread.state_signal.connect(self.showStatus)
+        self.split_olt_srv_thread.error_signal.connect(self.showError)
+        self.split_olt_srv_thread.start()
+        page_widget = self.container.findChild(QWidget, "logPage")
+        self.container.setCurrentWidget(page_widget)
+
     def searchDBTableInfo(self):
         # 查询数据库的表信息，返回dataframe ,显示在dbTableTw，最后一列加上 操作 列
         self.db_info_thread = DatabaseInfoThread()

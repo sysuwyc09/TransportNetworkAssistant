@@ -491,7 +491,7 @@ QPushButton:pressed {
           <enum>QFrame::Raised</enum>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>7</number>
          </property>
          <widget class="QWidget" name="homePage">
           <property name="maximumSize">
@@ -3990,7 +3990,7 @@ OLT站点</string>
              </widget>
              <widget class="QWidget" name="tab">
               <attribute name="title">
-               <string>光缆</string>
+               <string>管线</string>
               </attribute>
               <layout class="QGridLayout" name="gridLayout_5">
                <item row="0" column="0">
@@ -4241,6 +4241,48 @@ OLT站点</string>
                  </property>
                  <property name="text">
                   <string>汇聚层
+紧张段落</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="0">
+                <widget class="QPushButton" name="pipeBusyLineBtn">
+                 <property name="sizePolicy">
+                  <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                   <horstretch>0</horstretch>
+                   <verstretch>0</verstretch>
+                  </sizepolicy>
+                 </property>
+                 <property name="minimumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="maximumSize">
+                  <size>
+                   <width>100</width>
+                   <height>100</height>
+                  </size>
+                 </property>
+                 <property name="styleSheet">
+                  <string notr="true">QPushButton {
+        background-color: rgb(58, 65, 82);
+        color: #44cc88;
+        border-radius: 15px;
+        border: 1px solid #44cc88;
+        padding: 5px;
+        font: 700 11pt;
+    }
+    QPushButton:hover {
+        background-color: rgb(70, 77, 94);
+    }
+    QPushButton:pressed {
+        background-color: rgb(46, 53, 70);
+    }</string>
+                 </property>
+                 <property name="text">
+                  <string>管道
 紧张段落</string>
                  </property>
                 </widget>
@@ -6757,27 +6799,42 @@ QPushButton:pressed {
                    </widget>
                   </item>
                   <item>
-                   <widget class="QPushButton" name="addOLTBtn">
-                    <property name="sizePolicy">
-                     <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                      <horstretch>0</horstretch>
-                      <verstretch>0</verstretch>
-                     </sizepolicy>
-                    </property>
-                    <property name="minimumSize">
-                     <size>
-                      <width>100</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="maximumSize">
-                     <size>
-                      <width>100</width>
-                      <height>30</height>
-                     </size>
-                    </property>
-                    <property name="styleSheet">
-                     <string notr="true">QPushButton {
+                   <widget class="QFrame" name="btnFrame">
+                    <layout class="QVBoxLayout" name="verticalLayout_38">
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QPushButton" name="addOLTBtn">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>100</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {
     background-color: rgba(28, 33, 44, 255);
     color: #44cc88;
     border: 1px solid #44cc88;
@@ -6792,15 +6849,64 @@ QPushButton:hover {
 QPushButton:pressed {
     background-color: rgba(20, 25, 36, 255);
 }</string>
-                    </property>
-                    <property name="text">
-                     <string>添加</string>
-                    </property>
-                    <property name="icon">
-                     <iconset>
-                      <normalon>:/icons/assets/checkmark.svg</normalon>
-                     </iconset>
-                    </property>
+                       </property>
+                       <property name="text">
+                        <string>添加</string>
+                       </property>
+                       <property name="icon">
+                        <iconset>
+                         <normalon>:/icons/assets/checkmark.svg</normalon>
+                        </iconset>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="importOLTBtn">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>100</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {
+    background-color: rgba(28, 33, 44, 255);
+    color: #44cc88;
+    border: 1px solid #44cc88;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+QPushButton:hover {
+    background-color: rgba(40, 45, 56, 255);
+}
+
+QPushButton:pressed {
+    background-color: rgba(20, 25, 36, 255);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>导入</string>
+                       </property>
+                       <property name="icon">
+                        <iconset resource="resources.qrc">
+                         <normaloff>:/icons/assets/file.svg</normaloff>:/icons/assets/file.svg</iconset>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
                    </widget>
                   </item>
                  </layout>
@@ -6868,29 +6974,45 @@ QPushButton:pressed {
                    </widget>
                   </item>
                   <item>
-                   <layout class="QVBoxLayout" name="verticalLayout_36">
-                    <item>
-                     <widget class="QPushButton" name="delOltBtn">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>100</width>
-                        <height>30</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>100</width>
-                        <height>30</height>
-                       </size>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">QPushButton {
+                   <widget class="QFrame" name="btnFrame2">
+                    <layout class="QVBoxLayout" name="verticalLayout_36">
+                     <property name="spacing">
+                      <number>6</number>
+                     </property>
+                     <property name="leftMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="topMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="rightMargin">
+                      <number>0</number>
+                     </property>
+                     <property name="bottomMargin">
+                      <number>0</number>
+                     </property>
+                     <item>
+                      <widget class="QPushButton" name="delOltBtn">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>100</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {
     background-color: rgba(28, 33, 44, 255);
     color: #44cc88;
     border: 1px solid #44cc88;
@@ -6905,39 +7027,39 @@ QPushButton:hover {
 QPushButton:pressed {
     background-color: rgba(20, 25, 36, 255);
 }</string>
-                      </property>
-                      <property name="text">
-                       <string>删除</string>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normalon>:/icons/assets/delete.svg</normalon>
-                       </iconset>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QPushButton" name="beginOltBtn">
-                      <property name="sizePolicy">
-                       <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
-                        <horstretch>0</horstretch>
-                        <verstretch>0</verstretch>
-                       </sizepolicy>
-                      </property>
-                      <property name="minimumSize">
-                       <size>
-                        <width>100</width>
-                        <height>30</height>
-                       </size>
-                      </property>
-                      <property name="maximumSize">
-                       <size>
-                        <width>100</width>
-                        <height>30</height>
-                       </size>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">QPushButton {
+                       </property>
+                       <property name="text">
+                        <string>删除</string>
+                       </property>
+                       <property name="icon">
+                        <iconset>
+                         <normalon>:/icons/assets/delete.svg</normalon>
+                        </iconset>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="beginOltBtn">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>100</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {
     background-color: rgba(28, 33, 44, 255);
     color: #44cc88;
     border: 1px solid #44cc88;
@@ -6952,18 +7074,66 @@ QPushButton:hover {
 QPushButton:pressed {
     background-color: rgba(20, 25, 36, 255);
 }</string>
-                      </property>
-                      <property name="text">
-                       <string>开始</string>
-                      </property>
-                      <property name="icon">
-                       <iconset>
-                        <normalon>:/icons/assets/run.svg</normalon>
-                       </iconset>
-                      </property>
-                     </widget>
-                    </item>
-                   </layout>
+                       </property>
+                       <property name="text">
+                        <string>分流分析</string>
+                       </property>
+                       <property name="icon">
+                        <iconset>
+                         <normalon>:/icons/assets/right.svg</normalon>
+                        </iconset>
+                       </property>
+                      </widget>
+                     </item>
+                     <item>
+                      <widget class="QPushButton" name="splitOltBtn">
+                       <property name="sizePolicy">
+                        <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+                         <horstretch>0</horstretch>
+                         <verstretch>0</verstretch>
+                        </sizepolicy>
+                       </property>
+                       <property name="minimumSize">
+                        <size>
+                         <width>100</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="maximumSize">
+                        <size>
+                         <width>100</width>
+                         <height>30</height>
+                        </size>
+                       </property>
+                       <property name="styleSheet">
+                        <string notr="true">QPushButton {
+    background-color: rgba(28, 33, 44, 255);
+    color: #44cc88;
+    border: 1px solid #44cc88;
+    border-radius: 10px;
+    padding: 5px 10px;
+}
+
+QPushButton:hover {
+    background-color: rgba(40, 45, 56, 255);
+}
+
+QPushButton:pressed {
+    background-color: rgba(20, 25, 36, 255);
+}</string>
+                       </property>
+                       <property name="text">
+                        <string>承载分析</string>
+                       </property>
+                       <property name="icon">
+                        <iconset>
+                         <normalon>:/icons/assets/left.svg</normalon>
+                        </iconset>
+                       </property>
+                      </widget>
+                     </item>
+                    </layout>
+                   </widget>
                   </item>
                  </layout>
                 </widget>
