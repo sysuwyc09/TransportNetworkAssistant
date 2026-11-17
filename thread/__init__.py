@@ -32,3 +32,4 @@ from .LargePoleThread import LargePoleThread
 from .AggrBusyLineThread import AggrBusyLineThread
 from .PipeBusyLineThread import PipeBusyLineThread
 from .SplitOltSrvThread import SplitOltSrvThread
+from .UpdateOlinkThread import UpdateOlinkThread

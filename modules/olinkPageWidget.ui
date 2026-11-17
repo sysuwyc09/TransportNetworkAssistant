@@ -1,0 +1,410 @@
+<?xml version='1.0' encoding='utf-8'?>
+<ui version="4.0">
+  <class>OlinkPageWidget</class>
+  <widget class="QWidget" name="olinkPageWidget">
+    <layout class="QVBoxLayout" name="verticalLayout_18" stretch="2,1">
+      <item>
+        <widget class="QGroupBox" name="groupBox_3">
+          <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    border: 2px solid #546391;
+    border-radius: 5px; /* 圆角 */
+    margin-top: 2ex; /* 上边距 */
+}
+QGroupBox:title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left; /* 标题位置 */
+    padding: 0 3px; /* 内边距 */
+    color: #FFFFFF; /* 白色字体 */
+    background-color: #546391;
+	border-radius: 3px;
+}</string>
+            </property>
+          <property name="title">
+            <string>已关联拓扑连接光路</string>
+            </property>
+          <layout class="QVBoxLayout" name="verticalLayout_17">
+            <item>
+              <layout class="QGridLayout" name="gridLayout" columnstretch="1,3,3,1" rowminimumheight="0,0">
+                <item row="0" column="2">
+                  <widget class="QLabel" name="label_9">
+                    <property name="text">
+                      <string>Z端网元</string>
+                      </property>
+                    </widget>
+                  </item>
+                <item row="1" column="0">
+                  <widget class="QLineEdit" name="a_ne_le">
+                    <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>16777215</width>
+                        <height>30</height>
+                        </size>
+                      </property>
+                    </widget>
+                  </item>
+                <item row="1" column="1">
+                  <widget class="QComboBox" name="a_ne_cb">
+                    <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>16777215</width>
+                        <height>30</height>
+                        </size>
+                      </property>
+                    </widget>
+                  </item>
+                <item row="1" column="2">
+                  <widget class="QComboBox" name="z_ne_cb">
+                    <property name="sizePolicy">
+                      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>16777215</width>
+                        <height>30</height>
+                        </size>
+                      </property>
+                    </widget>
+                  </item>
+                <item row="1" column="3">
+                  <widget class="QPushButton" name="search_link_bt">
+                    <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>16777215</width>
+                        <height>30</height>
+                        </size>
+                      </property>
+                    <property name="styleSheet">
+                      <string notr="true">QPushButton {
+	border: 2px solid #6272a4;
+	border-radius: 5px;	
+	background-color: #6272a4;
+    color: #ffffff;
+}
+QPushButton:hover {
+	background-color: #7082b6;
+	border: 2px solid #7082b6;
+}
+QPushButton:pressed {	
+	background-color: #546391;
+	border: 2px solid #ff79c6;
+}</string>
+                      </property>
+                    <property name="text">
+                      <string>查询链路</string>
+                      </property>
+                    </widget>
+                  </item>
+                <item row="0" column="1">
+                  <widget class="QLabel" name="label_8">
+                    <property name="text">
+                      <string>A端网元</string>
+                      </property>
+                    </widget>
+                  </item>
+                <item row="0" column="0">
+                  <widget class="QLabel" name="label_10">
+                    <property name="text">
+                      <string>A端关键字</string>
+                      </property>
+                    </widget>
+                  </item>
+                </layout>
+              </item>
+            <item>
+              <layout class="QVBoxLayout" name="verticalLayout">
+                <item>
+                  <widget class="QLabel" name="label_11">
+                    <property name="text">
+                      <string>光电路名称</string>
+                      </property>
+                    </widget>
+                  </item>
+                <item>
+                  <widget class="QLineEdit" name="olink_name_le">
+                    <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>16777215</width>
+                        <height>30</height>
+                        </size>
+                      </property>
+                    </widget>
+                  </item>
+                <item>
+                  <widget class="QLabel" name="label_12">
+                    <property name="text">
+                      <string>文本路由</string>
+                      </property>
+                    </widget>
+                  </item>
+                <item>
+                  <widget class="QTextEdit" name="olink_text_te" />
+                  </item>
+                </layout>
+              </item>
+            </layout>
+          </widget>
+        </item>
+      <item>
+        <widget class="QGroupBox" name="groupBox_4">
+          <property name="styleSheet">
+            <string notr="true">QGroupBox {
+    border: 2px solid #546391;
+    border-radius: 5px; /* 圆角 */
+    margin-top: 2ex; /* 上边距 */
+}
+QGroupBox:title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left; /* 标题位置 */
+    padding: 0 3px; /* 内边距 */
+    color: #FFFFFF; /* 白色字体 */
+    background-color: #546391;
+	border-radius: 3px;
+}</string>
+            </property>
+          <property name="title">
+            <string>资源模糊搜索</string>
+            </property>
+          <layout class="QVBoxLayout" name="verticalLayout_16">
+            <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_9" stretch="0,4,1,1">
+                <item>
+                  <widget class="QLabel" name="label_13">
+                    <property name="font">
+                      <font>
+                        <pointsize>10</pointsize>
+                        <italic>false</italic>
+                        <bold>true</bold>
+                        </font>
+                      </property>
+                    <property name="styleSheet">
+                      <string notr="true">font: bold 10pt '微软雅黑'; color: #6272a4;</string>
+                      </property>
+                    <property name="text">
+                      <string>光纤光路：</string>
+                      </property>
+                    </widget>
+                  </item>
+                <item>
+                  <widget class="QLineEdit" name="olink_key_le">
+                    <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>16777215</width>
+                        <height>25</height>
+                        </size>
+                      </property>
+                    </widget>
+                  </item>
+                <item>
+                  <widget class="QPushButton" name="search_all_olink_bt">
+                    <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>16777215</width>
+                        <height>25</height>
+                        </size>
+                      </property>
+                    <property name="styleSheet">
+                      <string notr="true">QPushButton {
+	border: 2px solid #6272a4;
+	border-radius: 5px;	
+	background-color: #6272a4;
+    color: #ffffff;
+}
+QPushButton:hover {
+	background-color: #7082b6;
+	border: 2px solid #7082b6;
+}
+QPushButton:pressed {	
+	background-color: #546391;
+	border: 2px solid #ff79c6;
+}</string>
+                      </property>
+                    <property name="text">
+                      <string>模糊查询</string>
+                      </property>
+                    </widget>
+                  </item>
+                <item>
+                  <widget class="QPushButton" name="search_one_olink_bt">
+                    <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>16777215</width>
+                        <height>25</height>
+                        </size>
+                      </property>
+                    <property name="styleSheet">
+                      <string notr="true">QPushButton {
+	border: 2px solid #6272a4;
+	border-radius: 5px;	
+	background-color: #6272a4;
+    color: #ffffff;
+}
+QPushButton:hover {
+	background-color: #7082b6;
+	border: 2px solid #7082b6;
+}
+QPushButton:pressed {	
+	background-color: #546391;
+	border: 2px solid #ff79c6;
+}</string>
+                      </property>
+                    <property name="text">
+                      <string>精准查询</string>
+                      </property>
+                    </widget>
+                  </item>
+                </layout>
+              </item>
+            <item>
+              <layout class="QHBoxLayout" name="horizontalLayout_23" stretch="0,4,1,1">
+                <item>
+                  <widget class="QLabel" name="label_34">
+                    <property name="styleSheet">
+                      <string notr="true">font: bold 10pt '微软雅黑'; color: #6272a4;</string>
+                      </property>
+                    <property name="text">
+                      <string>传输电路：</string>
+                      </property>
+                    </widget>
+                  </item>
+                <item>
+                  <widget class="QLineEdit" name="circuit_keys_le">
+                    <property name="sizePolicy">
+                      <sizepolicy hsizetype="Expanding" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>16777215</width>
+                        <height>25</height>
+                        </size>
+                      </property>
+                    </widget>
+                  </item>
+                <item>
+                  <widget class="QPushButton" name="search_all_circuit_bt">
+                    <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>16777215</width>
+                        <height>25</height>
+                        </size>
+                      </property>
+                    <property name="styleSheet">
+                      <string notr="true">QPushButton {
+	border: 2px solid #6272a4;
+	border-radius: 5px;	
+	background-color: #6272a4;
+    color: #ffffff;
+}
+QPushButton:hover {
+	background-color: #7082b6;
+	border: 2px solid #7082b6;
+}
+QPushButton:pressed {	
+	background-color: #546391;
+	border: 2px solid #ff79c6;
+}</string>
+                      </property>
+                    <property name="text">
+                      <string>模糊查询</string>
+                      </property>
+                    </widget>
+                  </item>
+                <item>
+                  <widget class="QPushButton" name="search_one_circuit_bt">
+                    <property name="sizePolicy">
+                      <sizepolicy hsizetype="Minimum" vsizetype="Maximum">
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                        </sizepolicy>
+                      </property>
+                    <property name="maximumSize">
+                      <size>
+                        <width>16777215</width>
+                        <height>25</height>
+                        </size>
+                      </property>
+                    <property name="styleSheet">
+                      <string notr="true">QPushButton {
+	border: 2px solid #6272a4;
+	border-radius: 5px;	
+	background-color: #6272a4;
+    color: #ffffff;
+}
+QPushButton:hover {
+	background-color: #7082b6;
+	border: 2px solid #7082b6;
+}
+QPushButton:pressed {	
+	background-color: #546391;
+	border: 2px solid #ff79c6;
+}</string>
+                      </property>
+                    <property name="text">
+                      <string>精准查询</string>
+                      </property>
+                    </widget>
+                  </item>
+                </layout>
+              </item>
+            </layout>
+          </widget>
+        </item>
+      </layout>
+    </widget>
+  <resources />
+  <connections />
+  </ui>

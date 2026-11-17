@@ -3,7 +3,7 @@
 ################################################################################
 ## Form generated from reading UI file 'main.ui'
 ##
-## Created by: Qt User Interface Compiler version 6.6.1
+## Created by: Qt User Interface Compiler version 6.9.2
 ##
 ## WARNING! All changes made in this file will be lost when recompiling UI file!
 ################################################################################
@@ -30,7 +30,7 @@ class Ui_MainWindow(object):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
         MainWindow.resize(1000, 650)
-        sizePolicy = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(MainWindow.sizePolicy().hasHeightForWidth())
@@ -84,7 +84,7 @@ class Ui_MainWindow(object):
         self.pushButton.setMaximumSize(QSize(40, 40))
         self.pushButton.setStyleSheet(u"border: none;")
         icon = QIcon()
-        icon.addFile(u":/icons/assets/logo.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon.addFile(u":/icons/assets/logo.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.pushButton.setIcon(icon)
         self.pushButton.setIconSize(QSize(45, 45))
 
@@ -99,7 +99,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_2.addWidget(self.frame)
 
-        self.horizontalSpacer = QSpacerItem(364, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer = QSpacerItem(364, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_2.addItem(self.horizontalSpacer)
 
@@ -133,13 +133,13 @@ class Ui_MainWindow(object):
 "	color: rgb(147, 147, 147);\n"
 "}")
         icon1 = QIcon()
-        icon1.addFile(u":/icons/assets/home.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon1.addFile(u":/icons/assets/home.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.homeBtn.setIcon(icon1)
         self.homeBtn.setIconSize(QSize(24, 24))
 
         self.horizontalLayout_4.addWidget(self.homeBtn)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_2)
 
@@ -162,13 +162,13 @@ class Ui_MainWindow(object):
 "	color: rgb(147, 147, 147);\n"
 "}")
         icon2 = QIcon()
-        icon2.addFile(u":/icons/assets/menu.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon2.addFile(u":/icons/assets/menu.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.menuBtn.setIcon(icon2)
         self.menuBtn.setIconSize(QSize(18, 18))
 
         self.horizontalLayout_4.addWidget(self.menuBtn)
 
-        self.horizontalSpacer_3 = QSpacerItem(30, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(30, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_4.addItem(self.horizontalSpacer_3)
 
@@ -190,7 +190,7 @@ class Ui_MainWindow(object):
 "	background-color: rgb(0, 0, 0);\n"
 "}")
         icon3 = QIcon()
-        icon3.addFile(u":/icons/assets/minus (2).svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon3.addFile(u":/icons/assets/minus (2).svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.miniBtn.setIcon(icon3)
         self.miniBtn.setIconSize(QSize(22, 22))
 
@@ -214,7 +214,7 @@ class Ui_MainWindow(object):
 "	background-color: rgb(0, 0, 0);\n"
 "}")
         icon4 = QIcon()
-        icon4.addFile(u":/icons/assets/close (3).svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon4.addFile(u":/icons/assets/close (3).svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.closeBtn.setIcon(icon4)
         self.closeBtn.setIconSize(QSize(22, 22))
 
@@ -249,13 +249,13 @@ class Ui_MainWindow(object):
         self.headers.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_5 = QHBoxLayout(self.headers)
         self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
-        self.horizontalSpacer_4 = QSpacerItem(213, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_4 = QSpacerItem(213, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_4)
 
         self.label_2 = QLabel(self.headers)
         self.label_2.setObjectName(u"label_2")
-        sizePolicy1 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Ignored)
+        sizePolicy1 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Ignored)
         sizePolicy1.setHorizontalStretch(0)
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
@@ -265,7 +265,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_5.addWidget(self.label_2)
 
-        self.horizontalSpacer_5 = QSpacerItem(213, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_5 = QSpacerItem(213, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_5.addItem(self.horizontalSpacer_5)
 
@@ -290,7 +290,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_6.addWidget(self.label_3)
 
-        self.horizontalSpacer_6 = QSpacerItem(270, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        self.horizontalSpacer_6 = QSpacerItem(270, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_6.addItem(self.horizontalSpacer_6)
 
@@ -300,7 +300,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_6.addWidget(self.label_4)
 
-        self.horizontalSpacer_7 = QSpacerItem(267, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_7 = QSpacerItem(267, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_6.addItem(self.horizontalSpacer_7)
 
@@ -342,7 +342,7 @@ class Ui_MainWindow(object):
         self.outsideBtn.setMinimumSize(QSize(80, 80))
         self.outsideBtn.setMaximumSize(QSize(80, 80))
         icon5 = QIcon()
-        icon5.addFile(u":/icons/assets/america.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon5.addFile(u":/icons/assets/america.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.outsideBtn.setIcon(icon5)
         self.outsideBtn.setIconSize(QSize(60, 60))
 
@@ -397,7 +397,7 @@ class Ui_MainWindow(object):
         self.insideBtn.setMinimumSize(QSize(80, 80))
         self.insideBtn.setMaximumSize(QSize(80, 80))
         icon6 = QIcon()
-        icon6.addFile(u":/icons/assets/router.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon6.addFile(u":/icons/assets/router.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.insideBtn.setIcon(icon6)
         self.insideBtn.setIconSize(QSize(60, 60))
 
@@ -422,7 +422,7 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout_7.addWidget(self.card2)
 
-        self.horizontalSpacer_8 = QSpacerItem(25, 20, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        self.horizontalSpacer_8 = QSpacerItem(25, 20, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_7.addItem(self.horizontalSpacer_8)
 
@@ -454,7 +454,7 @@ class Ui_MainWindow(object):
         self.odevBtn.setMinimumSize(QSize(80, 80))
         self.odevBtn.setMaximumSize(QSize(80, 80))
         icon7 = QIcon()
-        icon7.addFile(u":/icons/assets/box.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon7.addFile(u":/icons/assets/box.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.odevBtn.setIcon(icon7)
         self.odevBtn.setIconSize(QSize(60, 60))
 
@@ -507,7 +507,7 @@ class Ui_MainWindow(object):
         self.oltBtn.setMinimumSize(QSize(80, 80))
         self.oltBtn.setMaximumSize(QSize(80, 80))
         icon8 = QIcon()
-        icon8.addFile(u":/icons/assets/olt.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon8.addFile(u":/icons/assets/olt.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.oltBtn.setIcon(icon8)
         self.oltBtn.setIconSize(QSize(60, 60))
 
@@ -560,7 +560,7 @@ class Ui_MainWindow(object):
         self.linkBtn.setMinimumSize(QSize(80, 80))
         self.linkBtn.setMaximumSize(QSize(80, 80))
         icon9 = QIcon()
-        icon9.addFile(u":/icons/assets/link.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon9.addFile(u":/icons/assets/link.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.linkBtn.setIcon(icon9)
         self.linkBtn.setIconSize(QSize(60, 60))
 
@@ -596,7 +596,7 @@ class Ui_MainWindow(object):
         self.action_frame.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_8 = QHBoxLayout(self.action_frame)
         self.horizontalLayout_8.setObjectName(u"horizontalLayout_8")
-        self.horizontalSpacer_10 = QSpacerItem(170, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_10 = QSpacerItem(170, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_8.addItem(self.horizontalSpacer_10)
 
@@ -623,7 +623,7 @@ class Ui_MainWindow(object):
 "	background-color: rgb(51, 150, 101);\n"
 "}")
         icon10 = QIcon()
-        icon10.addFile(u":/icons/assets/database.svg", QSize(), QIcon.Normal, QIcon.On)
+        icon10.addFile(u":/icons/assets/database.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
         self.dbmsBtn.setIcon(icon10)
 
         self.horizontalLayout_8.addWidget(self.dbmsBtn)
@@ -648,12 +648,12 @@ class Ui_MainWindow(object):
 "	background-color: rgb(51, 150, 101);\n"
 "}")
         icon11 = QIcon()
-        icon11.addFile(u":/icons/assets/prediction.svg", QSize(), QIcon.Normal, QIcon.On)
+        icon11.addFile(u":/icons/assets/prediction.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
         self.predictBtn.setIcon(icon11)
 
         self.horizontalLayout_8.addWidget(self.predictBtn)
 
-        self.horizontalSpacer_9 = QSpacerItem(170, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_9 = QSpacerItem(170, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_8.addItem(self.horizontalSpacer_9)
 
@@ -673,13 +673,13 @@ class Ui_MainWindow(object):
         self.frame_3.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_11 = QHBoxLayout(self.frame_3)
         self.horizontalLayout_11.setObjectName(u"horizontalLayout_11")
-        self.horizontalSpacer_12 = QSpacerItem(180, 19, QSizePolicy.Fixed, QSizePolicy.Minimum)
+        self.horizontalSpacer_12 = QSpacerItem(180, 19, QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_11.addItem(self.horizontalSpacer_12)
 
         self.fileTypeCB = QComboBox(self.frame_3)
         self.fileTypeCB.setObjectName(u"fileTypeCB")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Maximum)
+        sizePolicy2 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Maximum)
         sizePolicy2.setHorizontalStretch(0)
         sizePolicy2.setVerticalStretch(0)
         sizePolicy2.setHeightForWidth(self.fileTypeCB.sizePolicy().hasHeightForWidth())
@@ -710,7 +710,7 @@ class Ui_MainWindow(object):
 
         self.filePathLE = QLineEdit(self.frame_3)
         self.filePathLE.setObjectName(u"filePathLE")
-        sizePolicy3 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Maximum)
+        sizePolicy3 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Maximum)
         sizePolicy3.setHorizontalStretch(0)
         sizePolicy3.setVerticalStretch(0)
         sizePolicy3.setHeightForWidth(self.filePathLE.sizePolicy().hasHeightForWidth())
@@ -757,7 +757,7 @@ class Ui_MainWindow(object):
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
         icon12 = QIcon()
-        icon12.addFile(u":/icons/assets/file.svg", QSize(), QIcon.Normal, QIcon.On)
+        icon12.addFile(u":/icons/assets/file.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
         self.choseFileBtn.setIcon(icon12)
 
         self.horizontalLayout_11.addWidget(self.choseFileBtn)
@@ -784,7 +784,7 @@ class Ui_MainWindow(object):
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
         icon13 = QIcon()
-        icon13.addFile(u":/icons/assets/update.svg", QSize(), QIcon.Normal, QIcon.On)
+        icon13.addFile(u":/icons/assets/update.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
         self.updateDataBaseBtn.setIcon(icon13)
 
         self.horizontalLayout_11.addWidget(self.updateDataBaseBtn)
@@ -794,7 +794,7 @@ class Ui_MainWindow(object):
 
         self.frame_28 = QFrame(self.updatePage)
         self.frame_28.setObjectName(u"frame_28")
-        sizePolicy4 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Fixed)
+        sizePolicy4 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
         sizePolicy4.setHorizontalStretch(0)
         sizePolicy4.setVerticalStretch(0)
         sizePolicy4.setHeightForWidth(self.frame_28.sizePolicy().hasHeightForWidth())
@@ -803,7 +803,7 @@ class Ui_MainWindow(object):
         self.frame_28.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_27 = QHBoxLayout(self.frame_28)
         self.horizontalLayout_27.setObjectName(u"horizontalLayout_27")
-        self.horizontalSpacer_15 = QSpacerItem(728, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_15 = QSpacerItem(728, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_27.addItem(self.horizontalSpacer_15)
 
@@ -908,7 +908,7 @@ class Ui_MainWindow(object):
 
         self.label_26 = QLabel(self.frame_5)
         self.label_26.setObjectName(u"label_26")
-        sizePolicy5 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Maximum)
+        sizePolicy5 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
         sizePolicy5.setHorizontalStretch(0)
         sizePolicy5.setVerticalStretch(0)
         sizePolicy5.setHeightForWidth(self.label_26.sizePolicy().hasHeightForWidth())
@@ -1522,7 +1522,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_31.setObjectName(u"horizontalLayout_31")
         self.updateOneKeyBtn = QPushButton(self.frame_35)
         self.updateOneKeyBtn.setObjectName(u"updateOneKeyBtn")
-        sizePolicy6 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
+        sizePolicy6 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Fixed)
         sizePolicy6.setHorizontalStretch(0)
         sizePolicy6.setVerticalStretch(0)
         sizePolicy6.setHeightForWidth(self.updateOneKeyBtn.sizePolicy().hasHeightForWidth())
@@ -1545,10 +1545,37 @@ class Ui_MainWindow(object):
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
         icon14 = QIcon()
-        icon14.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Normal, QIcon.Off)
+        icon14.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
         self.updateOneKeyBtn.setIcon(icon14)
 
         self.horizontalLayout_31.addWidget(self.updateOneKeyBtn)
+
+        self.updateOlinkBtn = QPushButton(self.frame_35)
+        self.updateOlinkBtn.setObjectName(u"updateOlinkBtn")
+        sizePolicy6.setHeightForWidth(self.updateOlinkBtn.sizePolicy().hasHeightForWidth())
+        self.updateOlinkBtn.setSizePolicy(sizePolicy6)
+        self.updateOlinkBtn.setMinimumSize(QSize(150, 40))
+        self.updateOlinkBtn.setMaximumSize(QSize(150, 40))
+        self.updateOlinkBtn.setStyleSheet(u"QPushButton {\n"
+"    background-color: rgba(28, 33, 44, 255);\n"
+"    color: #44cc88;\n"
+"    border: 1px solid #44cc88;\n"
+"    border-radius: 10px;\n"
+"    padding: 5px 10px;\n"
+"}\n"
+"\n"
+"QPushButton:hover {\n"
+"    background-color: rgba(40, 45, 56, 255);\n"
+"}\n"
+"\n"
+"QPushButton:pressed {\n"
+"    background-color: rgba(20, 25, 36, 255);\n"
+"}")
+        icon15 = QIcon()
+        icon15.addFile(u":/icons/assets/fiber.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.updateOlinkBtn.setIcon(icon15)
+
+        self.horizontalLayout_31.addWidget(self.updateOlinkBtn)
 
 
         self.verticalLayout_16.addWidget(self.frame_35)
@@ -1618,7 +1645,7 @@ class Ui_MainWindow(object):
         self.frame_11.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_14 = QHBoxLayout(self.frame_11)
         self.horizontalLayout_14.setObjectName(u"horizontalLayout_14")
-        self.horizontalSpacer_13 = QSpacerItem(855, 19, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_13 = QSpacerItem(855, 19, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_14.addItem(self.horizontalSpacer_13)
 
@@ -1641,9 +1668,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon15 = QIcon()
-        icon15.addFile(u":/icons/assets/check.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.checkTableBtn.setIcon(icon15)
+        icon16 = QIcon()
+        icon16.addFile(u":/icons/assets/check.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.checkTableBtn.setIcon(icon16)
 
         self.horizontalLayout_14.addWidget(self.checkTableBtn)
 
@@ -1666,9 +1693,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon16 = QIcon()
-        icon16.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.runAnalysisBtn.setIcon(icon16)
+        icon17 = QIcon()
+        icon17.addFile(u":/icons/assets/run.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.runAnalysisBtn.setIcon(icon17)
 
         self.horizontalLayout_14.addWidget(self.runAnalysisBtn)
 
@@ -1733,7 +1760,7 @@ class Ui_MainWindow(object):
         self.frame_15.setFrameShadow(QFrame.Raised)
         self.horizontalLayout_15 = QHBoxLayout(self.frame_15)
         self.horizontalLayout_15.setObjectName(u"horizontalLayout_15")
-        self.horizontalSpacer_14 = QSpacerItem(855, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_14 = QSpacerItem(855, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_15.addItem(self.horizontalSpacer_14)
 
@@ -1756,9 +1783,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon17 = QIcon()
-        icon17.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.dbTableBtn.setIcon(icon17)
+        icon18 = QIcon()
+        icon18.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.dbTableBtn.setIcon(icon18)
 
         self.horizontalLayout_15.addWidget(self.dbTableBtn)
 
@@ -2507,7 +2534,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.searchDevUplinkBtn.setIcon(icon17)
+        self.searchDevUplinkBtn.setIcon(icon18)
 
         self.horizontalLayout_20.addWidget(self.searchDevUplinkBtn)
 
@@ -2647,7 +2674,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_24.setObjectName(u"verticalLayout_24")
         self.uplink_text = QTextEdit(self.frame_23)
         self.uplink_text.setObjectName(u"uplink_text")
-        sizePolicy7 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        sizePolicy7 = QSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Preferred)
         sizePolicy7.setHorizontalStretch(0)
         sizePolicy7.setVerticalStretch(0)
         sizePolicy7.setHeightForWidth(self.uplink_text.sizePolicy().hasHeightForWidth())
@@ -2733,7 +2760,7 @@ class Ui_MainWindow(object):
 
         self.label_38 = QLabel(self.frame_23)
         self.label_38.setObjectName(u"label_38")
-        sizePolicy8 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Expanding)
+        sizePolicy8 = QSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Expanding)
         sizePolicy8.setHorizontalStretch(0)
         sizePolicy8.setVerticalStretch(0)
         sizePolicy8.setHeightForWidth(self.label_38.sizePolicy().hasHeightForWidth())
@@ -2772,7 +2799,7 @@ class Ui_MainWindow(object):
         self.horizontalLayout_26.setObjectName(u"horizontalLayout_26")
         self.label_33 = QLabel(self.frame_27)
         self.label_33.setObjectName(u"label_33")
-        sizePolicy9 = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Preferred)
+        sizePolicy9 = QSizePolicy(QSizePolicy.Policy.Fixed, QSizePolicy.Policy.Preferred)
         sizePolicy9.setHorizontalStretch(0)
         sizePolicy9.setVerticalStretch(0)
         sizePolicy9.setHeightForWidth(self.label_33.sizePolicy().hasHeightForWidth())
@@ -2833,9 +2860,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon18 = QIcon()
-        icon18.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.searchLineBtn.setIcon(icon18)
+        icon19 = QIcon()
+        icon19.addFile(u":/icons/assets/search.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.searchLineBtn.setIcon(icon19)
 
         self.horizontalLayout_26.addWidget(self.searchLineBtn)
 
@@ -3009,7 +3036,7 @@ class Ui_MainWindow(object):
 
         self.aSiteLabel = QLabel(self.frame_29)
         self.aSiteLabel.setObjectName(u"aSiteLabel")
-        sizePolicy10 = QSizePolicy(QSizePolicy.Minimum, QSizePolicy.Preferred)
+        sizePolicy10 = QSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Preferred)
         sizePolicy10.setHorizontalStretch(0)
         sizePolicy10.setVerticalStretch(0)
         sizePolicy10.setHeightForWidth(self.aSiteLabel.sizePolicy().hasHeightForWidth())
@@ -3262,9 +3289,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon19 = QIcon()
-        icon19.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.delMustDevBtn.setIcon(icon19)
+        icon20 = QIcon()
+        icon20.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.delMustDevBtn.setIcon(icon20)
 
         self.verticalLayout_29.addWidget(self.delMustDevBtn)
 
@@ -3287,7 +3314,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.delNotDevBtn.setIcon(icon19)
+        self.delNotDevBtn.setIcon(icon20)
 
         self.verticalLayout_29.addWidget(self.delNotDevBtn)
 
@@ -3310,9 +3337,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon20 = QIcon()
-        icon20.addFile(u":/icons/assets/left.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.devToLeftBtn.setIcon(icon20)
+        icon21 = QIcon()
+        icon21.addFile(u":/icons/assets/left.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.devToLeftBtn.setIcon(icon21)
 
         self.verticalLayout_29.addWidget(self.devToLeftBtn)
 
@@ -3335,9 +3362,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon21 = QIcon()
-        icon21.addFile(u":/icons/assets/right.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.devToRightBtn.setIcon(icon21)
+        icon22 = QIcon()
+        icon22.addFile(u":/icons/assets/right.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.devToRightBtn.setIcon(icon22)
 
         self.verticalLayout_29.addWidget(self.devToRightBtn)
 
@@ -3403,9 +3430,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon22 = QIcon()
-        icon22.addFile(u":/icons/assets/file.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.importABsBtn.setIcon(icon22)
+        icon23 = QIcon()
+        icon23.addFile(u":/icons/assets/file.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.importABsBtn.setIcon(icon23)
 
         self.horizontalLayout_19.addWidget(self.importABsBtn)
 
@@ -3589,7 +3616,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.searchOltBtn.setIcon(icon17)
+        self.searchOltBtn.setIcon(icon18)
 
         self.horizontalLayout_23.addWidget(self.searchOltBtn)
 
@@ -3864,7 +3891,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.searchOltBtn_2.setIcon(icon17)
+        self.searchOltBtn_2.setIcon(icon18)
 
         self.horizontalLayout_32.addWidget(self.searchOltBtn_2)
 
@@ -3940,9 +3967,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon23 = QIcon()
-        icon23.addFile(u":/icons/assets/checkmark.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.addOLTBtn.setIcon(icon23)
+        icon24 = QIcon()
+        icon24.addFile(u":/icons/assets/checkmark.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.addOLTBtn.setIcon(icon24)
 
         self.verticalLayout_38.addWidget(self.addOLTBtn)
 
@@ -3967,7 +3994,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        self.importOLTBtn.setIcon(icon22)
+        self.importOLTBtn.setIcon(icon23)
 
         self.verticalLayout_38.addWidget(self.importOLTBtn)
 
@@ -4047,9 +4074,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon24 = QIcon()
-        icon24.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.delOltBtn.setIcon(icon24)
+        icon25 = QIcon()
+        icon25.addFile(u":/icons/assets/delete.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.delOltBtn.setIcon(icon25)
 
         self.verticalLayout_36.addWidget(self.delOltBtn)
 
@@ -4074,9 +4101,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon25 = QIcon()
-        icon25.addFile(u":/icons/assets/right.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.beginOltBtn.setIcon(icon25)
+        icon26 = QIcon()
+        icon26.addFile(u":/icons/assets/right.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.beginOltBtn.setIcon(icon26)
 
         self.verticalLayout_36.addWidget(self.beginOltBtn)
 
@@ -4101,9 +4128,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "    background-color: rgba(20, 25, 36, 255);\n"
 "}")
-        icon26 = QIcon()
-        icon26.addFile(u":/icons/assets/left.svg", QSize(), QIcon.Normal, QIcon.On)
-        self.splitOltBtn.setIcon(icon26)
+        icon27 = QIcon()
+        icon27.addFile(u":/icons/assets/left.svg", QSize(), QIcon.Mode.Normal, QIcon.State.On)
+        self.splitOltBtn.setIcon(icon27)
 
         self.verticalLayout_36.addWidget(self.splitOltBtn)
 
@@ -4368,13 +4395,13 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.fuzzy_match_btn, 1, 1, 1, 1)
 
-        self.to_be_continue_2 = QPushButton(self.frame_31)
-        self.to_be_continue_2.setObjectName(u"to_be_continue_2")
-        sizePolicy2.setHeightForWidth(self.to_be_continue_2.sizePolicy().hasHeightForWidth())
-        self.to_be_continue_2.setSizePolicy(sizePolicy2)
-        self.to_be_continue_2.setMinimumSize(QSize(100, 100))
-        self.to_be_continue_2.setMaximumSize(QSize(100, 100))
-        self.to_be_continue_2.setStyleSheet(u"QPushButton {\n"
+        self.searchOlinkBtn = QPushButton(self.frame_31)
+        self.searchOlinkBtn.setObjectName(u"searchOlinkBtn")
+        sizePolicy2.setHeightForWidth(self.searchOlinkBtn.sizePolicy().hasHeightForWidth())
+        self.searchOlinkBtn.setSizePolicy(sizePolicy2)
+        self.searchOlinkBtn.setMinimumSize(QSize(100, 100))
+        self.searchOlinkBtn.setMaximumSize(QSize(100, 100))
+        self.searchOlinkBtn.setStyleSheet(u"QPushButton {\n"
 "        background-color: rgb(58, 65, 82);\n"
 "        color: #44cc88;\n"
 "        border-radius: 15px;\n"
@@ -4389,7 +4416,30 @@ class Ui_MainWindow(object):
 "        background-color: rgb(46, 53, 70);\n"
 "    }")
 
-        self.gridLayout_2.addWidget(self.to_be_continue_2, 1, 2, 1, 1)
+        self.gridLayout_2.addWidget(self.searchOlinkBtn, 1, 2, 1, 1)
+
+        self.to_be_continue = QPushButton(self.frame_31)
+        self.to_be_continue.setObjectName(u"to_be_continue")
+        sizePolicy2.setHeightForWidth(self.to_be_continue.sizePolicy().hasHeightForWidth())
+        self.to_be_continue.setSizePolicy(sizePolicy2)
+        self.to_be_continue.setMinimumSize(QSize(100, 100))
+        self.to_be_continue.setMaximumSize(QSize(100, 100))
+        self.to_be_continue.setStyleSheet(u"QPushButton {\n"
+"        background-color: rgb(58, 65, 82);\n"
+"        color: #44cc88;\n"
+"        border-radius: 15px;\n"
+"        border: 1px solid #44cc88;\n"
+"        padding: 5px;\n"
+"        font: 700 11pt;\n"
+"    }\n"
+"    QPushButton:hover {\n"
+"        background-color: rgb(70, 77, 94);\n"
+"    }\n"
+"    QPushButton:pressed {\n"
+"        background-color: rgb(46, 53, 70);\n"
+"    }")
+
+        self.gridLayout_2.addWidget(self.to_be_continue, 1, 3, 1, 1)
 
 
         self.verticalLayout_32.addWidget(self.frame_31)
@@ -4484,13 +4534,13 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(64, 71, 90);\n"
 "}")
-        icon27 = QIcon()
-        icon27.addFile(u":/icons/assets/close.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.sideClose.setIcon(icon27)
+        icon28 = QIcon()
+        icon28.addFile(u":/icons/assets/close.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.sideClose.setIcon(icon28)
 
         self.horizontalLayout_10.addWidget(self.sideClose)
 
-        self.horizontalSpacer_11 = QSpacerItem(301, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_11 = QSpacerItem(301, 20, QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Minimum)
 
         self.horizontalLayout_10.addItem(self.horizontalSpacer_11)
 
@@ -4538,9 +4588,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon28 = QIcon()
-        icon28.addFile(u":/icons/assets/settings.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.settingBtn.setIcon(icon28)
+        icon29 = QIcon()
+        icon29.addFile(u":/icons/assets/settings.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.settingBtn.setIcon(icon29)
         self.settingBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.settingBtn)
@@ -4566,9 +4616,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon29 = QIcon()
-        icon29.addFile(u":/icons/assets/document.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.updateBtn.setIcon(icon29)
+        icon30 = QIcon()
+        icon30.addFile(u":/icons/assets/document.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.updateBtn.setIcon(icon30)
         self.updateBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.updateBtn)
@@ -4594,9 +4644,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon30 = QIcon()
-        icon30.addFile(u":/icons/assets/graph.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.kpiBtn.setIcon(icon30)
+        icon31 = QIcon()
+        icon31.addFile(u":/icons/assets/graph.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.kpiBtn.setIcon(icon31)
         self.kpiBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.kpiBtn)
@@ -4622,9 +4672,9 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        icon31 = QIcon()
-        icon31.addFile(u":/icons/assets/help.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.logBtn.setIcon(icon31)
+        icon32 = QIcon()
+        icon32.addFile(u":/icons/assets/help.svg", QSize(), QIcon.Mode.Normal, QIcon.State.Off)
+        self.logBtn.setIcon(icon32)
         self.logBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.logBtn)
@@ -4650,7 +4700,7 @@ class Ui_MainWindow(object):
 "QPushButton:pressed {\n"
 "	background-color: rgb(34, 40, 50);\n"
 "}")
-        self.agentBtn.setIcon(icon29)
+        self.agentBtn.setIcon(icon30)
         self.agentBtn.setIconSize(QSize(30, 30))
 
         self.verticalLayout_15.addWidget(self.agentBtn)
@@ -4692,7 +4742,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.container.setCurrentIndex(7)
+        self.container.setCurrentIndex(9)
         self.tabWidget_18.setCurrentIndex(2)
         self.tabWidget.setCurrentIndex(1)
         self.tabWidget_2.setCurrentIndex(1)
@@ -4749,6 +4799,7 @@ class Ui_MainWindow(object):
         self.label_18.setText(QCoreApplication.translate("MainWindow", u"--", None))
         self.label_31.setText(QCoreApplication.translate("MainWindow", u"--", None))
         self.updateOneKeyBtn.setText(QCoreApplication.translate("MainWindow", u"\u4e00\u952e\u66f4\u65b0", None))
+        self.updateOlinkBtn.setText(QCoreApplication.translate("MainWindow", u"\u66f4\u65b0\u5149\u7535\u8def", None))
         self.analysisLabel.setText(QCoreApplication.translate("MainWindow", u"\u3010\u6d4b\u8bd5\u3011", None))
         self.checkTableBtn.setText(QCoreApplication.translate("MainWindow", u"\u8868\u6821\u9a8c", None))
         self.runAnalysisBtn.setText(QCoreApplication.translate("MainWindow", u"\u6267\u884c\u5206\u6790", None))
@@ -4860,7 +4911,9 @@ class Ui_MainWindow(object):
 "\u5f52\u5c5e", None))
         self.fuzzy_match_btn.setText(QCoreApplication.translate("MainWindow", u"\u6a21\u7cca\n"
 "\u5339\u914d", None))
-        self.to_be_continue_2.setText(QCoreApplication.translate("MainWindow", u"\u5f85\u7eed", None))
+        self.searchOlinkBtn.setText(QCoreApplication.translate("MainWindow", u"\u67e5\u8be2\n"
+"\u5149\u7535\u8def", None))
+        self.to_be_continue.setText(QCoreApplication.translate("MainWindow", u"\u5f85\u7eed", None))
         self.statusLabel.setText("")
         self.sideClose.setText("")
         self.label_16.setText(QCoreApplication.translate("MainWindow", u"<html><head/><body><p align=\"center\"><span style=\" font-size:12pt; font-weight:700; color:#ffffff;\">\u4f7f\u7528\u8bf4\u660e</span></p><p align=\"center\"><span style=\" font-size:12pt; font-weight:700; color:#ffffff;\">\u9700\u5468\u671f\u66f4\u65b0\u6570\u636e </span></p></body></html>", None))

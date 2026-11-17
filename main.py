@@ -3,13 +3,15 @@ import sys
 from PySide6.QtCore import Qt, QEvent
 from PySide6.QtGui import QIcon, QColor
 from PySide6.QtWidgets import (QMainWindow, QApplication, QGraphicsDropShadowEffect, QWidget, QFileDialog, QMessageBox,
-                               QTableWidgetItem,QHBoxLayout,QPushButton,QHeaderView)
+                               QTableWidgetItem,QHBoxLayout,QPushButton,QHeaderView,
+                               QDialog, QVBoxLayout)
 from PySide6.QtUiTools import loadUiType
 from main_ui import Ui_MainWindow
 from thread.publicFunc import *
 from thread import *
 from customnWidget import *
 from predict.TransportPredict import TransportPredict
+
 
 class TNAIWindow(QMainWindow, Ui_MainWindow):
     def __init__(self):
@@ -91,6 +93,8 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.importOLTBtn.clicked.connect(self.importOltList)
         self.splitOltBtn.clicked.connect(self.splitOltAnalysis)
         self.beginOltBtn.clicked.connect(self.beginPonDiversion)
+        self.updateOlinkBtn.clicked.connect(self.updateOlink)
+        self.searchOlinkBtn.clicked.connect(self.searchOlink)
 
         self.writeAggrHouseBtn.clicked.connect(self.writeAggrHouseKml)
         self.odevNameKeysLe.returnPressed.connect(self.searchoDevs)
@@ -1204,6 +1208,33 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
         self.update_olt_one_table_thread.state_signal.connect(self.showStatus)
         self.update_olt_one_table_thread.error_signal.connect(self.showError)
         self.update_olt_one_table_thread.start()
+
+    def updateOlink(self):
+        folder_path = QFileDialog.getExistingDirectory(self, "选择光电路更新文件夹[需包含传输电路、光纤光路、拓扑连接文件]")
+        if not folder_path:
+            return
+        self.update_olink_thread = UpdateOlinkThread(folder_path=folder_path)
+        self.update_olink_thread.state_signal.connect(self.showStatus)
+        self.update_olink_thread.show_dialog_signal.connect(self.showOlinkMissingColumns)
+        self.update_olink_thread.start()
+        # 切换到日志页面logPage
+        page_widget = self.container.findChild(QWidget, "logPage")
+        self.container.setCurrentWidget(page_widget)
+
+    def searchOlink(self):
+        from modules.olinkPageWidget import OlinkPageWidget
+        dialog = QDialog(self)
+        dialog.setWindowTitle("光电路查询")
+        dialog.resize(1100, 750)
+        layout = QVBoxLayout(dialog)
+        layout.addWidget(OlinkPageWidget(dialog))
+        self.relay_line_result_dialogs.append(dialog)
+        dialog.finished.connect(lambda _=0, d=dialog: self.removeClosedDialog(d))
+        dialog.show()
+
+    def showOlinkMissingColumns(self, file_name, missing_columns, file_columns):
+        msg = f"文件「{file_name}」缺少以下必备列：\n" + "\n".join(f"  - {col}" for col in missing_columns)
+        QMessageBox.warning(self, "缺少必备列", msg)
 
 
 if __name__ == '__main__':
