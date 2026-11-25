@@ -1238,6 +1238,11 @@ class TNAIWindow(QMainWindow, Ui_MainWindow):
 
 
 if __name__ == '__main__':
+    # 初始化应用，判断是否包含结果和data文件夹,如果不存在则创建
+    if not os.path.exists("结果"):
+        os.makedirs("结果")
+    if not os.path.exists("data"):
+        os.makedirs("data")
     app = QApplication(sys.argv)
     # 设置图标
     app.setWindowIcon(QIcon('assets/main.png'))
