@@ -1,7 +1,6 @@
 .idea/
 __pycache__/
 .venv/
-.vscode/
 文件范例/
 data/
 build/
@@ -18,3 +17,4 @@ OLT管理一张表/
 分析数据/
 弱光用户地图/
 图层/
+临时脚本/
